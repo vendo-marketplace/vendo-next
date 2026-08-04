@@ -5,6 +5,7 @@ import favicon16 from "@/assets/icons/favicon-16x16.png";
 import favicon32 from "@/assets/icons/favicon-32x32.png";
 import "./globals.css";
 import type { ReactNode } from "react";
+import Providers from "@/providers/Providers";
 
 const mazzardH = localFont({
   variable: "--font-mazzard",
@@ -65,7 +66,7 @@ export default function RootLayout({
   return (
     <html lang="uk" className={mazzardH.variable} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
