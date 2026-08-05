@@ -1,9 +1,9 @@
-import HomepageSection from "./_components/homepage-section/HomepageSection";
+import RecommendedProducts from "./_components/recommended-prods/RecommendedProducts";
 
 export default function Home() {
   return (
     <>
-      <HomepageSection />
+      <RecommendedProducts />
     </>
   );
 }

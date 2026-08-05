@@ -67,7 +67,7 @@ export default function RootLayout({
     <html lang="uk" className={mazzardH.variable} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
         <Providers>
-          <div className="bg-red-300 w-full max-w-360 flex flex-col mx-auto h-full flex-1">
+          <div className="w-full max-w-360 flex flex-col mx-auto h-full flex-1">
             {children}
           </div>
         </Providers>
