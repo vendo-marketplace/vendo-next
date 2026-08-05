@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import faviconIco from "@/assets/icons/favicon.ico";
-import favicon16 from "@/assets/icons/favicon-16x16.png";
-import favicon32 from "@/assets/icons/favicon-32x32.png";
+import faviconIco from "@/assets/favicons/favicon.ico";
+import favicon16 from "@/assets/favicons/favicon-16x16.png";
+import favicon32 from "@/assets/favicons/favicon-32x32.png";
 import "./globals.css";
 import type { ReactNode } from "react";
 import Providers from "@/providers/Providers";
