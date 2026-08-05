@@ -1,12 +1,9 @@
 const LoadingSpinner = () => {
   return (
-    <div
-      role="status"
-      className="flex justify-center py-10"
-    >
+    <div role="status" className="flex justify-center py-10">
       <svg
         aria-hidden="true"
-        className="fill-brand-600 text-border-base size-[75px] animate-spin"
+        className="fill-brand-600 text-border-base size-18.75 animate-spin"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
