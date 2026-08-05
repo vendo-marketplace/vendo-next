@@ -31,7 +31,7 @@ export function getButtonClassName({
   className,
 }: Pick<ButtonProps, "variant" | "size" | "className"> = {}) {
   return cn(
-    "inline-flex shrink-0 cursor-pointer",
+    "cursor-pointer font-mazzard inline-flex items-center justify-center font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
     buttonVariants.variants[variant],
     buttonVariants.size[size],
     className,
