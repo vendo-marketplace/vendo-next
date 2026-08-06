@@ -13,7 +13,13 @@ const ProductCard = ({ card }: Props) => {
   return (
     <div className="border-border-base w-105.25 rounded-lg border bg-neutral-50 p-6 shadow-[0_1px_0.5px_0.05px_#1D293D05]">
       <div className="relative w-full h-73.25 overflow-hidden rounded-lg p-2">
-        <Image src={images[0]} alt={title} fill className="object-contain" />
+        <Image
+          src={images[0]}
+          alt={title}
+          fill
+          sizes="371px"
+          className="object-contain"
+        />
       </div>
       <div className="w-full space-y-7 pt-6">
         <div className="space-y-4">
