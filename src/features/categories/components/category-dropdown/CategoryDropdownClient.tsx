@@ -18,7 +18,15 @@ const menuContentClassName =
 const menuItemClassName =
   "flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 outline-none select-none data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-950";
 
-function CategoryMenuItem({ category }: { category: CategoryOption }) {
+interface CategoryMenuItemProps {
+  category: CategoryOption;
+  parentSlug: string;
+}
+
+function CategoryMenuItem({
+  category,
+  parentSlug,
+}: CategoryMenuItemProps) {
   if (category.children.length > 0) {
     return (
       <DropdownMenu.Sub>
@@ -38,7 +46,11 @@ function CategoryMenuItem({ category }: { category: CategoryOption }) {
             </DropdownMenu.Label>
 
             {category.children.map((child) => (
-              <CategoryMenuItem key={child.id} category={child} />
+              <CategoryMenuItem
+                key={child.id}
+                category={child}
+                parentSlug={parentSlug}
+              />
             ))}
           </DropdownMenu.SubContent>
         </DropdownMenu.Portal>
@@ -49,10 +61,7 @@ function CategoryMenuItem({ category }: { category: CategoryOption }) {
   return (
     <DropdownMenu.Item asChild textValue={category.title}>
       <Link
-        href={{
-          pathname: "/search",
-          query: { category: category.slug },
-        }}
+        href={`/category/${encodeURIComponent(parentSlug)}/${encodeURIComponent(category.slug)}`}
         className={menuItemClassName}
       >
         <span className="truncate">{category.title}</span>
@@ -92,7 +101,11 @@ export default function CategoryDropdownClient({
           {unavailable && <span>Failed to fetch categories</span>}
 
           {categories.map((category) => (
-            <CategoryMenuItem key={category.id} category={category} />
+            <CategoryMenuItem
+              key={category.id}
+              category={category}
+              parentSlug={category.slug}
+            />
           ))}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
