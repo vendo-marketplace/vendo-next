@@ -3,7 +3,7 @@
 import { DropdownMenu } from "radix-ui";
 
 import { Button } from "@/components/ui/button";
-import { ChevronDownIcon, ChevronRightIcon } from "@/components/ui/icons";
+import { ChevronRightIcon, GridIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
 import type { CategoryOption } from "../../types/category";
 
@@ -65,20 +65,15 @@ export default function CategoryDropdownClient({
   categories,
   unavailable = false,
 }: CategoryDropdownClientProps) {
-  const isDisabled = unavailable || categories.length === 0;
-
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <Button
-          className="group shrink-0"
-          title={isDisabled ? "Catalog is currently unavailable" : undefined}
+          className="border-border-base text-text-body hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 focus-visible:bg-brand-50 focus-visible:border-brand-600 focus-visible:text-brand-600 aria-expanded:bg-brand-50 aria-expanded:border-brand-600 aria-expanded:text-brand-600 flex h-10.5 w-28 cursor-pointer items-center gap-2 rounded-lg border bg-white px-3.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-[ease]"
+          title={"Catalog"}
         >
-          Catalog
-          <ChevronDownIcon
-            aria-hidden="true"
-            className="ml-2 size-4 transition-transform group-data-[state=open]:rotate-180"
-          />
+          <GridIcon width={16} height={16} />
+          <span className="">Каталог</span>
         </Button>
       </DropdownMenu.Trigger>
 
@@ -92,7 +87,7 @@ export default function CategoryDropdownClient({
           className={menuContentClassName}
         >
           <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-neutral-500">
-            Categories
+            Категорії
           </DropdownMenu.Label>
           {unavailable && <span>Failed to fetch categories</span>}
 
