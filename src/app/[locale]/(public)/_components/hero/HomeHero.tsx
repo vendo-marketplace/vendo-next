@@ -70,7 +70,7 @@ export default function HomeHero() {
 
   return (
     <section className="py-6 mt-4">
-      <div className="relative overflow-hidden rounded-2xl">
+      <div className="relative overflow-hidden rounded-2xl mx-auto w-full max-w-330">
         <div
           onTransitionEnd={handleTransitionEnd}
           className={[
