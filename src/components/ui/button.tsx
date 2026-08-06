@@ -9,10 +9,12 @@ const buttonVariants = {
     secondary:
       "border border-neutral-300 text-neutral-600 focus:ring-neutral-600",
     ghost: "text-neutral-500 hover:bg-neutral-100 focus:ring-neutral-700",
+    icon: "border border-gray-200 bg-white hover:border-brand-600 hover:text-brand-600 rounded-full text-neutral-600",
   },
   size: {
     default: "h-12 px-4 py-1 text-sm",
     small: "h-10 px-4 py-3 text-xs",
+    icon: "size-10 shrink-0 p-0 [&_svg]:size-5",
   },
 } as const;
 
