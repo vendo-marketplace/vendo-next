@@ -11,7 +11,7 @@ export const productQueries = {
         const res = await productsApi.search(query, pageParam);
         return res.data;
       },
-      initialPageParam: 0,
+      initialPageParam: 1,
       getNextPageParam: ({ metadata }) =>
         metadata.hasNext ? metadata.page + 1 : undefined,
     }),

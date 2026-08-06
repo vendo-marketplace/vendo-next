@@ -19,7 +19,7 @@ export default function RecommendedProducts() {
     isLoading,
   } = useSearchProducts("");
 
-  console.log("data: ", data);
+  console.log(data);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {

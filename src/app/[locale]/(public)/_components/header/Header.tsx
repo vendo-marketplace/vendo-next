@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { Button } from "@/components/ui/button";
+import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
 import Logo from "./logo/Logo";
 import SearchBar from "./search-bar/SearchBar";
 
@@ -11,7 +11,7 @@ const Header = () => {
         <div className="flex items-center gap-7.5 w-full">
           <Logo />
           <div className="flex items-center gap-3 flex-1">
-            <Button>Catalog</Button>
+            <CategoryDropdown />
             <Suspense fallback={null}>
               <SearchBar />
             </Suspense>
