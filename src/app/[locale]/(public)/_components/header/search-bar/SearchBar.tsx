@@ -4,12 +4,12 @@ import SearchBarForm from "./form/SearchBarForm";
 import { useSearchBar } from "./hooks/use-search-bar";
 
 const SearchBar = () => {
-  const { initialQuery, search } = useSearchBar();
+  const { query, setQuery, search } = useSearchBar();
 
   return (
     <SearchBarForm
-      key={initialQuery}
-      initialQuery={initialQuery}
+      query={query}
+      onQueryChange={setQuery}
       onSubmit={search}
     />
   );
