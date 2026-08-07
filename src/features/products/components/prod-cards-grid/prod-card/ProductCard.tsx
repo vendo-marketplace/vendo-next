@@ -10,6 +10,7 @@ interface Props {
 
 const ProductCard = ({ card }: Props) => {
   const { isNew, title, price, images, address, createdAt } = card;
+
   return (
     <div className="border-border-base w-105.25 rounded-lg border bg-neutral-50 p-6 shadow-[0_1px_0.5px_0.05px_#1D293D05]">
       <div className="relative w-full h-73.25 overflow-hidden rounded-lg">

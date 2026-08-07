@@ -5,17 +5,14 @@ import { cn } from "@/utils/utils";
 
 const buttonVariants = {
   variants: {
-    default: "bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-600",
-    secondary:
-      "border border-border-base text-neutral-600 hover:text-brand-600 hover:border-brand-600",
-    ghost: "text-neutral-500 hover:bg-neutral-100 focus:ring-neutral-700",
-    icon: "bg-white hover:text-brand-600 text-neutral-600",
+    brand:
+      "bg-brand-600 shadow-[0px_1px_0.5px_0.05px_#1D293D05] text-neutral-50 hover:bg-brand-700 focus:bg-brand-700 ring-2 focus:ring-brand-600 duration-0",
     none: "",
   },
   size: {
     xs: "py-1.5 px-3 text-xs",
     sm: "py-2 px-3 text-sm",
-    default: "px-4 py-2.5 text-sm",
+    base: "px-4 py-2.5 text-sm",
     lg: "py-3 px-5 text-md",
     xl: "py-3.5 px-6 text-md",
     none: "",
@@ -32,12 +29,12 @@ export type ButtonProps = ComponentProps<"button"> & {
 };
 
 export function getButtonClassName({
-  variant = "default",
-  size = "default",
+  variant = "brand",
+  size = "base",
   className,
 }: Pick<ButtonProps, "variant" | "size" | "className"> = {}) {
   return cn(
-    "cursor-pointer font-mazzard inline-flex items-center justify-center shrink-0 whitespace-nowrap font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+    "cursor-pointer font-mazzard inline-flex rounded-lg items-center justify-center shrink-0 whitespace-nowrap gap-2 disabled:bg-neutral-100 disabled:border-neutral-100 disabled:cursor-not-allowed",
     buttonVariants.variants[variant],
     buttonVariants.size[size],
     className,
@@ -46,8 +43,8 @@ export function getButtonClassName({
 
 export function Button({
   asChild = false,
-  variant = "default",
-  size = "default",
+  variant = "brand",
+  size = "base",
   className,
   type = "button",
   ...props
