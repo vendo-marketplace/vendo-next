@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useSearchProducts } from "../../hooks/use-products";
@@ -43,8 +45,11 @@ const SearchResults = ({ query }: Props) => {
 
   if (cards.length === 0) return <p>Не знайдено жодного товару</p>;
 
+  const { totalElements } = data.pages[0].metadata;
+
   return (
     <>
+      <p className="mb-4">Знайдено товарів: {totalElements}</p>
       <ProductCardsGrid cards={cards} />
       <div ref={ref} className="h-px" aria-hidden="true" />
       {isFetchingNextPage && <LoadingSpinner />}
