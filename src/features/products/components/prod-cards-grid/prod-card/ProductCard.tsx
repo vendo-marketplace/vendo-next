@@ -39,7 +39,7 @@ const ProductCard = ({ card }: Props) => {
             {formatRelativeTime(createdAt)}
           </span>
         </div>
-        <div className="mt-6 flex items-center justify-between gap-3">
+        <div className="mt-6 flex items-center justify-between gap-3 ">
           <strong className="text-2xl font-bold">{price} грн</strong>
           <div className="flex items-center gap-3">
             <Button type="button" className="size-9 min-w-32.25">
@@ -47,12 +47,12 @@ const ProductCard = ({ card }: Props) => {
             </Button>
             <Button
               type="button"
-              variant="secondary"
-              size="icon"
+              variant="none"
+              size="lg"
               aria-label="Написати продавцю"
-              className="border-gray-200 bg-white hover:border-brand-600 hover:text-brand-600"
+              className="border-gray-200 bg-white hover:border-brand-600 hover:text-brand-600 p-2.5"
             >
-              <ChatBubbleIcon />
+              <ChatBubbleIcon className="size-4" />
             </Button>
           </div>
         </div>

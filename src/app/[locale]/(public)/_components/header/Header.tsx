@@ -1,5 +1,11 @@
 import { Suspense } from "react";
 
+import { Button } from "@/components/ui/button";
+import {
+  ChatBubbleIcon,
+  CircleUserIcon,
+  HeartIcon,
+} from "@/components/ui/icons";
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
 import Logo from "./logo/Logo";
 import SearchBar from "./search-bar/SearchBar";
@@ -16,6 +22,20 @@ const Header = () => {
               <SearchBar />
             </Suspense>
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Button variant="icon" className="size-8 p-0">
+              <HeartIcon className="size-6 " />
+            </Button>
+            <Button variant="icon" className="size-8 p-0">
+              <ChatBubbleIcon className="size-6" />
+            </Button>
+            <Button variant="icon" className="size-8 p-0">
+              <CircleUserIcon className="size-6" />
+            </Button>
+          </div>
+          <Button>Додати оголошення</Button>
         </div>
       </div>
     </header>

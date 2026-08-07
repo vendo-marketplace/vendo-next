@@ -88,22 +88,22 @@ export default function HomeHero() {
         </div>
 
         <Button
+          variant="secondary"
+          size="none"
           aria-label="Попередній слайд"
-          variant="icon"
-          size="icon"
-          className="absolute top-1/2 left-3 -translate-y-1/2"
+          className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full size-10 p-0 bg-white text-neutral-600 hover:text-brand-600 hover:ring-brand-600"
           onClick={handlePreviousSlide}
         >
-          <ChevronLeftIcon />
+          <ChevronLeftIcon className="size-4" />
         </Button>
         <Button
-          variant="icon"
-          size="icon"
+          variant="secondary"
+          size="none"
           aria-label="Наступний слайд"
-          className="absolute top-1/2 right-3 -translate-y-1/2"
+          className="absolute top-1/2 right-3 -translate-y-1/2 size-10 p-0 rounded-full bg-white text-neutral-600"
           onClick={handleNextSlide}
         >
-          <ChevronRightIcon />
+          <ChevronRightIcon className="size-4" />
         </Button>
       </div>
     </section>

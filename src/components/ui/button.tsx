@@ -1,5 +1,5 @@
-import type { ComponentProps } from "react";
 import { Slot } from "radix-ui";
+import type { ComponentProps } from "react";
 
 import { cn } from "@/utils/utils";
 
@@ -7,14 +7,18 @@ const buttonVariants = {
   variants: {
     default: "bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-600",
     secondary:
-      "border border-neutral-300 text-neutral-600 focus:ring-neutral-600",
+      "border border-border-base text-neutral-600 hover:text-brand-600 hover:border-brand-600",
     ghost: "text-neutral-500 hover:bg-neutral-100 focus:ring-neutral-700",
-    icon: "border border-gray-200 bg-white hover:border-brand-600 hover:text-brand-600 rounded-full text-neutral-600",
+    icon: "bg-white hover:text-brand-600 text-neutral-600",
+    none: "",
   },
   size: {
-    default: "h-12 px-4 py-1 text-sm",
-    small: "h-10 px-4 py-3 text-xs",
-    icon: "size-10 shrink-0 p-0 [&_svg]:size-5",
+    xs: "py-1.5 px-3 text-xs",
+    sm: "py-2 px-3 text-sm",
+    default: "px-4 py-2.5 text-sm",
+    lg: "py-3 px-5 text-md",
+    xl: "py-3.5 px-6 text-md",
+    none: "",
   },
 } as const;
 
@@ -33,7 +37,7 @@ export function getButtonClassName({
   className,
 }: Pick<ButtonProps, "variant" | "size" | "className"> = {}) {
   return cn(
-    "cursor-pointer font-mazzard inline-flex items-center justify-center font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
+    "cursor-pointer font-mazzard inline-flex items-center justify-center shrink-0 whitespace-nowrap font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed",
     buttonVariants.variants[variant],
     buttonVariants.size[size],
     className,
