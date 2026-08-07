@@ -25,13 +25,13 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <Button variant="icon" className="size-8 p-0">
+            <Button variant="secondary" className="size-8 p-0 border-0">
               <HeartIcon className="size-6 " />
             </Button>
-            <Button variant="icon" className="size-8 p-0">
+            <Button variant="secondary" className="size-8 p-0 border-0">
               <ChatBubbleIcon className="size-6" />
             </Button>
-            <Button variant="icon" className="size-8 p-0">
+            <Button variant="secondary" className="size-8 p-0 border-0">
               <CircleUserIcon className="size-6" />
             </Button>
           </div>

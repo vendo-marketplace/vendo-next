@@ -91,7 +91,7 @@ export default function HomeHero() {
           variant="secondary"
           size="none"
           aria-label="Попередній слайд"
-          className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full size-10 p-0 bg-white text-neutral-600 hover:text-brand-600 hover:ring-brand-600"
+          className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full size-10 p-0 "
           onClick={handlePreviousSlide}
         >
           <ChevronLeftIcon className="size-4" />
@@ -100,7 +100,7 @@ export default function HomeHero() {
           variant="secondary"
           size="none"
           aria-label="Наступний слайд"
-          className="absolute top-1/2 right-3 -translate-y-1/2 size-10 p-0 rounded-full bg-white text-neutral-600"
+          className="absolute top-1/2 right-3 -translate-y-1/2 size-10 p-0 rounded-full "
           onClick={handleNextSlide}
         >
           <ChevronRightIcon className="size-4" />

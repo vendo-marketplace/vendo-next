@@ -48,12 +48,12 @@ const ProductCard = ({ card }: Props) => {
             </Button>
             <Button
               type="button"
-              variant="none"
+              variant="secondary"
               size="lg"
               aria-label="Написати продавцю"
-              className="border-gray-200 bg-white hover:border-brand-600 hover:text-brand-600 p-2.5"
+              className="size-9 p-0"
             >
-              <ChatBubbleIcon className="size-4" />
+              <ChatBubbleIcon className="size-4 " />
             </Button>
           </div>
         </div>
