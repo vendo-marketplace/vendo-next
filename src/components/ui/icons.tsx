@@ -37,6 +37,29 @@ export const EyeOffIcon = ({
   </svg>
 );
 
+export const SearchIcon = ({
+  className,
+  ...props
+}: SVGProps<SVGSVGElement>) => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    className={cn("inline-block", className)}
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M6.66732 2.66732C4.45818 2.66732 2.66732 4.45818 2.66732 6.66732C2.66732 8.87646 4.45818 10.6673 6.66732 10.6673C8.87646 10.6673 10.6673 8.87646 10.6673 6.66732C10.6673 4.45818 8.87646 2.66732 6.66732 2.66732ZM1.33398 6.66732C1.33398 3.7218 3.7218 1.33398 6.66732 1.33398C9.61284 1.33398 12.0007 3.7218 12.0007 6.66732C12.0007 9.61284 9.61284 12.0007 6.66732 12.0007C3.7218 12.0007 1.33398 9.61284 1.33398 6.66732ZM11.1959 11.1959C11.4563 10.9356 11.8784 10.9356 12.1387 11.1959L14.4721 13.5292C14.7324 13.7896 14.7324 14.2117 14.4721 14.4721C14.2117 14.7324 13.7896 14.7324 13.5292 14.4721L11.1959 12.1387C10.9356 11.8784 10.9356 11.4563 11.1959 11.1959Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
 export const LockIcon = ({ className, ...props }: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

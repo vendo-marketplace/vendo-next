@@ -13,7 +13,7 @@ interface CategoryDropdownClientProps {
 }
 
 const menuContentClassName =
-  "z-50 min-w-72 max-h-96 overflow-y-auto rounded-xl border border-neutral-200 bg-white p-2 shadow-xl outline-none";
+  "z-50 min-w-72 max-h-screen overflow-y-auto rounded-xl border border-neutral-200 bg-white p-2 shadow-xl outline-none";
 
 const menuItemClassName =
   "flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 outline-none select-none data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-950";
@@ -23,10 +23,7 @@ interface CategoryMenuItemProps {
   parentSlug: string;
 }
 
-function CategoryMenuItem({
-  category,
-  parentSlug,
-}: CategoryMenuItemProps) {
+function CategoryMenuItem({ category, parentSlug }: CategoryMenuItemProps) {
   if (category.children.length > 0) {
     return (
       <DropdownMenu.Sub>
@@ -77,10 +74,7 @@ export default function CategoryDropdownClient({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button
-          className="border-border-base text-text-body hover:bg-brand-50 hover:border-brand-600 hover:text-brand-600 focus-visible:bg-brand-50 focus-visible:border-brand-600 focus-visible:text-brand-600 aria-expanded:bg-brand-50 aria-expanded:border-brand-600 aria-expanded:text-brand-600 flex h-10.5 w-28 cursor-pointer items-center gap-2 rounded-lg border bg-white px-3.5 text-sm font-medium whitespace-nowrap transition-colors duration-150 ease-[ease]"
-          title={"Catalog"}
-        >
+        <Button variant="secondary" title={"Catalog"}>
           <GridIcon width={16} height={16} />
           <span className="">Каталог</span>
         </Button>
