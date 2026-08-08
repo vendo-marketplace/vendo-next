@@ -9,6 +9,7 @@ import {
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
 import Logo from "./logo/Logo";
 import SearchBar from "./search-bar/SearchBar";
+import Link from "next/link";
 
 const Header = () => {
   return (
@@ -16,6 +17,7 @@ const Header = () => {
       <div className="mx-auto w-full max-w-330 flex h-full justify-between gap-50 items-center">
         <div className="flex items-center gap-7.5 w-full flex-1">
           <Logo />
+          <Link href={"/login"}>Login</Link>
           <div className="flex items-center gap-3 flex-1">
             <CategoryDropdown />
             <Suspense fallback={null}>
