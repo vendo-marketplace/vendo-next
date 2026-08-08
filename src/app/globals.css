@@ -128,4 +128,7 @@
   * {
     @apply font-mazzard
   }
+  button {
+    @apply cursor-pointer
+  }
 }

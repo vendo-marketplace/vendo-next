@@ -51,7 +51,7 @@ export function Input({
       {start && (
         <div
           data-slot="input-start"
-          className="flex justify-center items-center size-4 text-neutral-400 group-focus-within:text-brand-600"
+          className="flex justify-center shrink-0 items-center size-4 text-neutral-400 group-focus-within:text-brand-600"
         >
           {start}
         </div>
