@@ -9,12 +9,20 @@ import { FormField } from "@/components/ui/form/form-field";
 import { LockIcon, MailIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
 
-import { useLogin } from "../hooks/use-login";
 import { signInSchema } from "../schemas/sign-in-schema";
 import type { LoginCredentials } from "../types/auth";
 
-export function SignInForm() {
-  const login = useLogin();
+type SignInFormProps = {
+  onSubmit: (credentials: LoginCredentials) => void | Promise<void>;
+  isPending?: boolean;
+  submitError?: React.ReactNode;
+};
+
+export function SignInForm({
+  onSubmit,
+  isPending = false,
+  submitError,
+}: SignInFormProps) {
   const {
     control,
     formState: { errors },
@@ -42,11 +50,7 @@ export function SignInForm() {
   };
 
   return (
-    <form
-      className="space-y-4"
-      noValidate
-      onSubmit={handleSubmit((credentials) => login.mutate(credentials))}
-    >
+    <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
       <FormField
         id="email"
         label="Електронна пошта"
@@ -91,14 +95,14 @@ export function SignInForm() {
         <Link href="/">Забули пароль?</Link>
       </div>
 
-      {login.isError && (
+      {submitError && (
         <p role="alert" className="text-sm text-red-600">
-          Не вдалося увійти. Перевірте дані та спробуйте ще раз.
+          {submitError}
         </p>
       )}
 
-      <Button className="w-full" type="submit" disabled={login.isPending}>
-        Увійти
+      <Button className="w-full" type="submit" disabled={isPending}>
+        Продовжити
       </Button>
     </form>
   );

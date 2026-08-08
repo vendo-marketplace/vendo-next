@@ -2,8 +2,9 @@
 
 import FooterTopLogo from "@/app/[locale]/(public)/_components/footer/top/logo/FooterTopLogo";
 import { Button } from "@/components/ui/button";
-import { SignInForm } from "@/features/auth/components/sign-in-form";
+import { SignIn } from "@/features/auth/components/sign-in";
 import AuthContentFooter from "./footer/AuthContentFooter";
+import { GoogleIcon } from "@/components/ui/icons";
 
 const AuthContent = () => {
   return (
@@ -24,7 +25,19 @@ const AuthContent = () => {
               <Button className="flex-1">Вхід</Button>
               <Button className="flex-1">Реєстрація</Button>
             </div>
-            <SignInForm />
+            <SignIn />
+            <div className="flex items-center justify-between gap-4">
+              <div className="h-px bg-neutral-100 w-full" />
+              <span className="text-neutral-600">або</span>
+              <div className="h-px bg-neutral-100 w-full" />
+            </div>
+            <Button
+              variant="secondary"
+              className="w-full text-[14px] leading-5"
+            >
+              <GoogleIcon className="size-4" />
+              <span>Увійти за допомогою Гугл</span>
+            </Button>
           </div>
         </div>
       </div>
