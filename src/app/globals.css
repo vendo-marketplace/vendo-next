@@ -123,3 +123,9 @@
 
   --font-mazzard: "Mazzard", sans-serif;
 }
+
+@layer base {
+  * {
+    @apply font-mazzard
+  }
+}
