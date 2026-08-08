@@ -2,16 +2,10 @@
 
 import FooterTopLogo from "@/app/[locale]/(public)/_components/footer/top/logo/FooterTopLogo";
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/ui/form/form-field";
-import { LockIcon, MailIcon } from "@/components/ui/icons";
-import { Input } from "@/components/ui/input/input";
-import Link from "next/link";
-import { useState } from "react";
+import { SignInForm } from "@/features/auth/components/sign-in-form";
 import AuthContentFooter from "./footer/AuthContentFooter";
 
 const AuthContent = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex  flex-1 items-center justify-center">
@@ -30,37 +24,7 @@ const AuthContent = () => {
               <Button className="flex-1">Вхід</Button>
               <Button className="flex-1">Реєстрація</Button>
             </div>
-            <div className="space-y-4">
-              <FormField label="Електронна пошта" required id="email">
-                {(fieldProps) => (
-                  <Input
-                    {...fieldProps}
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onClear={() => setEmail("")}
-                    placeholder="Введіть електронну пошту"
-                    start={<MailIcon className="size-full" />}
-                  />
-                )}
-              </FormField>
-              <div className="flex flex-col gap-3">
-                <FormField label="Пароль" required id="password">
-                  {(fieldProps) => (
-                    <Input
-                      {...fieldProps}
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onClear={() => setPassword("")}
-                      placeholder="Створіть пароль"
-                      start={<LockIcon className="size-full" />}
-                    />
-                  )}
-                </FormField>
-                <Link href={"/"}>Забули пароль?</Link>
-              </div>
-            </div>
+            <SignInForm />
           </div>
         </div>
       </div>

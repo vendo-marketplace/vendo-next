@@ -28,7 +28,7 @@ export function getInputClassName({
 }: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
     "flex group focus-within:border-brand-600 items-center gap-2 border rounded-lg p-2.5 bg-neutral-50 border-neutral-300 shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
-    invalid && "border-red-600 focus-within:border-red-600",
+    invalid && "border-red-500",
     inputVariants.size[size],
   );
 }
@@ -53,7 +53,10 @@ export function Input({
       {start && (
         <div
           data-slot="input-start"
-          className="flex justify-center shrink-0 items-center size-4 text-neutral-400 group-focus-within:text-brand-600"
+          className={cn(
+            "flex justify-center shrink-0 items-center size-4 text-neutral-400 group-focus-within:text-brand-600",
+            invalid && "text-red-700",
+          )}
         >
           {start}
         </div>
@@ -66,6 +69,7 @@ export function Input({
         aria-invalid={invalid || undefined}
         className={cn(
           "w-full placeholder:text-neutral-400 outline-none text-neutral-950 text-[14px] leading-5",
+          invalid && "border-red-500 focus-within:border-red-500",
           className,
         )}
       />
@@ -75,7 +79,10 @@ export function Input({
           aria-label="Clear input"
           type="button"
           onClick={onClear}
-          className="size-4 flex justify-center items-center text-neutral-600 group-focus-within:text-brand-600"
+          className={cn(
+            "size-4 flex justify-center items-center text-neutral-600 group-focus-within:text-brand-600",
+            invalid && "text-red-700",
+          )}
         >
           <CrossIcon />
         </button>

@@ -31,18 +31,20 @@ export const FormField = ({
         {label}
       </Label>
 
-      {children({
-        id,
-        invalid,
-        required,
-        "aria-describedby": invalid ? errorId : undefined,
-      })}
+      <div className="flex flex-col w-full gap-1">
+        {children({
+          id,
+          invalid,
+          required,
+          "aria-describedby": invalid ? errorId : undefined,
+        })}
 
-      {error && (
-        <p id={errorId} role="alert" className="text-sm text-red-600">
-          {error}
-        </p>
-      )}
+        {error && (
+          <p id={errorId} role="alert" className="text-sm text-red-700">
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
