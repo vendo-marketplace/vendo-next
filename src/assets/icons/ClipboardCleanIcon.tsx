@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const ClipboardCleanIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M9 3C9 2.44772 9.44772 2 10 2H14C14.5523 2 15 2.44772 15 3H18C19.1046 3 20 3.89543 20 5V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V5C4 3.89543 4.89543 3 6 3H9ZM9 5H6V20H18V5H15V6C15.5523 6 16 6.44772 16 7C16 7.55228 15.5523 8 15 8H9C8.44772 8 8 7.55228 8 7C8 6.44772 8.44772 6 9 6V5ZM11 6H13V4H11V6Z" fill={color}/>
+  </svg>
+)

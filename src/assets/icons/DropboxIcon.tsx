@@ -1,0 +1,20 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const DropboxIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path d="M12.013 6.175L7.006 9.369L12.013 12.563L7.006 15.756L2 12.545L7.006 9.352L2 6.175L7.006 2.981L12.013 6.175Z" fill={color}/>
+<path d="M6.981 17.806L11.987 14.613L16.993 17.806L11.987 21L6.981 17.806Z" fill={color}/>
+<path d="M12.013 12.545L17.019 9.351L12.013 6.175L16.993 2.981L22 6.175L16.993 9.369L22 12.562L16.993 15.756L12.013 12.545Z" fill={color}/>
+  </svg>
+)

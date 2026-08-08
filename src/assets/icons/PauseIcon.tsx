@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const PauseIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M6 7C6 5.89543 6.89543 5 8 5H9C10.1046 5 11 5.89543 11 7V17C11 18.1046 10.1046 19 9 19H8C6.89543 19 6 18.1046 6 17V7ZM9 7H8V17H9V7ZM13 7C13 5.89543 13.8954 5 15 5H16C17.1046 5 18 5.89543 18 7V17C18 18.1046 17.1046 19 16 19H15C13.8954 19 13 18.1046 13 17V7ZM16 7H15V17H16V7Z" fill={color}/>
+  </svg>
+)

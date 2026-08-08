@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const FileZipIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M8.5 2.58579C8.87507 2.21071 9.38378 2 9.91421 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V7.91421C4 7.38378 4.21071 6.87507 4.58579 6.5L8.5 2.58579ZM6 9V20H12V18H14V16.01H12V14H14V12.01H12V10H14V8.01H12V6H14V4H11V7C11 8.10457 10.1046 9 9 9H6ZM9 4.91421V7H6.91421L9 4.91421ZM14.01 6.01V8H16.01V10.01H14.01V12H16.01V14.01H14.01V16H16.01V18.01H14.01V20H18V4H16.01V6.01H14.01Z" fill={color}/>
+  </svg>
+)

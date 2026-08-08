@@ -134,7 +134,7 @@ export const GoogleIcon = ({
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 17 16"
-    fill="none"
+    fill="currentColor"
     className={cn("inline-block", className)}
     {...props}
   >

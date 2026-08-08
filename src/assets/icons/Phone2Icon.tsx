@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const Phone2Icon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M5 4C5 2.89543 5.89543 2 7 2H17C18.1046 2 19 2.89543 19 4V20C19 21.1046 18.1046 22 17 22H7C5.89543 22 5 21.1046 5 20V4ZM7 7V14H17V7H7ZM17 5H7V4L17 4V5ZM17 16H7V20H17V16ZM11 18C11 17.4477 11.4477 17 12 17H12.01C12.5623 17 13.01 17.4477 13.01 18C13.01 18.5523 12.5623 19 12.01 19H12C11.4477 19 11 18.5523 11 18Z" fill={color}/>
+  </svg>
+)

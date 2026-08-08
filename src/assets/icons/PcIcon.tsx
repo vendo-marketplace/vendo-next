@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const PcIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M3 5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V14C21 15.1046 20.1046 16 19 16H13V19H15C15.5523 19 16 19.4477 16 20C16 20.5523 15.5523 21 15 21H9C8.44772 21 8 20.5523 8 20C8 19.4477 8.44772 19 9 19H11V16H5C3.89543 16 3 15.1046 3 14V5ZM5 12V14H19V12H5ZM19 10H5V5L19 5V10Z" fill={color}/>
+  </svg>
+)

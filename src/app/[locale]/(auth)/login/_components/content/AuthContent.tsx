@@ -1,6 +1,8 @@
 import FooterTopLogo from "@/app/[locale]/(public)/_components/footer/top/logo/FooterTopLogo";
-import AuthContentFooter from "./footer/AuthContentFooter";
+import { UserIcon } from "@/assets/icons";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input/input";
+import AuthContentFooter from "./footer/AuthContentFooter";
 
 const AuthContent = () => {
   return (
@@ -17,6 +19,10 @@ const AuthContent = () => {
               <Button className="flex-1">Вхід</Button>
               <Button className="flex-1">Реєстрація</Button>
             </div>
+            <Input
+              placeholder="Текст інпут"
+              start={<UserIcon className="size-full " />}
+            />
           </div>
         </div>
       </div>

@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const TabletIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M6 4V20H18V4H6ZM4 4C4 3.02504 4.71821 2 5.875 2H18.125C19.2818 2 20 3.02504 20 4V20C20 20.975 19.2818 22 18.125 22H5.875C4.71821 22 4 20.975 4 20V4ZM10 18C10 17.4477 10.4477 17 11 17H13C13.5523 17 14 17.4477 14 18C14 18.5523 13.5523 19 13 19H11C10.4477 19 10 18.5523 10 18Z" fill={color}/>
+  </svg>
+)

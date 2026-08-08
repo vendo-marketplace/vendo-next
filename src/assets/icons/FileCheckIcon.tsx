@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const FileCheckIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M8.5 2.58579C8.87507 2.21071 9.38378 2 9.91421 2H18C19.1046 2 20 2.89543 20 4V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V7.91421C4 7.38378 4.21071 6.87507 4.58579 6.5L8.5 2.58579ZM6 9V20H18V4H11V7C11 8.10457 10.1046 9 9 9H6ZM9 4.91421V7H6.91421L9 4.91421ZM15.7071 11.2929C16.0976 11.6834 16.0976 12.3166 15.7071 12.7071L11.7071 16.7071C11.3166 17.0976 10.6834 17.0976 10.2929 16.7071L8.29289 14.7071C7.90237 14.3166 7.90237 13.6834 8.29289 13.2929C8.68342 12.9024 9.31658 12.9024 9.70711 13.2929L11 14.5858L14.2929 11.2929C14.6834 10.9024 15.3166 10.9024 15.7071 11.2929Z" fill={color}/>
+  </svg>
+)

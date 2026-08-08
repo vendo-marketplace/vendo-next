@@ -1,0 +1,18 @@
+interface Props {
+  className?: string
+  size?: number
+  color?: string
+}
+
+export const FileCopyAltIcon = ({ className, size = 24, color = "currentColor" }: Props) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path fillRule="evenodd" clipRule="evenodd" d="M11.9414 3.69842C12.3214 3.25513 12.8761 3 13.4599 3H18C19.1046 3 20 3.89543 20 5V15C20 16.1046 19.1046 17 18 17H11C9.89543 17 9 16.1046 9 15V7.86992C9 7.3925 9.17078 6.93083 9.48149 6.56834L11.9414 3.69842ZM15 5V7C15 8.10457 14.1046 9 13 9H11V15H18V5H15ZM11.7456 7H13V5.53659L11.7456 7ZM4 9C4 7.89543 4.89543 7 6 7H8V9H6V19H13V18H15V19C15 20.1046 14.1046 21 13 21H6C4.89543 21 4 20.1046 4 19V9Z" fill={color}/>
+  </svg>
+)
