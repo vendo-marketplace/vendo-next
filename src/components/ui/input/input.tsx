@@ -24,9 +24,11 @@ export type InputProps = Omit<
 
 export function getInputClassName({
   size = "base",
-}: Pick<InputProps, "size"> = {}) {
+  invalid,
+}: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
     "flex group focus-within:border-brand-600 items-center gap-2 border rounded-lg p-2.5 bg-neutral-50 border-neutral-300 shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
+    invalid && "border-red-600 focus-within:border-red-600",
     inputVariants.size[size],
   );
 }
@@ -46,7 +48,7 @@ export function Input({
       data-size={size}
       data-invalid={invalid || undefined}
       data-disabled={disabled || undefined}
-      className={getInputClassName({ size })}
+      className={getInputClassName({ size, invalid })}
     >
       {start && (
         <div

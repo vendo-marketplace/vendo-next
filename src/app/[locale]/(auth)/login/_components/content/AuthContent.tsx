@@ -2,16 +2,16 @@
 
 import FooterTopLogo from "@/app/[locale]/(public)/_components/footer/top/logo/FooterTopLogo";
 import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/ui/form/form-field";
 import { LockIcon, MailIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useState } from "react";
 import AuthContentFooter from "./footer/AuthContentFooter";
 
 const AuthContent = () => {
-  const [asd, setAsd] = useState("");
-  const qwe = () => setAsd("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex  flex-1 items-center justify-center">
@@ -31,33 +31,33 @@ const AuthContent = () => {
               <Button className="flex-1">Реєстрація</Button>
             </div>
             <div className="space-y-4">
+              <FormField label="Електронна пошта" required id="email">
+                {(fieldProps) => (
+                  <Input
+                    {...fieldProps}
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onClear={() => setEmail("")}
+                    placeholder="Введіть електронну пошту"
+                    start={<MailIcon className="size-full" />}
+                  />
+                )}
+              </FormField>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="email" required>
-                  Електронна пошта
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={asd}
-                  onChange={(e) => setAsd(e.target.value)}
-                  onClear={qwe}
-                  placeholder="Введіть електронну пошту"
-                  start={<MailIcon className="size-full " />}
-                />
-              </div>
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="password" required>
-                  Пароль
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={asd}
-                  onChange={(e) => setAsd(e.target.value)}
-                  onClear={qwe}
-                  placeholder="Створіть пароль"
-                  start={<LockIcon className="size-full " />}
-                />
+                <FormField label="Пароль" required id="password">
+                  {(fieldProps) => (
+                    <Input
+                      {...fieldProps}
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onClear={() => setPassword("")}
+                      placeholder="Створіть пароль"
+                      start={<LockIcon className="size-full" />}
+                    />
+                  )}
+                </FormField>
                 <Link href={"/"}>Забули пароль?</Link>
               </div>
             </div>
