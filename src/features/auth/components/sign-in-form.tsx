@@ -92,7 +92,12 @@ export function SignInForm({
           )}
         </FormField>
 
-        <Link href="/">Забули пароль?</Link>
+        <Link
+          href="/"
+          className="text-brand-600 font-medium text-[14px] leading-5"
+        >
+          Забули пароль?
+        </Link>
       </div>
 
       {submitError && (
