@@ -28,7 +28,7 @@ const AuthContent = () => {
             <SignIn />
             <div className="flex items-center justify-between gap-4">
               <div className="h-px bg-neutral-100 w-full" />
-              <span className="text-neutral-600">або</span>
+              <span className="text-neutral-600 font-medium">або</span>
               <div className="h-px bg-neutral-100 w-full" />
             </div>
             <Button
