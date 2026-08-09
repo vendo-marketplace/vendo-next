@@ -18,4 +18,10 @@ export const authMutations = {
         await queryClient.fetchQuery(authQueries.me());
       },
     }),
+  signUp: () =>
+    mutationOptions({
+      mutationFn: async (credentials: LoginCredentials) => {
+        await authApi.signUp(credentials);
+      },
+    }),
 };

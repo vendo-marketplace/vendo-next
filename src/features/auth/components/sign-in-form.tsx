@@ -17,12 +17,20 @@ type SignInFormProps = {
   onSubmit: (credentials: LoginCredentials) => void | Promise<void>;
   isPending?: boolean;
   submitError?: React.ReactNode;
+  submitLabel?: string;
+  showForgotPassword?: boolean;
+  passwordAutoComplete?: "current-password" | "new-password";
+  idPrefix?: string;
 };
 
 export function SignInForm({
   onSubmit,
   isPending = false,
   submitError,
+  submitLabel = "Увійти",
+  showForgotPassword = true,
+  passwordAutoComplete = "current-password",
+  idPrefix = "sign-in",
 }: SignInFormProps) {
   const {
     control,
@@ -53,7 +61,7 @@ export function SignInForm({
   return (
     <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
       <FormField
-        id="email"
+        id={`${idPrefix}-email`}
         label="Електронна пошта"
         error={errors.email?.message}
         required
@@ -74,7 +82,7 @@ export function SignInForm({
 
       <div className="flex flex-col gap-3">
         <FormField
-          id="password"
+          id={`${idPrefix}-password`}
           label="Пароль"
           error={errors.password?.message}
           required
@@ -83,7 +91,7 @@ export function SignInForm({
             <PasswordInput
               {...fieldProps}
               {...register("password")}
-              autoComplete="current-password"
+              autoComplete={passwordAutoComplete}
               value={password}
               onClear={() => clearField("password")}
               placeholder="Введіть пароль"
@@ -92,12 +100,14 @@ export function SignInForm({
           )}
         </FormField>
 
-        <Link
-          href="/"
-          className="text-brand-600 font-medium text-[14px] leading-5"
-        >
-          Забули пароль?
-        </Link>
+        {showForgotPassword && (
+          <Link
+            href="/"
+            className="text-brand-600 font-medium text-[14px] leading-5"
+          >
+            Забули пароль?
+          </Link>
+        )}
       </div>
 
       {submitError && (
@@ -107,7 +117,7 @@ export function SignInForm({
       )}
 
       <Button className="w-full" type="submit" disabled={isPending}>
-        Продовжити
+        {submitLabel}
       </Button>
     </form>
   );
