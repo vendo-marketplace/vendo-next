@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/icons";
 
 import HomeHeroSlide from "./slides/HomeHeroSlide";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { heroSlides } from "./slides/slides";
 
 const firstRealSlideIndex = 1;

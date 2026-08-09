@@ -2,7 +2,7 @@
 
 import { DropdownMenu } from "radix-ui";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { ChevronRightIcon, GridIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
 import type { CategoryOption } from "../../types/category";

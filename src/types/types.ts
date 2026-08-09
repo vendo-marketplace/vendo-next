@@ -7,3 +7,10 @@ export type ServerActionResult<T> =
       success: false;
       errorMessage: string;
     };
+
+export type ApiError = {
+  code: number;
+  message: string;
+  path: string;
+  timestamp: string;
+};

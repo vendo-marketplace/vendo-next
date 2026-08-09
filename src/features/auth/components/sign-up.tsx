@@ -19,11 +19,6 @@ export function SignUp({ onSuccess }: SignUpProps) {
     <SignInForm
       onSubmit={signUp}
       isPending={isPending}
-      submitError={
-        isError
-          ? "Не вдалося створити акаунт. Перевірте дані та спробуйте ще раз."
-          : undefined
-      }
       submitLabel="Створити акаунт"
       showForgotPassword={false}
       passwordAutoComplete="new-password"

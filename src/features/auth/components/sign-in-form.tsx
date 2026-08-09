@@ -4,19 +4,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm, useWatch } from "react-hook-form";
 
-import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form/form-field";
 import { LockIcon, MailIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
 import { PasswordInput } from "@/components/ui/input/password-input";
 
+import { Button } from "@/components/ui/button/button";
 import { signInSchema } from "../schemas/sign-in-schema";
 import type { LoginCredentials } from "../types/auth";
 
 type SignInFormProps = {
   onSubmit: (credentials: LoginCredentials) => void | Promise<void>;
   isPending?: boolean;
-  submitError?: React.ReactNode;
+  submitError?: string;
   submitLabel?: string;
   showForgotPassword?: boolean;
   passwordAutoComplete?: "current-password" | "new-password";
@@ -26,7 +26,6 @@ type SignInFormProps = {
 export function SignInForm({
   onSubmit,
   isPending = false,
-  submitError,
   submitLabel = "Увійти",
   showForgotPassword = true,
   passwordAutoComplete = "current-password",
@@ -110,11 +109,11 @@ export function SignInForm({
         )}
       </div>
 
-      {submitError && (
+      {/* {submitError && (
         <p role="alert" className="text-sm text-red-600">
           {submitError}
         </p>
-      )}
+      )} */}
 
       <Button className="w-full" type="submit" disabled={isPending}>
         {submitLabel}

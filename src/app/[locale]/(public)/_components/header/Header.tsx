@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import {
   ChatBubbleIcon,
   CircleUserIcon,

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Tabs } from "radix-ui";
 
 import FooterTopLogo from "@/app/[locale]/(public)/_components/footer/top/logo/FooterTopLogo";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { GoogleIcon } from "@/components/ui/icons";
 import { SignIn } from "@/features/auth/components/sign-in";
 import { SignUp } from "@/features/auth/components/sign-up";

@@ -2,11 +2,13 @@ import { authApi } from "@/api/auth";
 import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 
 import { authQueries } from "../queries/auth.queries";
-import type { LoginCredentials } from "../types/auth";
+import type { LoginCredentials, LoginResponse } from "../types/auth";
+import { AxiosError } from "axios";
+import { ApiError } from "@/types/types";
 
 export const authMutations = {
   login: (queryClient: QueryClient) =>
-    mutationOptions({
+    mutationOptions<LoginResponse, AxiosError<ApiError>, LoginCredentials>({
       mutationFn: async (credentials: LoginCredentials) => {
         const response = await authApi.login(credentials);
         return response.data;

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 import { ChatBubbleIcon, PinIcon } from "@/components/ui/icons";
 import type { ProductCardType } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";

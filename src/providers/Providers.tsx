@@ -1,11 +1,15 @@
 import { type ReactNode } from "react";
 import QueryProvider from "./QueryProvider";
 import AuthProvider from "./AuthProvider";
+import { Toaster } from "sonner";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <QueryProvider>
-      <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        {children}
+        <Toaster position="top-right" richColors closeButton />
+      </AuthProvider>
     </QueryProvider>
   );
 };
