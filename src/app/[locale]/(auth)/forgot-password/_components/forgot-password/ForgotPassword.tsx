@@ -12,7 +12,13 @@ const ForgotPassword = () => {
 
   const submitResetRequest = ({ email }: ForgotPasswordValues) => {
     mutate(email, {
-      onSuccess: () => router.push("/verify-email"),
+      onSuccess: () => {
+        const searchParams = new URLSearchParams({
+          email,
+          flow: "forgot-password",
+        });
+        router.push(`/verify-email?${searchParams.toString()}`);
+      },
       onError: (e) => toast.error(e.response?.data.message),
     });
   };

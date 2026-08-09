@@ -34,4 +34,10 @@ export const authMutations = {
         await authApi.forgotPassword(email);
       },
     }),
+  validateVerification: () =>
+    mutationOptions<void, AxiosError<ApiError>, string>({
+      mutationFn: async (otp) => {
+        await authApi.validateVerification(otp);
+      },
+    }),
 };

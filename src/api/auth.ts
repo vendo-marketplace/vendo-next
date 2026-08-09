@@ -15,5 +15,9 @@ export const authApi = {
     client.post<void>(apiEndpoints.auth.forgotPassword, null, {
       params: { email },
     }),
+  validateVerification: async (otp: string) =>
+    client.post<void>(apiEndpoints.auth.validateVerification, null, {
+      params: { otp },
+    }),
   me: async () => client.get<MeResponse>(apiEndpoints.auth.me),
 };
