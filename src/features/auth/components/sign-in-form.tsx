@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form/form-field";
 import { LockIcon, MailIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
+import { PasswordInput } from "@/components/ui/input/password-input";
 
 import { signInSchema } from "../schemas/sign-in-schema";
 import type { LoginCredentials } from "../types/auth";
@@ -79,10 +80,9 @@ export function SignInForm({
           required
         >
           {(fieldProps) => (
-            <Input
+            <PasswordInput
               {...fieldProps}
               {...register("password")}
-              type="password"
               autoComplete="current-password"
               value={password}
               onClear={() => clearField("password")}

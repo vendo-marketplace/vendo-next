@@ -18,8 +18,10 @@ export type InputProps = Omit<
 > & {
   size?: InputSize;
   start?: React.ReactNode;
+  end?: React.ReactNode;
   invalid?: boolean;
   onClear?: () => void;
+  clearable?: boolean;
 };
 
 export function getInputClassName({
@@ -36,9 +38,11 @@ export function getInputClassName({
 export function Input({
   size = "base",
   start,
+  end,
   invalid,
   disabled,
   className,
+  clearable = true,
   value,
   onClear,
   ...props
@@ -74,7 +78,7 @@ export function Input({
         )}
       />
 
-      {value && (
+      {clearable && value && (
         <button
           aria-label="Clear input"
           type="button"
@@ -86,6 +90,18 @@ export function Input({
         >
           <CrossIcon />
         </button>
+      )}
+
+      {end && (
+        <div
+          data-slot="input-end"
+          className={cn(
+            "flex shrink-0 items-center justify-center text-neutral-600 group-focus-within:text-brand-600",
+            invalid && "text-red-700",
+          )}
+        >
+          {end}
+        </div>
       )}
     </div>
   );
