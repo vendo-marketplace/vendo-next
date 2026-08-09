@@ -5,6 +5,7 @@ import { authQueries } from "../queries/auth.queries";
 import type { LoginCredentials, LoginResponse } from "../types/auth";
 import { AxiosError } from "axios";
 import { ApiError } from "@/types/types";
+import { toast } from "sonner";
 
 export const authMutations = {
   login: (queryClient: QueryClient) =>
@@ -18,6 +19,7 @@ export const authMutations = {
         localStorage.setItem("refresh-token", tokens["refresh-token"]);
 
         await queryClient.fetchQuery(authQueries.me());
+        toast.success("Signed in!");
       },
     }),
   signUp: () =>

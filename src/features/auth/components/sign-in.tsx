@@ -12,8 +12,7 @@ export function SignIn() {
   const signIn = (credentials: LoginCredentials) => {
     mutate(credentials, {
       onSuccess: () => {
-        toast.success("Signed in!");
-        router.replace("/");
+        router.push("/");
       },
       onError: (e) => {
         toast.error(e.response?.data.message);

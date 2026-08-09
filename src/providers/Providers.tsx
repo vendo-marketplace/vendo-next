@@ -8,7 +8,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
     <QueryProvider>
       <AuthProvider>
         {children}
-        <Toaster position="top-right" richColors closeButton />
+        <Toaster position="top-right" richColors />
       </AuthProvider>
     </QueryProvider>
   );
