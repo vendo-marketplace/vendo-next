@@ -7,6 +7,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/icons";
 import HomeHeroSlide from "./slides/HomeHeroSlide";
 import { Button } from "@/components/ui/button/button";
 import { heroSlides } from "./slides/slides";
+import { Logo } from "@/components/ui/logo";
 
 const firstRealSlideIndex = 1;
 const lastRealSlideIndex = heroSlides.length;

@@ -1,18 +1,23 @@
 "use client";
 
+import { toast } from "sonner";
 import { useSignUp } from "../hooks/use-sign-up";
 import type { LoginCredentials } from "../types/auth";
 import { SignInForm } from "./sign-in-form";
 
-type SignUpProps = {
-  onSuccess: () => void;
-};
-
-export function SignUp({ onSuccess }: SignUpProps) {
-  const { mutate, isPending, isError } = useSignUp();
+export function SignUp() {
+  const { mutate, isPending } = useSignUp();
 
   const signUp = (credentials: LoginCredentials) => {
-    mutate(credentials, { onSuccess });
+    mutate(credentials, {
+      onError: (e) => {
+        console.log(e);
+        toast.error(e.message);
+      },
+      onSuccess: () => {
+        toast.success("asda");
+      },
+    });
   };
 
   return (

@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs } from "radix-ui";
+import { useState } from "react";
 
-import FooterTopLogo from "@/app/[locale]/(public)/_components/footer/top/logo/FooterTopLogo";
 import { Button } from "@/components/ui/button/button";
 import { GoogleIcon } from "@/components/ui/icons";
 import { SignIn } from "@/features/auth/components/sign-in";
 import { SignUp } from "@/features/auth/components/sign-up";
 
-import AuthContentFooter from "./footer/AuthContentFooter";
+import { Logo } from "@/components/ui/logo";
 import { cn } from "@/utils/utils";
+import AuthContentFooter from "./footer/AuthContentFooter";
 
 type AuthTab = "sign-in" | "sign-up";
 
@@ -35,7 +35,7 @@ const AuthContent = () => {
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 items-center justify-center">
         <div className="w-120 space-y-6">
-          <FooterTopLogo />
+          <Logo size="sm" />
           <Tabs.Root
             className="flex w-full flex-col space-y-6"
             value={activeTab}
@@ -82,7 +82,7 @@ const AuthContent = () => {
               <SignIn />
             </Tabs.Content>
             <Tabs.Content value="sign-up" tabIndex={-1}>
-              <SignUp onSuccess={() => setActiveTab("sign-in")} />
+              <SignUp />
             </Tabs.Content>
 
             <div className="flex items-center justify-between gap-4">
