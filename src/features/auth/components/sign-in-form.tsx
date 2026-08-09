@@ -101,7 +101,7 @@ export function SignInForm({
 
         {showForgotPassword && (
           <Link
-            href="/"
+            href="/forgot-password"
             className="text-brand-600 font-medium text-[14px] leading-5"
           >
             Забули пароль?
