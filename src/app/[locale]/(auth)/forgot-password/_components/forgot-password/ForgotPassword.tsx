@@ -1,11 +1,20 @@
 "use client";
 
 import { ForgotPasswordForm } from "@/features/auth/forms/forgot-password-form";
-import { Link } from "@/i18n/navigation";
+import { useForgotPassword } from "@/features/auth/hooks/use-forgot-password";
+import type { ForgotPasswordValues } from "@/features/auth/schemas/forgot-password-schema";
+import { Link, useRouter } from "@/i18n/navigation";
+import { toast } from "sonner";
 
 const ForgotPassword = () => {
-  const submitResetRequest = () => {
-    // Add the forgot-password mutation and success redirect here.
+  const router = useRouter();
+  const { mutate, isPending } = useForgotPassword();
+
+  const submitResetRequest = ({ email }: ForgotPasswordValues) => {
+    mutate(email, {
+      onSuccess: () => router.push("/verify-email"),
+      onError: (e) => toast.error(e.response?.data.message),
+    });
   };
 
   return (
@@ -20,7 +29,7 @@ const ForgotPassword = () => {
         </p>
       </div>
 
-      <ForgotPasswordForm onSubmit={submitResetRequest} />
+      <ForgotPasswordForm onSubmit={submitResetRequest} isPending={isPending} />
 
       <p className="text-neutral-600 text-center text-[14px] leading-5">
         Вже маєте акаунт?{" "}

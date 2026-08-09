@@ -7,7 +7,14 @@ import { useMe } from "@/features/auth/hooks/use-me";
 
 export default function GuestOnlyLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { data: user, isPending } = useMe();
+  const hasStoredSession =
+    typeof window !== "undefined" &&
+    Boolean(
+      localStorage.getItem("access-token") ||
+      localStorage.getItem("refresh-token"),
+    );
+
+  const { data: user, isPending } = useMe(hasStoredSession);
 
   useEffect(() => {
     if (!isPending && user) {

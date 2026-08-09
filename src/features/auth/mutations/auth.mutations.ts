@@ -28,4 +28,10 @@ export const authMutations = {
         await authApi.signUp(credentials);
       },
     }),
+  forgotPassword: () =>
+    mutationOptions<void, AxiosError<ApiError>, string>({
+      mutationFn: async (email) => {
+        await authApi.forgotPassword(email);
+      },
+    }),
 };
