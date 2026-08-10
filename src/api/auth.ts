@@ -11,13 +11,5 @@ export const authApi = {
     client.post<LoginResponse>(apiEndpoints.auth.login, credentials),
   signUp: async (credentials: LoginCredentials) =>
     client.post<void>(apiEndpoints.auth.signUp, credentials),
-  forgotPassword: async (email: string) =>
-    client.post<void>(apiEndpoints.auth.forgotPassword, null, {
-      params: { email },
-    }),
-  validateVerification: async (otp: string) =>
-    client.post<void>(apiEndpoints.auth.validateVerification, null, {
-      params: { otp },
-    }),
   me: async () => client.get<MeResponse>(apiEndpoints.auth.me),
 };

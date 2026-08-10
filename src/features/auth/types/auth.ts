@@ -3,8 +3,6 @@ export type LoginCredentials = {
   password: string;
 };
 
-export type VerificationFlow = "signup" | "forgot-password";
-
 export type LoginResponse = {
   "access-token": string;
   "refresh-token": string;

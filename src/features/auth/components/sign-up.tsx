@@ -25,7 +25,6 @@ export function SignUp() {
       onSubmit={signUp}
       isPending={isPending}
       submitLabel="Створити акаунт"
-      showForgotPassword={false}
       passwordAutoComplete="new-password"
       idPrefix="sign-up"
     />

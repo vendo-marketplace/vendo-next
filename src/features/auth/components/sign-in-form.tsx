@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { useForm, useWatch } from "react-hook-form";
 
 import { FormField } from "@/components/ui/form/form-field";
@@ -18,7 +17,6 @@ type SignInFormProps = {
   isPending?: boolean;
   submitError?: string;
   submitLabel?: string;
-  showForgotPassword?: boolean;
   passwordAutoComplete?: "current-password" | "new-password";
   idPrefix?: string;
 };
@@ -27,7 +25,6 @@ export function SignInForm({
   onSubmit,
   isPending = false,
   submitLabel = "Увійти",
-  showForgotPassword = true,
   passwordAutoComplete = "current-password",
   idPrefix = "sign-in",
 }: SignInFormProps) {
@@ -79,35 +76,24 @@ export function SignInForm({
         )}
       </FormField>
 
-      <div className="flex flex-col gap-3">
-        <FormField
-          id={`${idPrefix}-password`}
-          label="Пароль"
-          error={errors.password?.message}
-          required
-        >
-          {(fieldProps) => (
-            <PasswordInput
-              {...fieldProps}
-              {...register("password")}
-              autoComplete={passwordAutoComplete}
-              value={password}
-              onClear={() => clearField("password")}
-              placeholder="Введіть пароль"
-              start={<LockIcon className="size-full" />}
-            />
-          )}
-        </FormField>
-
-        {showForgotPassword && (
-          <Link
-            href="/forgot-password"
-            className="text-brand-600 font-medium text-[14px] leading-5"
-          >
-            Забули пароль?
-          </Link>
+      <FormField
+        id={`${idPrefix}-password`}
+        label="Пароль"
+        error={errors.password?.message}
+        required
+      >
+        {(fieldProps) => (
+          <PasswordInput
+            {...fieldProps}
+            {...register("password")}
+            autoComplete={passwordAutoComplete}
+            value={password}
+            onClear={() => clearField("password")}
+            placeholder="Введіть пароль"
+            start={<LockIcon className="size-full" />}
+          />
         )}
-      </div>
+      </FormField>
 
       {/* {submitError && (
         <p role="alert" className="text-sm text-red-600">

@@ -4,8 +4,6 @@ export const apiEndpoints = {
     signUp: "/auth/sign-up",
     me: "/auth/me",
     refresh: "/auth/refresh",
-    forgotPassword: "/password/forgot",
-    validateVerification: "/verification/validate",
   },
   categories: {
     tree: "/categories/tree",
