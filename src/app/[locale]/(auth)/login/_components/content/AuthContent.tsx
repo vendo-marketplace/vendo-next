@@ -11,6 +11,7 @@ import { SignUp } from "@/features/auth/components/sign-up";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/utils/utils";
 import AuthContentFooter from "./footer/AuthContentFooter";
+import { GoogleLoginButton } from "@/components/ui/google-login-button";
 
 type AuthTab = "sign-in" | "sign-up";
 
@@ -90,6 +91,7 @@ const AuthContent = () => {
               <span className="text-neutral-600 font-medium">або</span>
               <div className="h-px w-full bg-neutral-100" />
             </div>
+            <GoogleLoginButton />
             <Button
               variant="secondary"
               className="w-full text-[14px] leading-5"
