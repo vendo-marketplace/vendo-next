@@ -1,9 +1,12 @@
 import SearchResults from "@/features/products/components/search-results/SearchResults";
+import { Suspense } from "react";
 
 const SearchPage = async () => {
   return (
     <section className="px-20 py-6">
-      <SearchResults />
+      <Suspense fallback={null}>
+        <SearchResults />
+      </Suspense>
     </section>
   );
 };
