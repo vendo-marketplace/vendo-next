@@ -43,9 +43,12 @@ export const authMutations = {
       },
     ),
   signUp: () =>
-    mutationOptions({
-      mutationFn: async (credentials: LoginCredentials) => {
-        await authApi.signUp(credentials);
+    mutationOptions<void, Error, LoginCredentials>({
+      mutationFn: async (credentials) => {
+        void credentials;
+        await new Promise<void>((resolve) => {
+          window.setTimeout(resolve, 500);
+        });
       },
     }),
 };

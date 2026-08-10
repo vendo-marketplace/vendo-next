@@ -6,7 +6,7 @@ import React from "react";
 
 const AuthPoster = () => {
   return (
-    <div className="flex flex-1 relative">
+    <div className="xl:flex flex-1 relative hidden">
       <Image
         src={bg}
         alt="Background"
