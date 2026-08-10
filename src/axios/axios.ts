@@ -72,6 +72,7 @@ client.interceptors.response.use(
       !originalRequest ||
       originalRequest._retry ||
       isAuthEndpoint(originalRequest.url, apiEndpoints.auth.login) ||
+      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.google) ||
       isAuthEndpoint(originalRequest.url, apiEndpoints.auth.refresh) ||
       typeof window === "undefined"
     ) {

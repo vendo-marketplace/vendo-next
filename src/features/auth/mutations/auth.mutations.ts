@@ -2,7 +2,11 @@ import { authApi } from "@/api/auth";
 import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 
 import { authQueries } from "../queries/auth.queries";
-import type { LoginCredentials, LoginResponse } from "../types/auth";
+import type {
+  GoogleLoginCredentials,
+  LoginCredentials,
+  LoginResponse,
+} from "../types/auth";
 import { AxiosError } from "axios";
 import { ApiError } from "@/types/types";
 import { toast } from "sonner";
@@ -22,6 +26,22 @@ export const authMutations = {
         toast.success("Signed in!");
       },
     }),
+  googleLogin: (queryClient: QueryClient) =>
+    mutationOptions<LoginResponse, AxiosError<ApiError>, GoogleLoginCredentials>(
+      {
+        mutationFn: async (credentials: GoogleLoginCredentials) => {
+          const response = await authApi.googleLogin(credentials);
+          return response.data;
+        },
+        onSuccess: async (tokens) => {
+          localStorage.setItem("access-token", tokens["access-token"]);
+          localStorage.setItem("refresh-token", tokens["refresh-token"]);
+
+          await queryClient.fetchQuery(authQueries.me());
+          toast.success("Signed in!");
+        },
+      },
+    ),
   signUp: () =>
     mutationOptions({
       mutationFn: async (credentials: LoginCredentials) => {

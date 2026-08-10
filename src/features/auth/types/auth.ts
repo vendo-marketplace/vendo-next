@@ -3,6 +3,10 @@ export type LoginCredentials = {
   password: string;
 };
 
+export type GoogleLoginCredentials = {
+  idToken: string;
+};
+
 export type LoginResponse = {
   "access-token": string;
   "refresh-token": string;
