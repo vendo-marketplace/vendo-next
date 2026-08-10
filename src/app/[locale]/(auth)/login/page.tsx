@@ -1,13 +1,9 @@
-import AuthContent from "./_components/content/AuthContent";
-import AuthPoster from "./_components/poster/AuthPoster";
+import { redirect } from "next/navigation";
 
-const LoginPage = () => {
-  return (
-    <section className="flex flex-1 p-4">
-      <AuthContent />
-      <AuthPoster />
-    </section>
-  );
+const LoginPage = async ({ params }: PageProps<"/[locale]/login">) => {
+  const { locale } = await params;
+
+  redirect(`/${locale}/sign-in`);
 };
 
 export default LoginPage;

@@ -1,19 +1,22 @@
 "use client";
 
 import { Tabs } from "radix-ui";
-import { useState } from "react";
 
-import { Button } from "@/components/ui/button/button";
+import {
+  Button,
+  getButtonClassName,
+} from "@/components/ui/button/button";
 import { GoogleIcon } from "@/components/ui/icons";
 import { SignIn } from "@/features/auth/components/sign-in";
 import { SignUp } from "@/features/auth/components/sign-up";
+import { Link } from "@/i18n/navigation";
 
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/utils/utils";
 import AuthContentFooter from "./footer/AuthContentFooter";
 import { GoogleLoginButton } from "@/components/ui/google-login-button";
 
-type AuthTab = "sign-in" | "sign-up";
+export type AuthTab = "sign-in" | "sign-up";
 
 const authContent = {
   "sign-in": {
@@ -28,8 +31,7 @@ const authContent = {
   },
 } as const;
 
-const AuthContent = () => {
-  const [activeTab, setActiveTab] = useState<AuthTab>("sign-in");
+const AuthContent = ({ activeTab }: { activeTab: AuthTab }) => {
   const content = authContent[activeTab];
 
   return (
@@ -40,7 +42,6 @@ const AuthContent = () => {
           <Tabs.Root
             className="flex w-full flex-col space-y-6"
             value={activeTab}
-            onValueChange={(value) => setActiveTab(value as AuthTab)}
           >
             <div className="space-y-1">
               <h1 className="text-neutral-950 text-[24px] leading-7.5 font-semibold">
@@ -56,26 +57,34 @@ const AuthContent = () => {
               aria-label="Авторизація"
             >
               <Tabs.Trigger value="sign-in" asChild>
-                <Button
+                <Link
+                  href="/sign-in"
                   className={cn(
-                    "flex-1 border-0",
+                    getButtonClassName({
+                      className: "flex-1 border-0",
+                      variant:
+                        activeTab === "sign-in" ? "brand" : "secondary",
+                    }),
                     activeTab === "sign-up" && "bg-transparent",
                   )}
-                  variant={activeTab === "sign-in" ? "brand" : "secondary"}
                 >
                   Вхід
-                </Button>
+                </Link>
               </Tabs.Trigger>
               <Tabs.Trigger value="sign-up" asChild>
-                <Button
+                <Link
+                  href="/sign-up"
                   className={cn(
-                    "flex-1 border-0",
+                    getButtonClassName({
+                      className: "flex-1 border-0",
+                      variant:
+                        activeTab === "sign-up" ? "brand" : "secondary",
+                    }),
                     activeTab === "sign-in" && "bg-transparent",
                   )}
-                  variant={activeTab === "sign-up" ? "brand" : "secondary"}
                 >
                   Реєстрація
-                </Button>
+                </Link>
               </Tabs.Trigger>
             </Tabs.List>
 

@@ -9,7 +9,7 @@ import {
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
 import Logo from "./logo/Logo";
 import SearchBar from "./search-bar/SearchBar";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 const Header = () => {
   return (
@@ -32,8 +32,12 @@ const Header = () => {
             <Button variant="secondary" className="size-8 p-0 border-0">
               <ChatBubbleIcon className="size-6" />
             </Button>
-            <Button variant="secondary" className="size-8 p-0 border-0">
-              <Link href={"/login"}>
+            <Button
+              asChild
+              variant="secondary"
+              className="size-8 border-0 p-0"
+            >
+              <Link href={"/sign-in"}>
                 <CircleUserIcon className="size-6" />
               </Link>
             </Button>
