@@ -6,12 +6,11 @@ import { useSearchProducts } from "../../hooks/use-products";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import ProductCardsGrid from "../prod-cards-grid/ProductCardsGrid";
 import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
+import { useSearchParams } from "next/navigation";
 
-interface Props {
-  query: string;
-}
-
-const SearchResults = ({ query }: Props) => {
+const SearchResults = () => {
+  const params = useSearchParams();
+  const query = params.get("q") ?? "";
   const { ref, inView } = useInView({ rootMargin: "300px" });
   const {
     data,
@@ -43,13 +42,18 @@ const SearchResults = ({ query }: Props) => {
 
   const cards = data.pages.flatMap((page) => page.data);
 
-  if (cards.length === 0) return <p>Не знайдено жодного товару</p>;
-
   const { totalElements } = data.pages[0].metadata;
 
   return (
     <>
-      <p className="mb-4">Знайдено товарів: {totalElements}</p>
+      <h1 className="mb-1 text-2xl font-semibold">
+        {query ? `Результати пошуку для «${query}»` : "Пошук"}
+      </h1>
+      {totalElements === 0 ? (
+        <p>Не знайдено жодного товару</p>
+      ) : (
+        <p className="mb-4">Знайдено товарів: {totalElements}</p>
+      )}
       <ProductCardsGrid cards={cards} />
       <div ref={ref} className="h-px" aria-hidden="true" />
       {isFetchingNextPage && <LoadingSpinner />}
