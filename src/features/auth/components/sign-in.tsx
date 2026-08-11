@@ -20,5 +20,11 @@ export function SignIn() {
     });
   };
 
-  return <SignInForm onSubmit={signIn} isPending={isPending} />;
+  return (
+    <SignInForm
+      onSubmit={signIn}
+      isPending={isPending}
+      showForgotPasswordLink
+    />
+  );
 }

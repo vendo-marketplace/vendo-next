@@ -5,7 +5,7 @@ import { type FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button/button";
 import { OtpCodeInput } from "@/components/ui/otp-code-input";
 import Image from "next/image";
-import img from "@/assets/auth/message-sent.png";
+import img from "@/assets/gifs/emailSent.gif";
 
 const CODE_LENGTH = 6;
 
@@ -25,7 +25,7 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
   return (
     <div className="space-y-6">
       <div className="w-40 h-34.25 relative mx-auto">
-        <Image src={img} alt="Image" fill />
+        <Image src={img} alt="Image" fill unoptimized />
       </div>
 
       <div className="space-y-1">

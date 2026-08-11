@@ -3,7 +3,7 @@ export const apiEndpoints = {
     login: "/auth/sign-in",
     google: "/auth/google",
     signUp: "/auth/sign-up",
-    forgotPassword: "/auth/forgot-password",
+    forgotPassword: "/password/forgot",
     me: "/auth/me",
     refresh: "/auth/refresh",
   },

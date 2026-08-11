@@ -15,6 +15,7 @@ export function ForgotPassword() {
         toast.success("Посилання для скидання пароля надіслано на вашу пошту");
       },
       onError: (error) => {
+        console.log(error);
         toast.error(
           error.response?.data.message ??
             "Не вдалося надіслати посилання. Спробуйте ще раз.",
@@ -24,9 +25,6 @@ export function ForgotPassword() {
   };
 
   return (
-    <ForgotPasswordForm
-      isPending={isPending}
-      onSubmit={requestPasswordReset}
-    />
+    <ForgotPasswordForm isPending={isPending} onSubmit={requestPasswordReset} />
   );
 }

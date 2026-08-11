@@ -28,21 +28,23 @@ export const authMutations = {
       },
     }),
   googleLogin: (queryClient: QueryClient) =>
-    mutationOptions<LoginResponse, AxiosError<ApiError>, GoogleLoginCredentials>(
-      {
-        mutationFn: async (credentials: GoogleLoginCredentials) => {
-          const response = await authApi.googleLogin(credentials);
-          return response.data;
-        },
-        onSuccess: async (tokens) => {
-          localStorage.setItem("access-token", tokens["access-token"]);
-          localStorage.setItem("refresh-token", tokens["refresh-token"]);
-
-          await queryClient.fetchQuery(authQueries.me());
-          toast.success("Signed in!");
-        },
+    mutationOptions<
+      LoginResponse,
+      AxiosError<ApiError>,
+      GoogleLoginCredentials
+    >({
+      mutationFn: async (credentials: GoogleLoginCredentials) => {
+        const response = await authApi.googleLogin(credentials);
+        return response.data;
       },
-    ),
+      onSuccess: async (tokens) => {
+        localStorage.setItem("access-token", tokens["access-token"]);
+        localStorage.setItem("refresh-token", tokens["refresh-token"]);
+
+        await queryClient.fetchQuery(authQueries.me());
+        toast.success("Signed in!");
+      },
+    }),
   signUp: () =>
     mutationOptions<void, Error, LoginCredentials>({
       mutationFn: async (credentials) => {
@@ -53,11 +55,7 @@ export const authMutations = {
       },
     }),
   forgotPassword: () =>
-    mutationOptions<
-      void,
-      AxiosError<ApiError>,
-      ForgotPasswordCredentials
-    >({
+    mutationOptions<void, AxiosError<ApiError>, ForgotPasswordCredentials>({
       mutationFn: async (credentials) => {
         await authApi.forgotPassword(credentials);
       },

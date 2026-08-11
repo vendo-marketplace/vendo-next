@@ -20,6 +20,7 @@ type SignInFormProps = {
   submitLabel?: string;
   passwordAutoComplete?: "current-password" | "new-password";
   idPrefix?: string;
+  showForgotPasswordLink?: boolean;
 };
 
 export function SignInForm({
@@ -28,6 +29,7 @@ export function SignInForm({
   submitLabel = "Увійти",
   passwordAutoComplete = "current-password",
   idPrefix = "sign-in",
+  showForgotPasswordLink = false,
 }: SignInFormProps) {
   const {
     control,
@@ -77,7 +79,7 @@ export function SignInForm({
         )}
       </FormField>
 
-      <div>
+      <div className="space-y-3">
         <FormField
           id={`${idPrefix}-password`}
           label="Пароль"
@@ -96,7 +98,14 @@ export function SignInForm({
             />
           )}
         </FormField>
-        <Link href={"/forgot-password"}>Забули пароль?</Link>
+        {showForgotPasswordLink && (
+          <Link
+            href="/forgot-password"
+            className="text-brand-600 font-medium text-[14px] leading-5"
+          >
+            Забули пароль?
+          </Link>
+        )}
       </div>
 
       {/* {submitError && (
