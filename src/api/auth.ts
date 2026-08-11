@@ -1,6 +1,7 @@
 import { apiEndpoints } from "@/api/endpoints";
 import client from "@/axios/axios";
 import type {
+  ForgotPasswordCredentials,
   GoogleLoginCredentials,
   LoginCredentials,
   LoginResponse,
@@ -14,5 +15,7 @@ export const authApi = {
     client.post<LoginResponse>(apiEndpoints.auth.google, credentials),
   signUp: async (credentials: LoginCredentials) =>
     client.post<void>(apiEndpoints.auth.signUp, credentials),
+  forgotPassword: async (credentials: ForgotPasswordCredentials) =>
+    client.post<void>(apiEndpoints.auth.forgotPassword, credentials),
   me: async () => client.get<MeResponse>(apiEndpoints.auth.me),
 };

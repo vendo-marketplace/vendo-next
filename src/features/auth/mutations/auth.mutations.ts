@@ -3,6 +3,7 @@ import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 
 import { authQueries } from "../queries/auth.queries";
 import type {
+  ForgotPasswordCredentials,
   GoogleLoginCredentials,
   LoginCredentials,
   LoginResponse,
@@ -49,6 +50,16 @@ export const authMutations = {
         await new Promise<void>((resolve) => {
           window.setTimeout(resolve, 500);
         });
+      },
+    }),
+  forgotPassword: () =>
+    mutationOptions<
+      void,
+      AxiosError<ApiError>,
+      ForgotPasswordCredentials
+    >({
+      mutationFn: async (credentials) => {
+        await authApi.forgotPassword(credentials);
       },
     }),
 };

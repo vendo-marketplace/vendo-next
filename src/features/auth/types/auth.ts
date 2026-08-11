@@ -3,6 +3,8 @@ export type LoginCredentials = {
   password: string;
 };
 
+export type ForgotPasswordCredentials = Pick<LoginCredentials, "email">;
+
 export type GoogleLoginCredentials = {
   idToken: string;
 };
