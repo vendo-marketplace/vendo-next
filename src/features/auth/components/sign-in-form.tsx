@@ -11,6 +11,7 @@ import { PasswordInput } from "@/components/ui/input/password-input";
 import { Button } from "@/components/ui/button/button";
 import { signInSchema } from "../schemas/sign-in-schema";
 import type { LoginCredentials } from "../types/auth";
+import { Link } from "@/i18n/navigation";
 
 type SignInFormProps = {
   onSubmit: (credentials: LoginCredentials) => void | Promise<void>;
@@ -76,24 +77,27 @@ export function SignInForm({
         )}
       </FormField>
 
-      <FormField
-        id={`${idPrefix}-password`}
-        label="Пароль"
-        error={errors.password?.message}
-        required
-      >
-        {(fieldProps) => (
-          <PasswordInput
-            {...fieldProps}
-            {...register("password")}
-            autoComplete={passwordAutoComplete}
-            value={password}
-            onClear={() => clearField("password")}
-            placeholder="Введіть пароль"
-            start={<LockIcon className="size-full" />}
-          />
-        )}
-      </FormField>
+      <div>
+        <FormField
+          id={`${idPrefix}-password`}
+          label="Пароль"
+          error={errors.password?.message}
+          required
+        >
+          {(fieldProps) => (
+            <PasswordInput
+              {...fieldProps}
+              {...register("password")}
+              autoComplete={passwordAutoComplete}
+              value={password}
+              onClear={() => clearField("password")}
+              placeholder="Введіть пароль"
+              start={<LockIcon className="size-full" />}
+            />
+          )}
+        </FormField>
+        <Link href={"/forgot-password"}>Забули пароль?</Link>
+      </div>
 
       {/* {submitError && (
         <p role="alert" className="text-sm text-red-600">
