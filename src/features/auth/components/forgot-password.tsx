@@ -6,15 +6,21 @@ import type { AxiosError } from "axios";
 import { toast } from "sonner";
 
 import checkEmailGif from "@/assets/gifs/checkEmail.gif";
+import { Button } from "@/components/ui/button/button";
+import { Link } from "@/i18n/navigation";
 import type { ApiError } from "@/types/types";
 
 import { useForgotPassword } from "../hooks/use-forgot-password";
+import { useResendPasswordOtp } from "../hooks/use-resend-password-otp";
 import type { ForgotPasswordCredentials } from "../types/auth";
 import { AuthContentHeader } from "./auth-content-header";
 import { ForgotPasswordForm } from "./forgot-password-form";
 
 export function ForgotPassword() {
-  const { mutate, isPending } = useForgotPassword();
+  const { mutate: forgotPassword, isPending: isForgotPasswordPending } =
+    useForgotPassword();
+  const { mutate: resendPasswordOtp, isPending: isResendPending } =
+    useResendPasswordOtp();
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
 
   const showError = (error: AxiosError<ApiError>) => {
@@ -25,7 +31,7 @@ export function ForgotPassword() {
   };
 
   const requestPasswordReset = (credentials: ForgotPasswordCredentials) => {
-    mutate(credentials, {
+    forgotPassword(credentials, {
       onSuccess: () => {
         setSubmittedEmail(credentials.email);
       },
@@ -36,7 +42,7 @@ export function ForgotPassword() {
   const resendPasswordReset = () => {
     if (!submittedEmail) return;
 
-    mutate(
+    resendPasswordOtp(
       { email: submittedEmail },
       {
         onSuccess: () => {
@@ -71,15 +77,19 @@ export function ForgotPassword() {
           </p>
         </div>
 
+        <Button asChild className="w-full">
+          <Link href="/sign-in">Продовжити</Link>
+        </Button>
+
         <p className="text-center text-[14px] text-neutral-400">
           Не отримали лист?{" "}
           <button
             className="font-medium text-brand-600 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
-            disabled={isPending}
+            disabled={isResendPending}
             onClick={resendPasswordReset}
           >
-            {isPending ? "Надсилання..." : "Надіслати ще раз"}
+            {isResendPending ? "Надсилання..." : "Надіслати ще раз"}
           </button>
         </p>
       </div>
@@ -93,7 +103,7 @@ export function ForgotPassword() {
         description="Введіть свою електронну пошту, і ми надішлемо вам посилання для скидання пароля."
       />
       <ForgotPasswordForm
-        isPending={isPending}
+        isPending={isForgotPasswordPending}
         onSubmit={requestPasswordReset}
       />
     </>
