@@ -8,6 +8,7 @@ import { GoogleIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/utils";
 
+import { AuthContentHeader } from "./auth-content-header";
 import { SignIn } from "./sign-in";
 import { SignUp } from "./sign-up";
 
@@ -36,14 +37,10 @@ export function AuthForm({ activeTab, onSignUpSuccess }: AuthFormProps) {
 
   return (
     <Tabs.Root className="flex w-full flex-col space-y-6" value={activeTab}>
-      <div className="space-y-1">
-        <h1 className="text-[24px] leading-7.5 font-semibold text-neutral-950">
-          {content.title}
-        </h1>
-        <p className="text-[16px] leading-6 font-normal text-neutral-400">
-          {content.description}
-        </p>
-      </div>
+      <AuthContentHeader
+        title={content.title}
+        description={content.description}
+      />
 
       <Tabs.List
         className="flex items-center justify-center gap-2 bg-brand-50"
