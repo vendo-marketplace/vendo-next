@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { AxiosError } from "axios";
 import { toast } from "sonner";
 
@@ -16,12 +16,25 @@ import type { ForgotPasswordCredentials } from "../types/auth";
 import { AuthContentHeader } from "./auth-content-header";
 import { ForgotPasswordForm } from "./forgot-password-form";
 
+const RESEND_COOLDOWN_SECONDS = 60;
+
 export function ForgotPassword() {
   const { mutate: forgotPassword, isPending: isForgotPasswordPending } =
     useForgotPassword();
   const { mutate: resendPasswordOtp, isPending: isResendPending } =
     useResendPasswordOtp();
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+
+    const timeout = window.setTimeout(() => {
+      setResendCooldown((seconds) => Math.max(0, seconds - 1));
+    }, 1_000);
+
+    return () => window.clearTimeout(timeout);
+  }, [resendCooldown]);
 
   const showError = (error: AxiosError<ApiError>) => {
     toast.error(
@@ -34,18 +47,20 @@ export function ForgotPassword() {
     forgotPassword(credentials, {
       onSuccess: () => {
         setSubmittedEmail(credentials.email);
+        setResendCooldown(RESEND_COOLDOWN_SECONDS);
       },
       onError: showError,
     });
   };
 
   const resendPasswordReset = () => {
-    if (!submittedEmail) return;
+    if (!submittedEmail || resendCooldown > 0) return;
 
     resendPasswordOtp(
       { email: submittedEmail },
       {
         onSuccess: () => {
+          setResendCooldown(RESEND_COOLDOWN_SECONDS);
           toast.success("Посилання надіслано повторно");
         },
         onError: showError,
@@ -86,10 +101,14 @@ export function ForgotPassword() {
           <button
             className="font-medium text-brand-600 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
-            disabled={isResendPending}
+            disabled={isResendPending || resendCooldown > 0}
             onClick={resendPasswordReset}
           >
-            {isResendPending ? "Надсилання..." : "Надіслати ще раз"}
+            {isResendPending
+              ? "Надсилання..."
+              : resendCooldown > 0
+                ? `Надіслати ще раз (${resendCooldown} с)`
+                : "Надіслати ще раз"}
           </button>
         </p>
       </div>
