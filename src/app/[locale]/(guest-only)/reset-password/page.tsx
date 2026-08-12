@@ -1,5 +1,6 @@
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
 import { AuthContentHeader } from "@/features/auth/components/auth-content-header";
+import { AuthPageWrapper } from "@/features/auth/components/auth-page-wrapper";
 import { ResetPassword } from "@/features/auth/components/reset-password";
 import type { Metadata } from "next";
 
@@ -18,21 +19,19 @@ export default async function ResetPasswordPage({
   const codeParam = (await searchParams).code;
   const code = Array.isArray(codeParam) ? codeParam[0] : codeParam;
 
-  if (!code) {
-    return (
-      <AuthContentContainer>
-        <AuthContentHeader
-          className="text-center"
-          title="Відсутній код скидання пароля"
-          description="Перейдіть за повним посиланням із листа, щоб змінити пароль."
-        />
-      </AuthContentContainer>
-    );
-  }
-
   return (
-    <AuthContentContainer>
-      <ResetPassword code={code} />
-    </AuthContentContainer>
+    <AuthPageWrapper>
+      <AuthContentContainer>
+        {!code ? (
+          <AuthContentHeader
+            className="text-center"
+            title="Відсутній код скидання пароля"
+            description="Перейдіть за повним посиланням із листа, щоб змінити пароль."
+          />
+        ) : (
+          <ResetPassword code={code} />
+        )}
+      </AuthContentContainer>
+    </AuthPageWrapper>
   );
 }

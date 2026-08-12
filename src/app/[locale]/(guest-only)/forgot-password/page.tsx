@@ -1,4 +1,5 @@
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
+import { AuthPageWrapper } from "@/features/auth/components/auth-page-wrapper";
 import { ForgotPassword } from "@/features/auth/components/forgot-password";
 import type { Metadata } from "next";
 
@@ -9,9 +10,11 @@ export const metadata: Metadata = {
 
 const ForgotPasswordPage = () => {
   return (
-    <AuthContentContainer>
-      <ForgotPassword />
-    </AuthContentContainer>
+    <AuthPageWrapper>
+      <AuthContentContainer>
+        <ForgotPassword />
+      </AuthContentContainer>
+    </AuthPageWrapper>
   );
 };
 

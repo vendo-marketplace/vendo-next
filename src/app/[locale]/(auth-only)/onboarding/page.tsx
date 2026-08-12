@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-import { Logo } from "@/components/ui/logo";
-import AuthContentFooter from "../../(guest-only)/_components/AuthContentFooter";
+import { AuthPageWrapper } from "@/features/auth/components/auth-page-wrapper";
 import { OnboardingContent } from "./_components/OnboardingContent";
 
 export const metadata: Metadata = {
@@ -11,14 +10,8 @@ export const metadata: Metadata = {
 
 export default function OnboardingPage() {
   return (
-    <>
-      <div className="flex px-15 py-6">
-        <Logo size="sm" />
-      </div>
-      <OnboardingContent />;
-      <AuthContentFooter />
-    </>
+    <AuthPageWrapper>
+      <OnboardingContent />
+    </AuthPageWrapper>
   );
-
-  return;
 }

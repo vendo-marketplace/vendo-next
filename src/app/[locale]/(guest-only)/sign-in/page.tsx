@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AuthPageWrapper } from "@/features/auth/components/auth-page-wrapper";
 import AuthPage from "../_components/AuthPage";
 
 export const metadata: Metadata = {
@@ -7,6 +8,10 @@ export const metadata: Metadata = {
   description: "Увійдіть у свій акаунт Vendo.",
 };
 
-const SignInPage = () => <AuthPage activeTab="sign-in" />;
+const SignInPage = () => (
+  <AuthPageWrapper>
+    <AuthPage activeTab="sign-in" />
+  </AuthPageWrapper>
+);
 
 export default SignInPage;

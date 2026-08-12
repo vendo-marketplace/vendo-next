@@ -4,8 +4,6 @@ import { type ReactNode, useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useMe } from "@/features/auth/hooks/use-me";
-import { Logo } from "@/components/ui/logo";
-import AuthContentFooter from "./_components/AuthContentFooter";
 
 export default function GuestOnlyLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -28,13 +26,5 @@ export default function GuestOnlyLayout({ children }: { children: ReactNode }) {
     return <LoadingSpinner />;
   }
 
-  return (
-    <>
-      <div className="flex px-15 py-6">
-        <Logo size="sm" />
-      </div>
-      {children}
-      <AuthContentFooter />
-    </>
-  );
+  return <>{children}</>;
 }
