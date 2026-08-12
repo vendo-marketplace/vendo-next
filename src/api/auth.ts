@@ -21,6 +21,10 @@ export const authApi = {
       params: { email },
       validateStatus: (status) => status === 200,
     }),
+  resendVerification: async (email: string) =>
+    client.post<void>(apiEndpoints.verification.resend, undefined, {
+      params: { email },
+    }),
   forgotPassword: async (credentials: ForgotPasswordCredentials) =>
     client.post<void>(apiEndpoints.auth.forgotPassword, undefined, {
       params: credentials,

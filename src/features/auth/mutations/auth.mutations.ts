@@ -53,6 +53,12 @@ export const authMutations = {
         await authApi.sendVerification(credentials.email);
       },
     }),
+  resendVerification: () =>
+    mutationOptions<void, AxiosError<ApiError>, string>({
+      mutationFn: async (email) => {
+        await authApi.resendVerification(email);
+      },
+    }),
   forgotPassword: () =>
     mutationOptions<void, AxiosError<ApiError>, ForgotPasswordCredentials>({
       mutationFn: async (credentials) => {

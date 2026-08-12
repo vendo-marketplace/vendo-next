@@ -1,13 +1,19 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import type { AxiosError } from "axios";
+import Image from "next/image";
+import { type FormEvent, useEffect, useState } from "react";
+import { toast } from "sonner";
 
+import img from "@/assets/gifs/emailSent.gif";
 import { Button } from "@/components/ui/button/button";
 import { OtpCodeInput } from "@/components/ui/otp-code-input";
-import Image from "next/image";
-import img from "@/assets/gifs/emailSent.gif";
+import type { ApiError } from "@/types/types";
+
+import { useResendVerification } from "../hooks/use-resend-verification";
 
 const CODE_LENGTH = 6;
+const RESEND_COOLDOWN_SECONDS = 60;
 
 type VerifyCodeProps = {
   email: string;
@@ -16,10 +22,42 @@ type VerifyCodeProps = {
 
 export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
   const [code, setCode] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(
+    RESEND_COOLDOWN_SECONDS,
+  );
+  const { mutate: resendVerification, isPending: isResendPending } =
+    useResendVerification();
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+
+    const timeout = window.setTimeout(() => {
+      setResendCooldown((seconds) => Math.max(0, seconds - 1));
+    }, 1_000);
+
+    return () => window.clearTimeout(timeout);
+  }, [resendCooldown]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (code.length === CODE_LENGTH) onSuccess();
+  };
+
+  const handleResend = () => {
+    if (resendCooldown > 0) return;
+
+    resendVerification(email, {
+      onSuccess: () => {
+        setResendCooldown(RESEND_COOLDOWN_SECONDS);
+        toast.success("Код підтвердження надіслано повторно");
+      },
+      onError: (error: AxiosError<ApiError>) => {
+        toast.error(
+          error.response?.data.message ??
+            "Не вдалося надіслати код. Спробуйте ще раз.",
+        );
+      },
+    });
   };
 
   return (
@@ -60,10 +98,16 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
       <p className="text-center text-[14px] text-neutral-400">
         Не отримали лист?{" "}
         <button
-          className="font-medium text-brand-600 hover:text-brand-700"
+          className="font-medium text-brand-600 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
           type="button"
+          disabled={isResendPending || resendCooldown > 0}
+          onClick={handleResend}
         >
-          Надіслати ще раз
+          {isResendPending
+            ? "Надсилання..."
+            : resendCooldown > 0
+              ? `Надіслати ще раз (${resendCooldown} с)`
+              : "Надіслати ще раз"}
         </button>
       </p>
     </div>

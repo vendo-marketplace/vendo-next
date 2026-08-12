@@ -11,6 +11,7 @@ export const apiEndpoints = {
   },
   verification: {
     send: "/verification/send",
+    resend: "/verification/resend",
     validate: "/verification/validate",
   },
   categories: {
