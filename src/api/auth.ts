@@ -6,6 +6,7 @@ import type {
   LoginCredentials,
   LoginResponse,
   MeResponse,
+  ResetPasswordCredentials,
 } from "@/features/auth/types/auth";
 
 export const authApi = {
@@ -23,5 +24,11 @@ export const authApi = {
     client.put<void>(apiEndpoints.auth.resendPassword, undefined, {
       params: credentials,
     }),
+  resetPassword: async ({ code, password }: ResetPasswordCredentials) =>
+    client.put<void>(
+      apiEndpoints.auth.resetPassword,
+      { password },
+      { params: { code } },
+    ),
   me: async () => client.get<MeResponse>(apiEndpoints.auth.me),
 };

@@ -7,6 +7,7 @@ import type {
   GoogleLoginCredentials,
   LoginCredentials,
   LoginResponse,
+  ResetPasswordCredentials,
 } from "../types/auth";
 import { AxiosError } from "axios";
 import { ApiError } from "@/types/types";
@@ -64,6 +65,12 @@ export const authMutations = {
     mutationOptions<void, AxiosError<ApiError>, ForgotPasswordCredentials>({
       mutationFn: async (credentials) => {
         await authApi.resendPassword(credentials);
+      },
+    }),
+  resetPassword: () =>
+    mutationOptions<void, AxiosError<ApiError>, ResetPasswordCredentials>({
+      mutationFn: async (credentials) => {
+        await authApi.resetPassword(credentials);
       },
     }),
 };

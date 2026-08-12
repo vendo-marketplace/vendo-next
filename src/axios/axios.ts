@@ -74,7 +74,8 @@ client.interceptors.response.use(
       isAuthEndpoint(originalRequest.url, apiEndpoints.auth.login) ||
       isAuthEndpoint(originalRequest.url, apiEndpoints.auth.google) ||
       isAuthEndpoint(originalRequest.url, apiEndpoints.auth.forgotPassword) ||
-      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.resendPasswordOtp) ||
+      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.resendPassword) ||
+      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.resetPassword) ||
       isAuthEndpoint(originalRequest.url, apiEndpoints.auth.refresh) ||
       typeof window === "undefined"
     ) {

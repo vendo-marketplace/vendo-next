@@ -5,6 +5,7 @@ export const apiEndpoints = {
     signUp: "/auth/sign-up",
     forgotPassword: "/password/forgot",
     resendPassword: "/password/resend",
+    resetPassword: "/password/reset",
     me: "/auth/me",
     refresh: "/auth/refresh",
   },

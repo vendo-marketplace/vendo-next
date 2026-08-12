@@ -5,6 +5,11 @@ export type LoginCredentials = {
 
 export type ForgotPasswordCredentials = Pick<LoginCredentials, "email">;
 
+export type ResetPasswordCredentials = {
+  code: string;
+  password: string;
+};
+
 export type GoogleLoginCredentials = {
   idToken: string;
 };
