@@ -1,20 +1,19 @@
 "use client";
 
+import { useRouter } from "@/i18n/navigation";
+
 import { useSignUp } from "../hooks/use-sign-up";
 import type { LoginCredentials } from "../types/auth";
 import { SignInForm } from "./forms/sign-in-form";
 
-export function SignUp({
-  onSuccess,
-}: {
-  onSuccess?: (email: string) => void;
-}) {
+export function SignUp() {
+  const router = useRouter();
   const { mutate, isPending } = useSignUp();
 
   const signUp = (credentials: LoginCredentials) => {
     mutate(credentials, {
       onSuccess: () => {
-        onSuccess?.(credentials.email);
+        router.push("/onboarding");
       },
     });
   };

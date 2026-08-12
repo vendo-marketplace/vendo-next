@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { Logo } from "@/components/ui/logo";

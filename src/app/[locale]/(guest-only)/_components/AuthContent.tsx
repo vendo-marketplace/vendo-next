@@ -5,7 +5,6 @@ import {
   type AuthTab,
 } from "@/features/auth/components/forms/auth-form";
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
-import { SignUpFlow } from "@/features/auth/components/sign-up-flow";
 
 type AuthContentProps = {
   activeTab: AuthTab;
@@ -13,11 +12,7 @@ type AuthContentProps = {
 
 const AuthContent = ({ activeTab }: AuthContentProps) => (
   <AuthContentContainer>
-    {activeTab === "sign-up" ? (
-      <SignUpFlow />
-    ) : (
-      <AuthForm activeTab="sign-in" />
-    )}
+    <AuthForm activeTab={activeTab} />
   </AuthContentContainer>
 );
 

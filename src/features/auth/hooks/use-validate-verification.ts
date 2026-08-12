@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { authMutations } from "../mutations/auth.mutations";
 
-export const useSignUp = () => {
+export const useValidateVerification = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(authMutations.signUp(queryClient));
+  return useMutation(authMutations.validateVerification(queryClient));
 };

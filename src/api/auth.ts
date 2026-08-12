@@ -15,7 +15,7 @@ export const authApi = {
   googleLogin: async (credentials: GoogleLoginCredentials) =>
     client.post<LoginResponse>(apiEndpoints.auth.google, credentials),
   signUp: async (credentials: LoginCredentials) =>
-    client.post<void>(apiEndpoints.auth.signUp, credentials),
+    client.post<LoginResponse>(apiEndpoints.auth.signUp, credentials),
   sendVerification: async (email: string) =>
     client.post<void>(apiEndpoints.verification.send, undefined, {
       params: { email },
@@ -24,6 +24,10 @@ export const authApi = {
   resendVerification: async (email: string) =>
     client.post<void>(apiEndpoints.verification.resend, undefined, {
       params: { email },
+    }),
+  validateVerification: async (code: string) =>
+    client.post<void>(apiEndpoints.verification.validate, undefined, {
+      params: { code },
     }),
   forgotPassword: async (credentials: ForgotPasswordCredentials) =>
     client.post<void>(apiEndpoints.auth.forgotPassword, undefined, {

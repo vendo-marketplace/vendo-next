@@ -16,7 +16,6 @@ export type AuthTab = "sign-in" | "sign-up";
 
 type AuthFormProps = {
   activeTab: AuthTab;
-  onSignUpSuccess?: (email: string) => void;
 };
 
 const authContent = {
@@ -32,7 +31,7 @@ const authContent = {
   },
 } as const;
 
-export function AuthForm({ activeTab, onSignUpSuccess }: AuthFormProps) {
+export function AuthForm({ activeTab }: AuthFormProps) {
   const content = authContent[activeTab];
 
   return (
@@ -80,7 +79,7 @@ export function AuthForm({ activeTab, onSignUpSuccess }: AuthFormProps) {
         <SignIn />
       </Tabs.Content>
       <Tabs.Content value="sign-up" tabIndex={-1}>
-        <SignUp onSuccess={onSignUpSuccess} />
+        <SignUp />
       </Tabs.Content>
 
       <div className="flex items-center justify-between gap-4">

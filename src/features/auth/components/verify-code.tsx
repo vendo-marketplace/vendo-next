@@ -11,13 +11,14 @@ import { OtpCodeInput } from "@/components/ui/otp-code-input";
 import type { ApiError } from "@/types/types";
 
 import { useResendVerification } from "../hooks/use-resend-verification";
+import { useValidateVerification } from "../hooks/use-validate-verification";
 
 const CODE_LENGTH = 6;
 const RESEND_COOLDOWN_SECONDS = 60;
 
 type VerifyCodeProps = {
   email: string;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 };
 
 export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
@@ -27,6 +28,8 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
   );
   const { mutate: resendVerification, isPending: isResendPending } =
     useResendVerification();
+  const { mutate: validateVerification, isPending: isValidationPending } =
+    useValidateVerification();
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -40,7 +43,17 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (code.length === CODE_LENGTH) onSuccess();
+    if (code.length !== CODE_LENGTH) return;
+
+    validateVerification(code, {
+      onSuccess: () => onSuccess?.(),
+      onError: (error: AxiosError<ApiError>) => {
+        toast.error(
+          error.response?.data.message ??
+            "Не вдалося підтвердити код. Перевірте його та спробуйте ще раз.",
+        );
+      },
+    });
   };
 
   const handleResend = () => {
@@ -89,9 +102,9 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
         <Button
           className="w-full"
           type="submit"
-          disabled={code.length !== CODE_LENGTH}
+          disabled={code.length !== CODE_LENGTH || isValidationPending}
         >
-          Підтвердити
+          {isValidationPending ? "Підтвердження..." : "Підтвердити"}
         </Button>
       </form>
 

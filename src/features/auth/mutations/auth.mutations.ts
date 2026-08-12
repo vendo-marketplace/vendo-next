@@ -46,11 +46,32 @@ export const authMutations = {
         toast.success("Signed in!");
       },
     }),
-  signUp: () =>
-    mutationOptions<void, AxiosError<ApiError>, LoginCredentials>({
+  signUp: (queryClient: QueryClient) =>
+    mutationOptions<LoginResponse, AxiosError<ApiError>, LoginCredentials>({
       mutationFn: async (credentials) => {
-        await authApi.signUp(credentials);
-        await authApi.sendVerification(credentials.email);
+        const response = await authApi.signUp(credentials);
+        return response.data;
+      },
+      onSuccess: async (tokens, credentials) => {
+        localStorage.setItem("access-token", tokens["access-token"]);
+        localStorage.setItem("refresh-token", tokens["refresh-token"]);
+
+        await Promise.all([
+          authApi.sendVerification(credentials.email),
+          queryClient.fetchQuery(authQueries.me()),
+        ]);
+      },
+    }),
+  validateVerification: (queryClient: QueryClient) =>
+    mutationOptions<void, AxiosError<ApiError>, string>({
+      mutationFn: async (code) => {
+        await authApi.validateVerification(code);
+      },
+      onSuccess: async () => {
+        await queryClient.fetchQuery({
+          ...authQueries.me(),
+          staleTime: 0,
+        });
       },
     }),
   resendVerification: () =>
