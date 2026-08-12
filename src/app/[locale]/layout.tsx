@@ -1,14 +1,14 @@
-import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import faviconIco from "@/assets/favicons/favicon.ico";
 import favicon16 from "@/assets/favicons/favicon-16x16.png";
 import favicon32 from "@/assets/favicons/favicon-32x32.png";
-import "../globals.css";
-import type { ReactNode } from "react";
-import Providers from "@/providers/Providers";
+import faviconIco from "@/assets/favicons/favicon.ico";
 import { routing } from "@/i18n/routing";
+import Providers from "@/providers/Providers";
+import type { Metadata, Viewport } from "next";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
+import localFont from "next/font/local";
+import type { ReactNode } from "react";
+import "../globals.css";
 
 const mazzardH = localFont({
   variable: "--font-mazzard",

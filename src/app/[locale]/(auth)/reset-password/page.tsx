@@ -1,6 +1,12 @@
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
 import { AuthContentHeader } from "@/features/auth/components/auth-content-header";
 import { ResetPassword } from "@/features/auth/components/reset-password";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Скидання пароля",
+  description: "Створіть новий пароль для свого акаунта Vendo.",
+};
 
 type ResetPasswordPageProps = {
   searchParams: Promise<{ code?: string | string[] }>;
