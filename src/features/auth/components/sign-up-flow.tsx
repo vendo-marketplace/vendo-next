@@ -14,6 +14,8 @@ type SignUpState =
 export function SignUpFlow() {
   const [state, setState] = useState<SignUpState>({ step: "form" });
 
+  return <AccountCreated />;
+
   switch (state.step) {
     case "form":
       return (

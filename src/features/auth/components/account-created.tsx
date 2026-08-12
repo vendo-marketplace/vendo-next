@@ -1,16 +1,15 @@
+import { ArrowRightIcon, TickIcon } from "@/assets/icons";
 import { Button } from "@/components/ui/button/button";
-import { CheckIcon, UserIcon } from "@/components/ui/icons";
+import { UserIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
 import { Link } from "@/i18n/navigation";
 import { AuthContentHeader } from "./auth-content-header";
 
 export function AccountCreated() {
   return (
-    <div className="space-y-6">
-      <div className="flex size-14 items-center justify-center rounded-full bg-brand-50 text-brand-600">
-        <div className="flex size-7 items-center justify-center rounded-full bg-brand-600">
-          <CheckIcon className="size-3.5" />
-        </div>
+    <>
+      <div className="flex justify-center mx-auto items-center size-14 bg-brand-50 rounded-full text-brand-600">
+        <TickIcon className="size-8" aria-hidden="true" />
       </div>
 
       <AuthContentHeader
@@ -40,11 +39,13 @@ export function AccountCreated() {
         <Link href="/sign-in">Увійти в акаунт</Link>
       </Button>
 
-      <p className="text-center text-[14px] text-neutral-400">
-        <Link className="font-medium hover:text-neutral-600" href="/sign-in">
-          Пропустити →
-        </Link>
-      </p>
-    </div>
+      <Link
+        className="font-medium cursor-pointer flex items-center justify-center gap-2 text-[14px] leading-5 text-neutral-600"
+        href="/sign-in"
+      >
+        <span>Пропустити</span>
+        <ArrowRightIcon className="size-4" />
+      </Link>
+    </>
   );
 }
