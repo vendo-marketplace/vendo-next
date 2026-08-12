@@ -37,7 +37,7 @@ export function ResetPassword({ code }: ResetPasswordProps) {
 
   if (isSuccess) {
     return (
-      <div className="space-y-6 text-center w-120 mx-auto my-auto">
+      <>
         <div className="flex justify-center mx-auto items-center size-14 bg-brand-50 rounded-full text-brand-600">
           <TickIcon className="size-8" aria-hidden="true" />
         </div>
@@ -52,17 +52,17 @@ export function ResetPassword({ code }: ResetPasswordProps) {
         <Button asChild className="w-full">
           <Link href="/sign-in">Увійти в акаунт</Link>
         </Button>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <>
       <AuthContentHeader
         title="Змініть свій пароль"
         description="Ласкаво просимо назад! Виберіть новий надійний пароль і збережіть його, щоб продовжити."
       />
       <ResetPasswordForm isPending={isPending} onSubmit={submitPassword} />
-    </div>
+    </>
   );
 }

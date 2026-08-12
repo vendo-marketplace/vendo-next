@@ -30,5 +30,9 @@ export default async function ResetPasswordPage({
     );
   }
 
-  return <ResetPassword code={code} />;
+  return (
+    <AuthContentContainer>
+      <ResetPassword code={code} />
+    </AuthContentContainer>
+  );
 }
