@@ -47,12 +47,10 @@ export const authMutations = {
       },
     }),
   signUp: () =>
-    mutationOptions<void, Error, LoginCredentials>({
+    mutationOptions<void, AxiosError<ApiError>, LoginCredentials>({
       mutationFn: async (credentials) => {
-        void credentials;
-        await new Promise<void>((resolve) => {
-          window.setTimeout(resolve, 500);
-        });
+        await authApi.signUp(credentials);
+        await authApi.sendVerification(credentials.email);
       },
     }),
   forgotPassword: () =>

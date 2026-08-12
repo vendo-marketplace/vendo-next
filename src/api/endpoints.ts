@@ -10,6 +10,7 @@ export const apiEndpoints = {
     refresh: "/auth/refresh",
   },
   verification: {
+    send: "/verification/send",
     validate: "/verification/validate",
   },
   categories: {

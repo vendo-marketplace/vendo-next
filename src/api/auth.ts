@@ -16,6 +16,11 @@ export const authApi = {
     client.post<LoginResponse>(apiEndpoints.auth.google, credentials),
   signUp: async (credentials: LoginCredentials) =>
     client.post<void>(apiEndpoints.auth.signUp, credentials),
+  sendVerification: async (email: string) =>
+    client.post<void>(apiEndpoints.verification.send, undefined, {
+      params: { email },
+      validateStatus: (status) => status === 200,
+    }),
   forgotPassword: async (credentials: ForgotPasswordCredentials) =>
     client.post<void>(apiEndpoints.auth.forgotPassword, undefined, {
       params: credentials,
