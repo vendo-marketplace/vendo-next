@@ -3,6 +3,7 @@ export const apiEndpoints = {
     login: "/auth/sign-in",
     google: "/auth/google",
     signUp: "/auth/sign-up",
+    complete: "/auth/complete",
     forgotPassword: "/password/forgot",
     resendPassword: "/password/resend",
     resetPassword: "/password/reset",

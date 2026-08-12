@@ -1,6 +1,7 @@
 import { apiEndpoints } from "@/api/endpoints";
 import client from "@/axios/axios";
 import type {
+  AccountCompletionCredentials,
   ForgotPasswordCredentials,
   GoogleLoginCredentials,
   LoginCredentials,
@@ -16,6 +17,8 @@ export const authApi = {
     client.post<LoginResponse>(apiEndpoints.auth.google, credentials),
   signUp: async (credentials: LoginCredentials) =>
     client.post<LoginResponse>(apiEndpoints.auth.signUp, credentials),
+  completeAccount: async (credentials: AccountCompletionCredentials) =>
+    client.patch<void>(apiEndpoints.auth.complete, credentials),
   sendVerification: async (email: string) =>
     client.post<void>(apiEndpoints.verification.send, undefined, {
       params: { email },

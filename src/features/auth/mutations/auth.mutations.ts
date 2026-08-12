@@ -3,6 +3,7 @@ import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 
 import { authQueries } from "../queries/auth.queries";
 import type {
+  AccountCompletionCredentials,
   ForgotPasswordCredentials,
   GoogleLoginCredentials,
   LoginCredentials,
@@ -72,6 +73,15 @@ export const authMutations = {
           ...authQueries.me(),
           staleTime: 0,
         });
+      },
+    }),
+  completeAccount: (queryClient: QueryClient) =>
+    mutationOptions<void, AxiosError<ApiError>, AccountCompletionCredentials>({
+      mutationFn: async (credentials) => {
+        await authApi.completeAccount(credentials);
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: authQueries.me().queryKey });
       },
     }),
   resendVerification: () =>
