@@ -1,5 +1,6 @@
 import { ArrowRightIcon, TickIcon } from "@/assets/icons";
 import { Button } from "@/components/ui/button/button";
+import { FormField } from "@/components/ui/form/form-field";
 import { UserIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
 import { Link } from "@/i18n/navigation";
@@ -19,15 +20,17 @@ export function AccountCreated() {
       />
 
       <div className="space-y-4">
-        <label className="flex flex-col gap-3 text-[14px] font-medium text-neutral-700">
-          Ім’я
-          <Input
-            name="fullName"
-            autoComplete="name"
-            placeholder="Введіть своє ім’я"
-            start={<UserIcon className="size-full" />}
-          />
-        </label>
+        <FormField id="account-created-full-name" label="Ім’я">
+          {(fieldProps) => (
+            <Input
+              {...fieldProps}
+              name="fullName"
+              autoComplete="name"
+              placeholder="Введіть своє ім’я"
+              start={<UserIcon className="size-full" />}
+            />
+          )}
+        </FormField>
 
         <label className="flex flex-col gap-3 text-[14px] font-medium text-neutral-700">
           Дата народження
