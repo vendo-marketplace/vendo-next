@@ -1,4 +1,4 @@
-import type { AuthTab } from "@/features/auth/components/auth-form";
+import type { AuthTab } from "@/features/auth/components/forms/auth-form";
 
 import AuthContent from "./AuthContent";
 import AuthPoster from "./AuthPoster";

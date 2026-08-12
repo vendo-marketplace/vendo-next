@@ -11,7 +11,7 @@ import { PasswordInput } from "@/components/ui/input/password-input";
 import {
   resetPasswordSchema,
   type ResetPasswordFormValues,
-} from "../schemas/reset-password-schema";
+} from "../../schemas/reset-password-schema";
 
 type ResetPasswordFormProps = {
   isPending: boolean;

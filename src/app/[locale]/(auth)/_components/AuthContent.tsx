@@ -1,6 +1,9 @@
 "use client";
 
-import { AuthForm, type AuthTab } from "@/features/auth/components/auth-form";
+import {
+  AuthForm,
+  type AuthTab,
+} from "@/features/auth/components/forms/auth-form";
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
 import { SignUpFlow } from "@/features/auth/components/sign-up-flow";
 

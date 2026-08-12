@@ -2,7 +2,7 @@
 
 import { useSignUp } from "../hooks/use-sign-up";
 import type { LoginCredentials } from "../types/auth";
-import { SignInForm } from "./sign-in-form";
+import { SignInForm } from "./forms/sign-in-form";
 
 export function SignUp({
   onSuccess,

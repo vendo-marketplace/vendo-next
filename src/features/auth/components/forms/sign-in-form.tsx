@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input/input";
 import { PasswordInput } from "@/components/ui/input/password-input";
 
 import { Button } from "@/components/ui/button/button";
-import { signInSchema } from "../schemas/sign-in-schema";
-import type { LoginCredentials } from "../types/auth";
+import { signInSchema } from "../../schemas/sign-in-schema";
+import type { LoginCredentials } from "../../types/auth";
 import { Link } from "@/i18n/navigation";
 
 type SignInFormProps = {

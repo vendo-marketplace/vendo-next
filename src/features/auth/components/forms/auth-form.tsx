@@ -8,9 +8,9 @@ import { GoogleIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/utils";
 
-import { AuthContentHeader } from "./auth-content-header";
-import { SignIn } from "./sign-in";
-import { SignUp } from "./sign-up";
+import { AuthContentHeader } from "../auth-content-header";
+import { SignIn } from "../sign-in";
+import { SignUp } from "../sign-up";
 
 export type AuthTab = "sign-in" | "sign-up";
 

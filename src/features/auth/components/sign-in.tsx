@@ -4,7 +4,7 @@ import { useRouter } from "@/i18n/navigation";
 import { toast } from "sonner";
 import { useLogin } from "../hooks/use-login";
 import { LoginCredentials } from "../types/auth";
-import { SignInForm } from "./sign-in-form";
+import { SignInForm } from "./forms/sign-in-form";
 
 export function SignIn() {
   const router = useRouter();

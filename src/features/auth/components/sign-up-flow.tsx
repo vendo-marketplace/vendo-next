@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { AccountCreated } from "./account-created";
-import { AuthForm } from "./auth-form";
+import { AuthForm } from "./forms/auth-form";
 import { VerifyCode } from "./verify-code";
 
 type SignUpState =

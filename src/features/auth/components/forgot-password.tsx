@@ -15,7 +15,7 @@ import { useForgotPassword } from "../hooks/use-forgot-password";
 import { useResendPassword } from "../hooks/use-resend-password";
 import type { ForgotPasswordCredentials } from "../types/auth";
 import { AuthContentHeader } from "./auth-content-header";
-import { ForgotPasswordForm } from "./forgot-password-form";
+import { ForgotPasswordForm } from "./forms/forgot-password-form";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 

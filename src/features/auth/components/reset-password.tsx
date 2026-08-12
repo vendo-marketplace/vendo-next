@@ -10,7 +10,7 @@ import { Link } from "@/i18n/navigation";
 import { useResetPassword } from "../hooks/use-reset-password";
 import type { ResetPasswordFormValues } from "../schemas/reset-password-schema";
 import { AuthContentHeader } from "./auth-content-header";
-import { ResetPasswordForm } from "./reset-password-form";
+import { ResetPasswordForm } from "./forms/reset-password-form";
 
 type ResetPasswordProps = {
   code: string;

@@ -8,8 +8,8 @@ import { FormField } from "@/components/ui/form/form-field";
 import { MailIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
 
-import { forgotPasswordSchema } from "../schemas/forgot-password-schema";
-import type { ForgotPasswordCredentials } from "../types/auth";
+import { forgotPasswordSchema } from "../../schemas/forgot-password-schema";
+import type { ForgotPasswordCredentials } from "../../types/auth";
 
 type ForgotPasswordFormProps = {
   isPending?: boolean;
