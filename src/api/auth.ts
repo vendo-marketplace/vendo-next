@@ -19,8 +19,8 @@ export const authApi = {
     client.post<void>(apiEndpoints.auth.forgotPassword, undefined, {
       params: credentials,
     }),
-  resendPasswordOtp: async (credentials: ForgotPasswordCredentials) =>
-    client.put<void>(apiEndpoints.auth.resendPasswordOtp, undefined, {
+  resendPassword: async (credentials: ForgotPasswordCredentials) =>
+    client.put<void>(apiEndpoints.auth.resendPassword, undefined, {
       params: credentials,
     }),
   me: async () => client.get<MeResponse>(apiEndpoints.auth.me),

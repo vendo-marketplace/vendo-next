@@ -4,7 +4,7 @@ export const apiEndpoints = {
     google: "/auth/google",
     signUp: "/auth/sign-up",
     forgotPassword: "/password/forgot",
-    resendPasswordOtp: "/password/resend-otp",
+    resendPassword: "/password/resend",
     me: "/auth/me",
     refresh: "/auth/refresh",
   },

@@ -60,10 +60,10 @@ export const authMutations = {
         await authApi.forgotPassword(credentials);
       },
     }),
-  resendPasswordOtp: () =>
+  resendPassword: () =>
     mutationOptions<void, AxiosError<ApiError>, ForgotPasswordCredentials>({
       mutationFn: async (credentials) => {
-        await authApi.resendPasswordOtp(credentials);
+        await authApi.resendPassword(credentials);
       },
     }),
 };

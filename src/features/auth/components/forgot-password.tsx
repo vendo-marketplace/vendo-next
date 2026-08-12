@@ -1,8 +1,8 @@
 "use client";
 
+import type { AxiosError } from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import type { AxiosError } from "axios";
 import { toast } from "sonner";
 
 import checkEmailGif from "@/assets/gifs/checkEmail.gif";
@@ -11,7 +11,8 @@ import { Link } from "@/i18n/navigation";
 import type { ApiError } from "@/types/types";
 
 import { useForgotPassword } from "../hooks/use-forgot-password";
-import { useResendPasswordOtp } from "../hooks/use-resend-password-otp";
+
+import { useResendPassword } from "../hooks/use-resend-password";
 import type { ForgotPasswordCredentials } from "../types/auth";
 import { AuthContentHeader } from "./auth-content-header";
 import { ForgotPasswordForm } from "./forgot-password-form";
@@ -21,8 +22,8 @@ const RESEND_COOLDOWN_SECONDS = 60;
 export function ForgotPassword() {
   const { mutate: forgotPassword, isPending: isForgotPasswordPending } =
     useForgotPassword();
-  const { mutate: resendPasswordOtp, isPending: isResendPending } =
-    useResendPasswordOtp();
+  const { mutate: resendPassword, isPending: isResendPending } =
+    useResendPassword();
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
 
@@ -56,7 +57,7 @@ export function ForgotPassword() {
   const resendPasswordReset = () => {
     if (!submittedEmail || resendCooldown > 0) return;
 
-    resendPasswordOtp(
+    resendPassword(
       { email: submittedEmail },
       {
         onSuccess: () => {

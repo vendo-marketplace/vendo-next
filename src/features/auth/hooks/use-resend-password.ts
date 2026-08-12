@@ -2,5 +2,5 @@ import { useMutation } from "@tanstack/react-query";
 
 import { authMutations } from "../mutations/auth.mutations";
 
-export const useResendPasswordOtp = () =>
-  useMutation(authMutations.resendPasswordOtp());
+export const useResendPassword = () =>
+  useMutation(authMutations.resendPassword());
