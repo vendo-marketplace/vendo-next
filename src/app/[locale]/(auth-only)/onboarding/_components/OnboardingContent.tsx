@@ -1,6 +1,6 @@
 "use client";
 
-import { AccountCreated } from "@/features/auth/components/account-created";
+import { AccountCompletion } from "@/features/auth/components/account-completion";
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
 import { VerifyCode } from "@/features/auth/components/verify-code";
 import { useMe } from "@/features/auth/hooks/use-me";
@@ -15,7 +15,7 @@ export function OnboardingContent() {
     <>
       <AuthContentContainer>
         {user.emailVerified ? (
-          <AccountCreated onSuccess={onSuccess} />
+          <AccountCompletion onSuccess={onSuccess} />
         ) : (
           <VerifyCode email={user.email} />
         )}

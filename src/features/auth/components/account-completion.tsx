@@ -7,13 +7,13 @@ import type { AccountCompletionCredentials } from "../types/auth";
 import { AuthContentHeader } from "./auth-content-header";
 import { AccountCompletionForm } from "./forms/account-completion-form";
 
-type AccountCreatedProps = {
+type AccountCompletionProps = {
   onSuccess: (
     credentials: AccountCompletionCredentials,
   ) => void | Promise<void>;
 };
 
-export function AccountCreated({ onSuccess }: AccountCreatedProps) {
+export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
   return (
     <>
       <div className="flex justify-center mx-auto items-center size-14 bg-brand-50 rounded-full text-brand-600">
