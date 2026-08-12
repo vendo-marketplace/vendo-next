@@ -10,6 +10,11 @@ export type ResetPasswordCredentials = {
   password: string;
 };
 
+export type AccountCompletionCredentials = {
+  fullName: string;
+  birthDate: string;
+};
+
 export type GoogleLoginCredentials = {
   idToken: string;
 };
