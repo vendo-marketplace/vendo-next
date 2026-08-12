@@ -1,4 +1,5 @@
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
+import { AuthContentHeader } from "@/features/auth/components/auth-content-header";
 import { ResetPassword } from "@/features/auth/components/reset-password";
 import { validateResetCode } from "@/features/auth/server/validate-reset-code";
 
@@ -15,14 +16,11 @@ export default async function ResetPasswordPage({
   if (!code) {
     return (
       <AuthContentContainer>
-        <div className="space-y-1 text-center">
-          <h1 className="text-[24px] leading-7.5 font-semibold text-neutral-950">
-            Відсутній код скидання пароля
-          </h1>
-          <p className="text-[16px] leading-6 text-neutral-400">
-            Перейдіть за повним посиланням із листа, щоб змінити пароль.
-          </p>
-        </div>
+        <AuthContentHeader
+          className="text-center"
+          title="Відсутній код скидання пароля"
+          description="Перейдіть за повним посиланням із листа, щоб змінити пароль."
+        />
       </AuthContentContainer>
     );
   }
@@ -34,15 +32,12 @@ export default async function ResetPasswordPage({
       {isCodeValid ? (
         <ResetPassword code={code} />
       ) : (
-        <div className="space-y-1 text-center">
-          <h1 className="text-[24px] leading-7.5 font-semibold text-neutral-950">
-            Недійсний код скидання пароля
-          </h1>
-          <p className="text-[16px] leading-6 text-neutral-400">
-            Це посилання недійсне або термін його дії минув. Запросіть нове
-            посилання для скидання пароля.
-          </p>
-        </div>
+        <AuthContentHeader
+          className="text-center"
+          title="Недійсний код скидання пароля"
+          description="Це посилання недійсне або термін його дії минув. Запросіть нове
+            посилання для скидання пароля."
+        />
       )}
     </AuthContentContainer>
   );

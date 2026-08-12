@@ -11,6 +11,7 @@ import { useResetPassword } from "../hooks/use-reset-password";
 import type { ResetPasswordFormValues } from "../schemas/reset-password-schema";
 import { AuthContentHeader } from "./auth-content-header";
 import { ResetPasswordForm } from "./forms/reset-password-form";
+import { TickIcon } from "@/assets/icons";
 
 type ResetPasswordProps = {
   code: string;
@@ -37,22 +38,17 @@ export function ResetPassword({ code }: ResetPasswordProps) {
 
   if (isSuccess) {
     return (
-      <div className="space-y-6 text-center">
-        <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-brand-50">
-          <div className="flex size-7 items-center justify-center rounded-full bg-brand-600">
-            <CheckIcon className="size-3.5" aria-hidden="true" />
-          </div>
+      <div className="space-y-6 text-center w-120 mx-auto my-auto">
+        <div className="flex justify-center mx-auto items-center size-14 bg-brand-50 rounded-full text-brand-600">
+          <TickIcon className="size-8" aria-hidden="true" />
         </div>
 
-        <div className="space-y-1">
-          <h1 className="text-[24px] leading-7.5 font-semibold text-neutral-950">
-            Пароль успішно змінено
-          </h1>
-          <p className="text-[14px] leading-5 text-neutral-400">
-            Ваш новий пароль надійно збережено. Тепер ви можете використовувати
-            його для входу в акаунт.
-          </p>
-        </div>
+        <AuthContentHeader
+          className="text-center"
+          title="Пароль успішно змінено"
+          description="Ваш новий пароль надійно збережено. Тепер ви можете використовувати
+            його для входу в акаунт."
+        />
 
         <Button asChild className="w-full">
           <Link href="/sign-in">Увійти в акаунт</Link>
