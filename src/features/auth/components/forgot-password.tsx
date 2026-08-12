@@ -82,10 +82,10 @@ export function ForgotPassword() {
         </div>
 
         <div className="space-y-1">
-          <h1 className="text-[24px] leading-7.5 font-semibold text-neutral-950">
+          <h1 className="text-[24px] leading-8 font-semibold text-neutral-950">
             Перевірте свою пошту!
           </h1>
-          <p className="text-[14px] leading-5 text-neutral-400">
+          <p className="text-[16px] leading-6 text-neutral-400">
             Ми надіслали на адресу{" "}
             <span className="text-brand-800 underline">{submittedEmail}</span>{" "}
             посилання для скидання пароля. Воно буде дійсне недовго, тож

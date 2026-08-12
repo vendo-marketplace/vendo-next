@@ -4,14 +4,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button/button";
-import { CheckIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
 
+import { TickIcon } from "@/assets/icons";
 import { useResetPassword } from "../hooks/use-reset-password";
 import type { ResetPasswordFormValues } from "../schemas/reset-password-schema";
 import { AuthContentHeader } from "./auth-content-header";
 import { ResetPasswordForm } from "./forms/reset-password-form";
-import { TickIcon } from "@/assets/icons";
 
 type ResetPasswordProps = {
   code: string;

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button/button";
 import { CheckIcon, UserIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
 import { Link } from "@/i18n/navigation";
+import { AuthContentHeader } from "./auth-content-header";
 
 export function AccountCreated() {
   return (
@@ -12,15 +13,11 @@ export function AccountCreated() {
         </div>
       </div>
 
-      <div className="space-y-1">
-        <h1 className="text-[24px] leading-7.5 font-semibold text-neutral-950">
-          Вітаємо у Vendo!
-        </h1>
-        <p className="text-[14px] leading-5 text-neutral-400">
-          Розкажіть трохи про себе, щоб ми могли персоналізувати Ваш досвід та
-          зробити покупки ще зручнішими.
-        </p>
-      </div>
+      <AuthContentHeader
+        title="Вітаємо у Vendo!"
+        description="Розкажіть трохи про себе, щоб ми могли персоналізувати Ваш досвід та
+          зробити покупки ще зручнішими."
+      />
 
       <div className="space-y-4">
         <label className="flex flex-col gap-3 text-[14px] font-medium text-neutral-700">

@@ -1,7 +1,6 @@
 import { AuthContentContainer } from "@/features/auth/components/auth-content-container";
 import { AuthContentHeader } from "@/features/auth/components/auth-content-header";
 import { ResetPassword } from "@/features/auth/components/reset-password";
-import { validateResetCode } from "@/features/auth/server/validate-reset-code";
 
 type ResetPasswordPageProps = {
   searchParams: Promise<{ code?: string | string[] }>;
@@ -25,20 +24,5 @@ export default async function ResetPasswordPage({
     );
   }
 
-  const isCodeValid = await validateResetCode(code);
-
-  return (
-    <AuthContentContainer>
-      {isCodeValid ? (
-        <ResetPassword code={code} />
-      ) : (
-        <AuthContentHeader
-          className="text-center"
-          title="Недійсний код скидання пароля"
-          description="Це посилання недійсне або термін його дії минув. Запросіть нове
-            посилання для скидання пароля."
-        />
-      )}
-    </AuthContentContainer>
-  );
+  return <ResetPassword code={code} />;
 }
