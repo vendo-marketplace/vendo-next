@@ -4,10 +4,9 @@ import { useEffect, useState } from "react";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/icons";
 
-import HomeHeroSlide from "./slides/HomeHeroSlide";
 import { Button } from "@/components/ui/button/button";
+import HomeHeroSlide from "./slides/HomeHeroSlide";
 import { heroSlides } from "./slides/slides";
-import { Logo } from "@/components/ui/logo";
 
 const firstRealSlideIndex = 1;
 const lastRealSlideIndex = heroSlides.length;
