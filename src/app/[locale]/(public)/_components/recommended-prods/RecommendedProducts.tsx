@@ -7,17 +7,19 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useSearchProducts } from "@/features/products/hooks/use-products";
 import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
-import Select from "@/components/ui/select";
-
-const cityOptions = [
-  { value: "kyiv", label: "Kyiv" },
-  { value: "lviv", label: "Lviv" },
-  { value: "odesa", label: "Odesa" },
-  { value: "dnipro", label: "Dnipro" },
-] as const;
+import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
+import { useRecommendedProductsSort } from "@/features/products/hooks/use-recommended-products-sort";
+import { getProductSortQuery } from "@/features/products/lib/product-sort";
+import type { SearchProductsQuery } from "@/types/product";
 
 export default function RecommendedProducts() {
+  const { sort, setSort } = useRecommendedProductsSort();
   const { ref, inView } = useInView({ rootMargin: "300px" });
+  const productsQuery = {
+    page: 1,
+    size: 25,
+    sort: getProductSortQuery(sort),
+  } satisfies SearchProductsQuery;
   const {
     data,
     fetchNextPage,
@@ -25,7 +27,7 @@ export default function RecommendedProducts() {
     isFetchNextPageError,
     isFetchingNextPage,
     isLoading,
-  } = useSearchProducts("");
+  } = useSearchProducts("", productsQuery);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {
@@ -53,11 +55,7 @@ export default function RecommendedProducts() {
       </h2>
       <div className="flex justify-between">
         <span>Cities</span>
-        <Select
-          options={cityOptions}
-          placeholder="Choose a city"
-          value="lviv"
-        />
+        <ProductSortSelect value={sort} onChange={setSort} />
       </div>
       <ProductCardsGrid cards={cards} />
       <div ref={ref} className="h-px" aria-hidden="true" />
