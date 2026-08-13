@@ -108,12 +108,6 @@ export function SignInForm({
         )}
       </div>
 
-      {/* {submitError && (
-        <p role="alert" className="text-sm text-red-600">
-          {submitError}
-        </p>
-      )} */}
-
       <Button className="w-full" type="submit" disabled={isPending}>
         {submitLabel}
       </Button>

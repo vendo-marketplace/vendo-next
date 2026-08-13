@@ -2,9 +2,8 @@
 
 import { Tabs } from "radix-ui";
 
-import { Button, getButtonClassName } from "@/components/ui/button/button";
+import { getButtonClassName } from "@/components/ui/button/button";
 import { GoogleLoginButton } from "@/components/ui/google-login-button";
-import { GoogleIcon } from "@/components/ui/icons";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/utils";
 
@@ -88,10 +87,10 @@ export function AuthForm({ activeTab }: AuthFormProps) {
         <div className="h-px w-full bg-neutral-100" />
       </div>
       <GoogleLoginButton />
-      <Button variant="secondary" className="w-full text-[14px] leading-5">
+      {/* <Button variant="secondary" className="w-full text-[14px] leading-5">
         <GoogleIcon className="size-4" />
         <span>{content.googleLabel}</span>
-      </Button>
+      </Button> */}
     </Tabs.Root>
   );
 }
