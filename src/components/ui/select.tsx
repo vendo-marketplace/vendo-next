@@ -11,6 +11,7 @@ type Props<T extends string> = {
   placeholder?: string;
   disabled?: boolean;
   onChange?: (value: T) => void;
+  className?: string;
 };
 
 const Select = <T extends string>({
@@ -18,6 +19,7 @@ const Select = <T extends string>({
   value,
   placeholder = "Select an option",
   disabled,
+  className,
   onChange,
 }: Props<T>) => {
   const handleValueChange = (nextValue: string) => {
@@ -34,7 +36,9 @@ const Select = <T extends string>({
       disabled={disabled}
       onValueChange={handleValueChange}
     >
-      <RadixSelect.Trigger className="flex justify-between items-center font-medium text-neutral-600 text-[14px] leading-5  w-52 px-4 py-1.5 rounded-lg border border-neutral-300">
+      <RadixSelect.Trigger
+        className={`flex justify-between items-center gap-2 font-medium text-neutral-600 text-[14px] leading-5 w-fit px-4 py-1.5 rounded-lg border border-neutral-300 ${className}`}
+      >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon aria-hidden="true">
           <AngleDownIcon className="size-4" />
@@ -44,8 +48,9 @@ const Select = <T extends string>({
       <RadixSelect.Portal>
         <RadixSelect.Content
           position="popper"
+          align="end"
           sideOffset={4}
-          className="w-52 font-medium"
+          className="min-w-(--radix-select-trigger-width) font-medium"
         >
           <RadixSelect.Viewport className="rounded-lg bg-neutral-50 p-2 gap-6 cursor-pointer border border-border-base text-neutral-600 text-[14px] leading-5">
             {options.map((opt) => (
@@ -53,7 +58,7 @@ const Select = <T extends string>({
                 key={opt.value}
                 value={opt.value}
                 className={cn(
-                  "flex items-center justify-between rounded-lg border-0 px-2 py-1.5 outline-none",
+                  "flex items-center justify-between rounded-lg border-0 gap-2 px-2 py-1.5 outline-none",
                   opt.value === value && "text-neutral-950",
                   "hover:bg-brand-50 hover:font-semibold data-highlighted:bg-brand-50 data-highlighted:font-semibold",
                 )}

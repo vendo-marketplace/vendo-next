@@ -1,5 +1,10 @@
 {
   "LocaleSwitcher": {
     "label": "Language"
+  },
+  "ProductSort": {
+    "PRICE_ASC": "Price: low to high",
+    "PRICE_DESC": "Price: high to low",
+    "CREATED_AT_DESC": "Newest first"
   }
 }

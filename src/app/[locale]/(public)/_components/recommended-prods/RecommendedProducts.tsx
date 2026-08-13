@@ -41,13 +41,10 @@ export default function RecommendedProducts() {
     isFetchingNextPage,
   ]);
 
-  if (isLoading) return <LoadingSpinner />;
+  const cards = data?.pages.flatMap((page) => page.data) ?? [];
 
-  if (!data) return null;
+  if (!isLoading && cards.length === 0) return null;
 
-  const cards = data.pages.flatMap((page) => page.data);
-
-  if (cards.length === 0) return null;
   return (
     <section className="py-4 px-15 space-y-7">
       <h2 className="text-3xl font-semibold text-neutral-950">
@@ -57,7 +54,7 @@ export default function RecommendedProducts() {
         <span>Cities</span>
         <ProductSortSelect value={sort} onChange={setSort} />
       </div>
-      <ProductCardsGrid cards={cards} />
+      {isLoading ? <LoadingSpinner /> : <ProductCardsGrid cards={cards} />}
       <div ref={ref} className="h-px" aria-hidden="true" />
       {isFetchingNextPage && <LoadingSpinner />}
       {isFetchNextPageError && (

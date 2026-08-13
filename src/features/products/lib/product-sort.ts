@@ -2,24 +2,20 @@ import type { SearchProductsQuery } from "@/types/product";
 
 type ProductSortDefinition = {
   value: string;
-  label: string;
   query: SearchProductsQuery["sort"];
 };
 
 const PRODUCT_SORT_DEFINITIONS = [
   {
     value: "PRICE_ASC",
-    label: "Спочатку дешевші",
     query: { sortBy: "PRICE", direction: "ASC" },
   },
   {
     value: "PRICE_DESC",
-    label: "Спочатку дорожчі",
     query: { sortBy: "PRICE", direction: "DESC" },
   },
   {
     value: "CREATED_AT_DESC",
-    label: "Найновіші",
     query: { sortBy: "CREATED_AT", direction: "DESC" },
   },
 ] as const satisfies readonly ProductSortDefinition[];
@@ -27,8 +23,8 @@ const PRODUCT_SORT_DEFINITIONS = [
 export type ProductSortOption =
   (typeof PRODUCT_SORT_DEFINITIONS)[number]["value"];
 
-export const PRODUCT_SORT_OPTIONS = PRODUCT_SORT_DEFINITIONS.map(
-  ({ value, label }) => ({ value, label }),
+export const PRODUCT_SORT_VALUES = PRODUCT_SORT_DEFINITIONS.map(
+  ({ value }) => value,
 );
 
 export const DEFAULT_PRODUCT_SORT =

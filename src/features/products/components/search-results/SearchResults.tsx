@@ -47,30 +47,26 @@ const SearchResults = () => {
     isFetchingNextPage,
   ]);
 
-  if (isLoading) return <LoadingSpinner />;
-
   if (isError && !data) return <p>Щось пішло не так.</p>;
 
-  if (!data) return null;
-
-  const cards = data.pages.flatMap((page) => page.data);
-
-  const { totalElements } = data.pages[0].metadata;
+  const cards = data?.pages.flatMap((page) => page.data) ?? [];
+  const totalElements = data?.pages[0].metadata.totalElements;
 
   return (
     <>
       <h1 className="mb-1 text-2xl font-semibold">
         {query ? `Результати пошуку для «${query}»` : "Пошук"}
       </h1>
-      {totalElements === 0 ? (
-        <p>Не знайдено жодного товару</p>
-      ) : (
-        <p className="mb-4">Знайдено товарів: {totalElements}</p>
-      )}
+      {totalElements !== undefined &&
+        (totalElements === 0 ? (
+          <p>Не знайдено жодного товару</p>
+        ) : (
+          <p className="mb-4">Знайдено товарів: {totalElements}</p>
+        ))}
       <div className="mb-4 flex justify-end">
         <ProductSortSelect value={sort} onChange={setSort} />
       </div>
-      <ProductCardsGrid cards={cards} />
+      {isLoading ? <LoadingSpinner /> : <ProductCardsGrid cards={cards} />}
       <div ref={ref} className="h-px" aria-hidden="true" />
       {isFetchingNextPage && <LoadingSpinner />}
 
