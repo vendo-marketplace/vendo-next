@@ -12,7 +12,7 @@ git pull origin main
 echo "🐳 Build Docker image..."
 docker build \
   --no-cache \
-  --build-arg VITE_API_BASE_URL=$API_URL \
+  --build-arg NEXT_PUBLIC_API_URL=$API_URL \
   -t $APP_NAME \
   -f ./Dockerfile .
 
@@ -21,6 +21,9 @@ docker stop $CONTAINER_NAME || true
 docker rm $CONTAINER_NAME || true
 
 echo "🚀 Run new container..."
-docker run -d --name $CONTAINER_NAME -p $PORT:80 $APP_NAME
+docker run -d \
+  --name $CONTAINER_NAME \
+  -p $PORT:3000 \
+  $APP_NAME
 
 echo "✅ Deployed successfully on port $PORT"
