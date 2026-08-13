@@ -40,26 +40,8 @@ export const getProductSortQuery = (
   PRODUCT_SORT_DEFINITIONS.find((definition) => definition.value === value)!
     .query;
 
-export const parseProductSortQuery = (
-  sortBy: string | null,
-  direction: string | null,
-): ProductSortOption => {
-  const defaultQuery = getProductSortQuery(DEFAULT_PRODUCT_SORT);
-  const nextSortBy = PRODUCT_SORT_DEFINITIONS.some(
-    ({ query }) => query.sortBy === sortBy,
-  )
-    ? sortBy
-    : defaultQuery.sortBy;
-  const nextDirection = PRODUCT_SORT_DEFINITIONS.some(
-    ({ query }) => query.direction === direction,
-  )
-    ? direction
-    : defaultQuery.direction;
-
-  return (
-    PRODUCT_SORT_DEFINITIONS.find(
-      ({ query }) =>
-        query.sortBy === nextSortBy && query.direction === nextDirection,
-    )?.value ?? DEFAULT_PRODUCT_SORT
-  );
-};
+export const parseProductSortOption = (
+  value: string | null,
+): ProductSortOption =>
+  PRODUCT_SORT_DEFINITIONS.find((definition) => definition.value === value)
+    ?.value ?? DEFAULT_PRODUCT_SORT;

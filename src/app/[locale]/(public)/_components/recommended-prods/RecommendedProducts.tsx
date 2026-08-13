@@ -8,12 +8,12 @@ import { useSearchProducts } from "@/features/products/hooks/use-products";
 import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
 import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
-import { useRecommendedProductsSort } from "@/features/products/hooks/use-recommended-products-sort";
+import { useProductSortParams } from "@/features/products/hooks/use-product-sort-params";
 import { getProductSortQuery } from "@/features/products/lib/product-sort";
 import type { SearchProductsQuery } from "@/types/product";
 
 export default function RecommendedProducts() {
-  const { sort, setSort } = useRecommendedProductsSort();
+  const { sort, setSort } = useProductSortParams();
   const { ref, inView } = useInView({ rootMargin: "300px" });
   const productsQuery = {
     page: 1,
