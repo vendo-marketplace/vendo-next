@@ -15,7 +15,7 @@ export function SignIn() {
         router.push("/");
       },
       onError: (e) => {
-        toast.error(e.response?.data.message);
+        toast.error(e.response?.data.message ?? "Перевірте дані для входу");
       },
     });
   };

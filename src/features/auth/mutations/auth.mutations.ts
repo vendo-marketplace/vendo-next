@@ -1,6 +1,9 @@
 import { authApi } from "@/api/auth";
 import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 
+import { ApiError } from "@/types/types";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 import { authQueries } from "../queries/auth.queries";
 import type {
   AccountCompletionCredentials,
@@ -10,9 +13,6 @@ import type {
   LoginResponse,
   ResetPasswordCredentials,
 } from "../types/auth";
-import { AxiosError } from "axios";
-import { ApiError } from "@/types/types";
-import { toast } from "sonner";
 
 export const authMutations = {
   login: (queryClient: QueryClient) =>
@@ -26,7 +26,7 @@ export const authMutations = {
         localStorage.setItem("refresh-token", tokens["refresh-token"]);
 
         await queryClient.fetchQuery(authQueries.me());
-        toast.success("Signed in!");
+        toast.success("Вхід виконано");
       },
     }),
   googleLogin: (queryClient: QueryClient) =>
@@ -44,7 +44,7 @@ export const authMutations = {
         localStorage.setItem("refresh-token", tokens["refresh-token"]);
 
         await queryClient.fetchQuery(authQueries.me());
-        toast.success("Signed in!");
+        toast.success("Вхід виконано");
       },
     }),
   signUp: (queryClient: QueryClient) =>
@@ -81,7 +81,9 @@ export const authMutations = {
         await authApi.completeAccount(credentials);
       },
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: authQueries.me().queryKey });
+        await queryClient.invalidateQueries({
+          queryKey: authQueries.me().queryKey,
+        });
       },
     }),
   resendVerification: () =>
