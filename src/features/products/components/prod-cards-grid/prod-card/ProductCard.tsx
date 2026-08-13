@@ -18,6 +18,7 @@ const ProductCard = ({ card }: Props) => {
           src={images[0]}
           alt={title}
           fill
+          unoptimized
           sizes="371px"
           className="object-contain"
         />
