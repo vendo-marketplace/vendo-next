@@ -8,7 +8,6 @@ export const productsApi = {
       apiEndpoints.products.search,
       {
         page,
-        size: 3,
       },
       {
         params: {
