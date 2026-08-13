@@ -14,3 +14,8 @@ export type ApiError = {
   path: string;
   timestamp: string;
 };
+
+export type SelectOption<T extends string> = {
+  value: T;
+  label: string;
+};
