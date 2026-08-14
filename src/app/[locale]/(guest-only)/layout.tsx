@@ -14,15 +14,15 @@ export default function GuestOnlyLayout({ children }: { children: ReactNode }) {
       localStorage.getItem("refresh-token"),
     );
 
-  const { data: user, isPending } = useMe(hasStoredSession);
+  const { data: user, isLoading } = useMe(hasStoredSession);
 
   useEffect(() => {
-    if (!isPending && user) {
+    if (!isLoading && user) {
       router.replace("/");
     }
-  }, [isPending, router, user]);
+  }, [isLoading, router, user]);
 
-  if (isPending || user) {
+  if (isLoading || user) {
     return <LoadingSpinner />;
   }
 
