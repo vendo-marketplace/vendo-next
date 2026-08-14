@@ -1,5 +1,6 @@
 import logoUrl from "@/assets/icons/logo.svg";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/utils/utils";
 import Image from "next/image";
 
 interface Props {
@@ -8,13 +9,11 @@ interface Props {
 
 const Logo = ({ className }: Props) => {
   return (
-    <Link href={"/"} className="relative size-9">
+    <Link href="/" className={cn("block h-9 w-auto", className)}>
       <Image
         src={logoUrl}
-        sizes="36px"
-        fill
         alt="Vendo logo"
-        className={className}
+        className="h-9 w-auto"
       />
     </Link>
   );

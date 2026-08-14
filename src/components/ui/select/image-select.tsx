@@ -59,12 +59,7 @@ const ImageSelect = <T extends string>({
           )}
         </Select.Value>
         <Select.Icon aria-hidden="true">
-          <Image
-            src={angleDownIcon}
-            alt="Angle down icon"
-            width={16}
-            height={16}
-          />
+          <Image src={angleDownIcon} alt="" width={16} height={16} />
         </Select.Icon>
       </Select.Trigger>
 

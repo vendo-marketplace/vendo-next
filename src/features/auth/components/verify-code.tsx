@@ -74,7 +74,13 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
   return (
     <div className="space-y-6">
       <div className="w-40 h-34.25 relative mx-auto">
-        <Image src={img} alt="Image" fill unoptimized />
+        <Image
+          src={img}
+          alt="Image"
+          fill
+          sizes="160px"
+          className="object-contain"
+        />
       </div>
 
       <div className="space-y-1">
