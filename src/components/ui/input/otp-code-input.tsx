@@ -7,7 +7,7 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@/components/ui/input/input-otp";
 import { cn } from "@/utils/utils";
 
 type OtpCodeInputProps = Omit<

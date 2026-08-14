@@ -77,7 +77,8 @@ export function ForgotPassword() {
             src={checkEmailGif}
             alt="Надісланий електронний лист"
             fill
-            unoptimized
+            sizes="160px"
+            className="object-contain"
           />
         </div>
 

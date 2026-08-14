@@ -9,6 +9,8 @@ const AuthPoster = () => (
       src={bg}
       alt="Background"
       fill
+      sizes="(min-width: 1280px) 50vw, 1px"
+      loading="eager"
       className="rounded-lg object-cover"
     />
     <div className="absolute right-9 bottom-16 left-9 space-y-3 text-neutral-50">

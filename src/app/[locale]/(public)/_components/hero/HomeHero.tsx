@@ -83,7 +83,11 @@ export default function HomeHero() {
           style={{ transform: `translateX(-${trackIndex * 100}%)` }}
         >
           {sliderSlides.map((slide, index) => (
-            <HomeHeroSlide key={`${slide.id} - ${index}`} image={slide.image} />
+            <HomeHeroSlide
+              key={`${slide.id} - ${index}`}
+              image={slide.image}
+              eager={index === firstRealSlideIndex}
+            />
           ))}
         </div>
 

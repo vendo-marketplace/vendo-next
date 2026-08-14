@@ -3,13 +3,12 @@ import { Suspense } from "react";
 import { Button } from "@/components/ui/button/button";
 import {
   ChatBubbleIcon,
-  CircleUserIcon,
   HeartIcon,
 } from "@/components/ui/icons";
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
+import HeaderAuth from "./auth/HeaderAuth";
 import Logo from "./logo/Logo";
 import SearchBar from "./search-bar/SearchBar";
-import { Link } from "@/i18n/navigation";
 
 const Header = () => {
   return (
@@ -32,15 +31,7 @@ const Header = () => {
             <Button variant="secondary" className="size-8 p-0 border-0">
               <ChatBubbleIcon className="size-6" />
             </Button>
-            <Button
-              asChild
-              variant="secondary"
-              className="size-8 border-0 p-0"
-            >
-              <Link href={"/sign-in"}>
-                <CircleUserIcon className="size-6" />
-              </Link>
-            </Button>
+            <HeaderAuth />
           </div>
           <Button>Додати оголошення</Button>
         </div>

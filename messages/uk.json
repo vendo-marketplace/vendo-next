@@ -1,5 +1,10 @@
 {
   "LocaleSwitcher": {
     "label": "Мова"
+  },
+  "ProductSort": {
+    "PRICE_ASC": "Спочатку дешевші",
+    "PRICE_DESC": "Спочатку дорожчі",
+    "CREATED_AT_DESC": "Найновіші"
   }
 }

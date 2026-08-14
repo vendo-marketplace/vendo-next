@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import img from "@/assets/gifs/emailSent.gif";
 import { Button } from "@/components/ui/button/button";
-import { OtpCodeInput } from "@/components/ui/otp-code-input";
+import { OtpCodeInput } from "@/components/ui/input/otp-code-input";
 import type { ApiError } from "@/types/types";
 
 import { useResendVerification } from "../hooks/use-resend-verification";
@@ -23,9 +23,7 @@ type VerifyCodeProps = {
 
 export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
   const [code, setCode] = useState("");
-  const [resendCooldown, setResendCooldown] = useState(
-    RESEND_COOLDOWN_SECONDS,
-  );
+  const [resendCooldown, setResendCooldown] = useState(RESEND_COOLDOWN_SECONDS);
   const { mutate: resendVerification, isPending: isResendPending } =
     useResendVerification();
   const { mutate: validateVerification, isPending: isValidationPending } =
@@ -76,7 +74,13 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
   return (
     <div className="space-y-6">
       <div className="w-40 h-34.25 relative mx-auto">
-        <Image src={img} alt="Image" fill unoptimized />
+        <Image
+          src={img}
+          alt="Image"
+          fill
+          sizes="160px"
+          className="object-contain"
+        />
       </div>
 
       <div className="space-y-1">

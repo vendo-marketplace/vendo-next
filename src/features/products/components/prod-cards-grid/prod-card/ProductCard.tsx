@@ -6,9 +6,10 @@ import Image from "next/image";
 
 interface Props {
   card: ProductCardType;
+  eager?: boolean;
 }
 
-const ProductCard = ({ card }: Props) => {
+const ProductCard = ({ card, eager = false }: Props) => {
   const { isNew, title, price, images, address, createdAt } = card;
 
   return (
@@ -18,7 +19,9 @@ const ProductCard = ({ card }: Props) => {
           src={images[0]}
           alt={title}
           fill
+          unoptimized
           sizes="371px"
+          loading={eager ? "eager" : "lazy"}
           className="object-contain"
         />
       </div>

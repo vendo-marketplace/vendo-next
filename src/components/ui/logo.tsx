@@ -37,7 +37,12 @@ export const Logo = ({ size = "md" }: LogoProps) => {
 
   return (
     <div data-size={size} className={`flex items-center ${variant.wrapper}`}>
-      <Image src={logo} alt="Logo" width={variant.icon} height={variant.icon} />
+      <Image
+        src={logo}
+        alt="Vendo logo"
+        width={variant.icon}
+        className="h-auto"
+      />
 
       <span className={`text-brand-800 font-medium uppercase ${variant.label}`}>
         Vendo

@@ -1,22 +1,23 @@
+"use client";
+
 import Image from "next/image";
 import { Select } from "radix-ui";
 import angleDownIcon from "@/assets/icons/angle-down.svg";
+import type { SelectOption } from "@/types/types";
 
-export type SelectOption<T extends string> = {
-  value: T;
-  label: string;
-  image?: string;
+export type ImageSelectOption<T extends string> = SelectOption<T> & {
+  image: string;
 };
 
 type Props<T extends string> = {
-  options: readonly SelectOption<T>[];
+  options: readonly ImageSelectOption<T>[];
   value?: T;
   placeholder?: string;
   disabled?: boolean;
   onChange?: (value: T) => void;
 };
 
-const CustomSelect = <T extends string>({
+const ImageSelect = <T extends string>({
   options,
   value,
   placeholder = "Select an option",
@@ -43,16 +44,14 @@ const CustomSelect = <T extends string>({
         <Select.Value placeholder={placeholder}>
           {selectedOption && (
             <div className="flex items-center gap-2 h-5 ">
-              {selectedOption.image && (
-                <div className="flex justify-center items-center size-5">
-                  <Image
-                    src={selectedOption.image}
-                    width={16}
-                    height={16}
-                    alt={selectedOption.label}
-                  />
-                </div>
-              )}
+              <div className="flex size-5 items-center justify-center">
+                <Image
+                  src={selectedOption.image}
+                  width={16}
+                  height={16}
+                  alt={selectedOption.label}
+                />
+              </div>
               <span className="text-[14px] h-full leading-5">
                 {selectedOption.label}
               </span>
@@ -60,12 +59,7 @@ const CustomSelect = <T extends string>({
           )}
         </Select.Value>
         <Select.Icon aria-hidden="true">
-          <Image
-            src={angleDownIcon}
-            alt="Angle down icon"
-            width={16}
-            height={16}
-          />
+          <Image src={angleDownIcon} alt="" width={16} height={16} />
         </Select.Icon>
       </Select.Trigger>
 
@@ -79,11 +73,9 @@ const CustomSelect = <T extends string>({
                 className="flex cursor-pointer items-center gap-2 border-none outline-none focus:bg-neutral-400"
               >
                 <div className="flex items-center gap-2">
-                  {image && (
-                    <div className="flex items-center justify-center">
-                      <Image src={image} width={16} height={16} alt={label} />
-                    </div>
-                  )}
+                  <div className="flex items-center justify-center">
+                    <Image src={image} width={16} height={16} alt={label} />
+                  </div>
                   <span>{label}</span>
                 </div>
               </Select.Item>
@@ -95,4 +87,4 @@ const CustomSelect = <T extends string>({
   );
 };
 
-export default CustomSelect;
+export default ImageSelect;

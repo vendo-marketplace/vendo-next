@@ -1,3 +1,7 @@
+import type { PaginatedQuery } from "./types";
+
+export type SearchProductsQuery = PaginatedQuery<"CREATED_AT" | "PRICE">;
+
 export interface ProductCardType {
   id: string;
   title: string;
