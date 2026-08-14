@@ -4,7 +4,7 @@ import enFlag from "@/assets/flags/english.svg";
 import uaFlag from "@/assets/flags/ukraine.svg";
 import ImageSelect, {
   type ImageSelectOption,
-} from "@/components/ui/image-select";
+} from "@/components/ui/select/image-select";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
@@ -27,11 +27,7 @@ const FooterTopLanguageSelect = () => {
   return (
     <div className="flex w-36 items-center justify-end">
       <span className="sr-only">{t("label")}</span>
-      <ImageSelect
-        options={languages}
-        value={locale}
-        onChange={changeLocale}
-      />
+      <ImageSelect options={languages} value={locale} onChange={changeLocale} />
     </div>
   );
 };

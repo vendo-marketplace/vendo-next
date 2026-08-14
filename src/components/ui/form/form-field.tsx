@@ -1,4 +1,4 @@
-import { Label } from "../label";
+import { Label } from "./label";
 
 type FieldControlProps = {
   id: string;

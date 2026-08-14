@@ -54,7 +54,9 @@ export default function RecommendedProducts() {
         <span>Cities</span>
         <ProductSortSelect value={sort} onChange={setSort} />
       </div>
-      {isLoading ? <LoadingSpinner /> : <ProductCardsGrid cards={cards} />}
+
+      <ProductCardsGrid cards={cards} isLoading={isLoading} />
+
       <div ref={ref} className="h-px" aria-hidden="true" />
       {isFetchingNextPage && <LoadingSpinner />}
       {isFetchNextPageError && (

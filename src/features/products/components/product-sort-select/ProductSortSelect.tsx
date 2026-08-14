@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import Select from "@/components/ui/select";
+import Select from "@/components/ui/select/select";
 
 import {
   PRODUCT_SORT_VALUES,
