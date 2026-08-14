@@ -66,7 +66,7 @@ const SearchResults = () => {
       <div className="mb-4 flex justify-end">
         <ProductSortSelect value={sort} onChange={setSort} />
       </div>
-      {isLoading ? <LoadingSpinner /> : <ProductCardsGrid cards={cards} />}
+      <ProductCardsGrid cards={cards} isLoading={isLoading} />
       <div ref={ref} className="h-px" aria-hidden="true" />
       {isFetchingNextPage && <LoadingSpinner />}
 
