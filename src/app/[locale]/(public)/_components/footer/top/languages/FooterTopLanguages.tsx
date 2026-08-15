@@ -1,6 +1,5 @@
 "use client";
 
-import enFlag from "@/assets/flags/english.svg";
 import uaFlag from "@/assets/flags/ukraine.svg";
 import ImageSelect, {
   type ImageSelectOption,
@@ -10,7 +9,6 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
 
 const languages: ImageSelectOption<Locale>[] = [
-  { value: "en", label: "English", image: enFlag },
   { value: "uk", label: "Українська", image: uaFlag },
 ];
 
