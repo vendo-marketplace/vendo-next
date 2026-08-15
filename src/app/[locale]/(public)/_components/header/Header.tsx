@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 
 import { Button } from "@/components/ui/button/button";
-import { ChatBubbleIcon, HeartIcon } from "@/components/ui/icons";
+import { ChatBubbleIcon } from "@/components/ui/icons";
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
 import HeaderAuth from "./auth/HeaderAuth";
+import HeaderFavoritesLink from "./favorites/HeaderFavoritesLink";
 import Logo from "./logo/Logo";
 import SearchBar from "./search-bar/SearchBar";
-import { Link } from "@/i18n/navigation";
 
 const Header = () => {
   return (
@@ -23,11 +23,7 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <Link href={"/favorites"} className="flex">
-              <Button variant="secondary" className="size-8 p-0 border-0">
-                <HeartIcon className="size-6 " />
-              </Button>
-            </Link>
+            <HeaderFavoritesLink />
             <Button variant="secondary" className="size-8 p-0 border-0">
               <ChatBubbleIcon className="size-6" />
             </Button>
