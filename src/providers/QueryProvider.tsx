@@ -10,7 +10,7 @@ const QueryProvider = ({ children }: { children: ReactNode }) => {
         defaultOptions: {
           queries: {
             staleTime: 60 * 1000,
-            retry: 1,
+            retry: false,
             refetchOnWindowFocus: false,
           },
         },

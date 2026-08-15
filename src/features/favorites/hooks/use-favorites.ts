@@ -4,60 +4,79 @@ import { useTranslations } from "next-intl";
 import { useMemo, useSyncExternalStore } from "react";
 import { toast } from "sonner";
 
+import { useMe } from "@/features/auth/hooks/use-me";
 import type { ProductCardType } from "@/types/product";
 import { useFavoritesStore } from "../stores/favorites.store";
-
-const hasStoredSession = () =>
-  Boolean(
-    localStorage.getItem("access-token") ||
-      localStorage.getItem("refresh-token"),
-  );
+import { useAddFavorite } from "./use-add-favorite";
+import { useFavoriteProducts } from "./use-favorite-products";
+import { useRemoveFavorite } from "./use-remove-favorite";
 
 const emptySubscribe = () => () => undefined;
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
+const emptyFavorites: ProductCardType[] = [];
 
 export const useFavorites = () => {
   const t = useTranslations("Favorites");
-  const favorites = useFavoritesStore((state) => state.favorites);
+  const guestFavorites = useFavoritesStore((state) => state.favorites);
   const toggleGuestFavorite = useFavoritesStore((state) => state.toggle);
+  const addFavorite = useAddFavorite();
+  const removeFavorite = useRemoveFavorite();
+  const { data: currentUser, isLoading: isAuthLoading } = useMe();
   const isHydrated = useSyncExternalStore(
     emptySubscribe,
     getClientSnapshot,
     getServerSnapshot,
   );
-  const isAuthenticated = useSyncExternalStore(
-    emptySubscribe,
-    hasStoredSession,
-    getServerSnapshot,
+  const isAuthenticated = Boolean(currentUser);
+  const {
+    data: authenticatedFavorites = emptyFavorites,
+    isLoading: isAuthenticatedFavoritesLoading,
+  } = useFavoriteProducts(isHydrated && isAuthenticated);
+
+  const favorites = useMemo(
+    () =>
+      isAuthenticated
+        ? authenticatedFavorites
+        : isHydrated
+          ? guestFavorites
+          : emptyFavorites,
+    [authenticatedFavorites, guestFavorites, isAuthenticated, isHydrated],
   );
 
   const favoriteIds = useMemo(
-    () =>
-      new Set(
-        isHydrated && !isAuthenticated
-          ? favorites.map(({ id }) => id)
-          : [],
-      ),
-    [favorites, isAuthenticated, isHydrated],
+    () => new Set(favorites.map(({ id }) => id)),
+    [favorites],
   );
 
   const toggleFavorite = (product: ProductCardType) => {
-    if (hasStoredSession()) {
-      toast.info(t("signedInComingSoon"));
+    const wasFavorite = favoriteIds.has(product.id);
+
+    if (!isAuthenticated) {
+      toggleGuestFavorite(product);
+      toast.success(t(wasFavorite ? "removed" : "added"));
       return;
     }
 
-    const wasFavorite = favoriteIds.has(product.id);
-    toggleGuestFavorite(product);
-    toast.success(t(wasFavorite ? "removed" : "added"));
+    if (wasFavorite) {
+      removeFavorite.mutate(product.id, {
+        onSuccess: () => toast.success(t("removed")),
+      });
+      return;
+    }
+
+    addFavorite.mutate(product, {
+      onSuccess: () => toast.success(t("added")),
+    });
   };
 
   return {
-    favorites: isHydrated && !isAuthenticated ? favorites : [],
+    isLoading:
+      !isHydrated ||
+      isAuthLoading ||
+      (isAuthenticated && isAuthenticatedFavoritesLoading),
+    favorites,
     favoriteIds,
-    isAuthenticated,
-    isHydrated,
     toggleFavorite,
   };
 };

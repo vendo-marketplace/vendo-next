@@ -11,7 +11,11 @@ interface Props {
 }
 
 const ProductCardsGrid = ({ cards, isLoading = false }: Props) => {
-  const { favoriteIds, isHydrated, toggleFavorite } = useFavorites();
+  const {
+    favoriteIds,
+    isLoading: areFavoritesLoading,
+    toggleFavorite,
+  } = useFavorites();
 
   if (isLoading) return <LoadingSpinner />;
 
@@ -23,7 +27,7 @@ const ProductCardsGrid = ({ cards, isLoading = false }: Props) => {
           card={card}
           eager={index < 3}
           favorite={favoriteIds.has(card.id)}
-          favoriteDisabled={!isHydrated}
+          favoriteDisabled={areFavoritesLoading}
           onToggleFavorite={() => toggleFavorite(card)}
         />
       ))}
