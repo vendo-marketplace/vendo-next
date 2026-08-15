@@ -50,8 +50,7 @@ export default function RecommendedProducts() {
       <h2 className="text-3xl font-semibold text-neutral-950">
         Товари, що вам можуть сподобатись
       </h2>
-      <div className="flex justify-between">
-        <span>Cities</span>
+      <div className="flex justify-end">
         <ProductSortSelect value={sort} onChange={setSort} />
       </div>
 
