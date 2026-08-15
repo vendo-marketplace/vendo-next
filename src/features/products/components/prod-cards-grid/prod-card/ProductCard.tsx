@@ -19,7 +19,6 @@ const ProductCard = ({ card, eager = false }: Props) => {
           src={images[0]}
           alt={title}
           fill
-          unoptimized
           sizes="371px"
           loading={eager ? "eager" : "lazy"}
           className="object-contain"
