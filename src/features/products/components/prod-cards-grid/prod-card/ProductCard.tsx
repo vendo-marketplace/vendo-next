@@ -1,19 +1,44 @@
+"use client";
+
 import { Button } from "@/components/ui/button/button";
-import { ChatBubbleIcon, PinIcon } from "@/components/ui/icons";
+import { ChatBubbleIcon, HeartIcon, PinIcon } from "@/components/ui/icons";
 import type { ProductCardType } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface Props {
   card: ProductCardType;
   eager?: boolean;
+  favorite: boolean;
+  favoriteDisabled?: boolean;
+  onToggleFavorite: () => void;
 }
 
-const ProductCard = ({ card, eager = false }: Props) => {
+const ProductCard = ({
+  card,
+  eager = false,
+  favorite,
+  favoriteDisabled = false,
+  onToggleFavorite,
+}: Props) => {
   const { isNew, title, price, images, address, createdAt } = card;
+  const t = useTranslations("Favorites");
 
   return (
-    <div className="border-border-base w-105.25 rounded-lg border bg-neutral-50 p-6 shadow-[0_1px_0.5px_0.05px_#1D293D05]">
+    <div className="border-border-base relative w-105.25 rounded-lg border bg-neutral-50 p-6 shadow-[0_1px_0.5px_0.05px_#1D293D05]">
+      <Button
+        variant="secondary"
+        size="none"
+        disabled={favoriteDisabled}
+        aria-label={t(favorite ? "removeLabel" : "addLabel")}
+        onClick={onToggleFavorite}
+        className={`absolute top-2 right-2 size-9 z-50 rounded-full  ${
+          favorite ? "text-red-500" : "text-neutral-600"
+        }`}
+      >
+        <HeartIcon className="size-5" />
+      </Button>
       <div className="relative w-full h-73.25 overflow-hidden rounded-lg">
         <Image
           src={images[0]}

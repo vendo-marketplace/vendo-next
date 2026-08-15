@@ -15,16 +15,17 @@ import {
 import { CircleUserIcon } from "@/components/ui/icons";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { authKeys } from "@/features/auth/queries/auth.keys";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 
 export default function HeaderAuth() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [hasStoredSession, setHasStoredSession] = useState(
     () =>
       typeof window !== "undefined" &&
       Boolean(
         localStorage.getItem("access-token") ||
-          localStorage.getItem("refresh-token"),
+        localStorage.getItem("refresh-token"),
       ),
   );
 
@@ -35,15 +36,12 @@ export default function HeaderAuth() {
     localStorage.removeItem("refresh-token");
     setHasStoredSession(false);
     queryClient.removeQueries({ queryKey: authKeys.all });
+    router.refresh();
   };
 
   if (!user) {
     return (
-      <Button
-        asChild
-        variant="secondary"
-        className="size-8 border-0 p-0"
-      >
+      <Button asChild variant="secondary" className="size-8 border-0 p-0">
         <Link href="/sign-in" aria-label="Sign in">
           <CircleUserIcon className="size-6" />
         </Link>

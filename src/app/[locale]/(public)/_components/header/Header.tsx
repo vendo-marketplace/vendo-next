@@ -23,7 +23,7 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <Link href={"/favorites"}>
+            <Link href={"/favorites"} className="flex">
               <Button variant="secondary" className="size-8 p-0 border-0">
                 <HeartIcon className="size-6 " />
               </Button>
