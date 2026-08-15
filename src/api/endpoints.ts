@@ -21,5 +21,8 @@ export const apiEndpoints = {
   products: {
     search: "/search",
   },
-  favorites: "/favorites",
+  favorites: {
+    list: "/favorites",
+    product: (productId: string) => `/favorites/${productId}`,
+  },
 } as const;

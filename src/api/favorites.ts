@@ -8,5 +8,9 @@ export interface FavoritesResponse {
 }
 
 export const favoritesApi = {
-  get: async () => client.get<FavoritesResponse>(apiEndpoints.favorites),
+  get: async () => client.get<FavoritesResponse>(apiEndpoints.favorites.list),
+  add: async (productId: string) =>
+    client.post<void>(apiEndpoints.favorites.product(productId)),
+  remove: async (productId: string) =>
+    client.delete<void>(apiEndpoints.favorites.product(productId)),
 };
