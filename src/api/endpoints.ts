@@ -21,4 +21,5 @@ export const apiEndpoints = {
   products: {
     search: "/search",
   },
+  favorites: "/favorites",
 } as const;
