@@ -41,7 +41,7 @@ export function AuthForm({ activeTab }: AuthFormProps) {
       />
 
       <Tabs.List
-        className="flex items-center justify-center gap-2 bg-brand-50"
+        className="flex items-center justify-center gap-1 p-1 bg-brand-50 rounded-lg"
         aria-label="Авторизація"
       >
         <Tabs.Trigger value="sign-in" asChild>
