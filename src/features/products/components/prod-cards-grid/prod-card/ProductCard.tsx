@@ -27,18 +27,6 @@ const ProductCard = ({
 
   return (
     <div className="border-border-base relative w-105.25 rounded-lg border bg-neutral-50 p-6 shadow-[0_1px_0.5px_0.05px_#1D293D05]">
-      <Button
-        variant="secondary"
-        size="none"
-        disabled={favoriteDisabled}
-        aria-label={t(favorite ? "removeLabel" : "addLabel")}
-        onClick={onToggleFavorite}
-        className={`absolute top-2 right-2 size-9 z-50 rounded-full  ${
-          favorite ? "text-red-500" : "text-neutral-600"
-        }`}
-      >
-        <HeartIcon className="size-5" />
-      </Button>
       <div className="relative w-full h-73.25 overflow-hidden rounded-lg">
         <Image
           src={images[0]}
@@ -46,9 +34,21 @@ const ProductCard = ({
           fill
           sizes="371px"
           loading={eager ? "eager" : "lazy"}
-          className="object-contain"
+          className="object-contain "
         />
       </div>
+      <Button
+        variant="secondary"
+        size="none"
+        disabled={favoriteDisabled}
+        aria-label={t(favorite ? "removeLabel" : "addLabel")}
+        onClick={onToggleFavorite}
+        className={`absolute top-2 right-2 size-9 rounded-full  ${
+          favorite ? "text-red-500" : "text-neutral-600"
+        }`}
+      >
+        <HeartIcon className="size-5" />
+      </Button>
       <div className="w-full space-y-7 pt-6">
         <div className="space-y-4">
           <span
