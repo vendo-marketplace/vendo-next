@@ -16,7 +16,7 @@ export type AccountCompletionCredentials = {
 };
 
 export type GoogleLoginCredentials = {
-  idToken: string;
+  authCode: string;
 };
 
 export type LoginResponse = {

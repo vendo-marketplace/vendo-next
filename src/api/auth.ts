@@ -14,7 +14,9 @@ export const authApi = {
   login: async (credentials: LoginCredentials) =>
     client.post<LoginResponse>(apiEndpoints.auth.login, credentials),
   googleLogin: async (credentials: GoogleLoginCredentials) =>
-    client.post<LoginResponse>(apiEndpoints.auth.google, credentials),
+    client.post<LoginResponse>(apiEndpoints.auth.google, undefined, {
+      params: credentials,
+    }),
   signUp: async (credentials: LoginCredentials) =>
     client.post<LoginResponse>(apiEndpoints.auth.signUp, credentials),
   completeAccount: async (credentials: AccountCompletionCredentials) =>

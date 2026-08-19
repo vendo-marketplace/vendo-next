@@ -86,11 +86,7 @@ export function AuthForm({ activeTab }: AuthFormProps) {
         <span className="font-medium text-neutral-600">або</span>
         <div className="h-px w-full bg-neutral-100" />
       </div>
-      <GoogleLoginButton />
-      {/* <Button variant="secondary" className="w-full text-[14px] leading-5">
-        <GoogleIcon className="size-4" />
-        <span>{content.googleLabel}</span>
-      </Button> */}
+      <GoogleLoginButton label={content.googleLabel} />
     </Tabs.Root>
   );
 }
