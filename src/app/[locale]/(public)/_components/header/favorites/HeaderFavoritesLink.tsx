@@ -9,7 +9,7 @@ import { Link } from "@/i18n/navigation";
 
 const HeaderFavoritesLink = () => {
   const t = useTranslations("Favorites");
-  const { favoriteIds } = useFavorites();
+  const { favoriteIds, isLoading } = useFavorites();
   const favoritesCount = favoriteIds.size;
 
   return (
@@ -20,7 +20,7 @@ const HeaderFavoritesLink = () => {
     >
       <Link href="/favorites" aria-label={t("title")}>
         <HeartIcon className="size-6" aria-hidden="true" />
-        {favoritesCount > 0 && (
+        {!isLoading && favoritesCount > 0 && (
           <span className="bg-brand-600 absolute rounded-full size-3 top-[1.5px] right-px text-[8px] text-center leading-3 font-medium text-[#FCFCFC]">
             {favoritesCount}
           </span>
