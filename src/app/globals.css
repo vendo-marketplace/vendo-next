@@ -121,6 +121,53 @@
   --color-green-900: #2a5c0b;
   --color-green-950: #123400;
 
+  /* Semantic color tokens */
+  --color-surface-brand: #105fff;
+  --color-surface-brand-subtle: #edf6ff;
+  --color-surface-primary: #ffffff;
+  --color-surface-primary-subtle: #f3f4f6;
+  --color-surface-tertiary: #efefef;
+  --color-surface-secondary: #fcfcfc;
+  --color-surface-secondary-brand: #edf6ff;
+  --color-surface-invert: #3d3d3d;
+  --color-surface-hover: #0a49eb;
+  --color-surface-success: #008236;
+  --color-surface-success-hover: #016630;
+  --color-surface-success-subtle: #f0fdf4;
+  --color-surface-error: #ef0d12;
+  --color-surface-error-hover: #cc090d;
+  --color-surface-error-subtle: #fff1f1;
+  --color-surface-warning: #ff980a;
+  --color-surface-warning-subtle: #fffaec;
+  --color-surface-warning-hover: #fa7d00;
+
+  --color-text-primary: #292929;
+  --color-text-secondary: #656565;
+  --color-text-tertiary: #989898;
+  --color-text-placeholder: #bdbdbd;
+  --color-text-invert: #ffffff;
+  --color-text-brand: #105fff;
+  --color-text-brand-dark: #0f3bbe;
+  --color-text-brand-light: #50a6ff;
+  --color-text-hover: #105fff;
+  --color-text-error: #cc090d;
+  --color-text-warning: #cc5d02;
+  --color-text-success: #008236;
+
+  --color-stroke-primary: #bdbdbd;
+  --color-stroke-primary-subtle: #e5e7eb;
+  --color-stroke-secondary: #efefef;
+  --color-stroke-tertiary: #989898;
+  --color-stroke-brand: #105fff;
+  --color-stroke-brand-light: #50a6ff;
+  --color-stroke-brand-subtle: #b9dbff;
+  --color-stroke-error: #ff2f34;
+  --color-stroke-error-subtle: #ffc4c5;
+  --color-stroke-success: #008236;
+  --color-stroke-success-subtle: #b9f8cf;
+  --color-stroke-warning: #ff980a;
+  --color-stroke-warning-subtle: #ffe5a5;
+
   --color-border-base: #e5e7eb;
   --color-text-body: #4a5565;
   --color-text-heading: #101828;
