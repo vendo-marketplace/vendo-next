@@ -1,13 +1,13 @@
 "use client";
 
+import { AiIcon } from "@/assets/icons";
+import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
-import { ChatBubbleIcon, HeartIcon, PinIcon } from "@/components/ui/icons";
+import { HeartIcon, PinIcon } from "@/components/ui/icons";
 import type { ProductCardType } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Badge } from "@/components/ui/badge/badge";
-import { AiIcon } from "@/assets/icons";
+import Image from "next/image";
 
 interface Props {
   card: ProductCardType;
@@ -28,8 +28,8 @@ const ProductCard = ({
   const t = useTranslations("Favorites");
 
   return (
-    <div className="border-stroke-primary-subtle relative w-full rounded-[8px] border bg-surface-primary p-4 pb-8 shadow-sm">
-      <div className="relative w-full h-50 overflow-hidden rounded-lg">
+    <div className="border-stroke-primary-subtle relative flex h-full w-full flex-col rounded-[8px] border bg-surface-primary p-4 pb-8 shadow-xs hover:shadow-sm">
+      <div className="relative h-50 w-full shrink-0 overflow-hidden rounded-lg">
         <Image
           src={images[0]}
           alt={title}
@@ -53,20 +53,20 @@ const ProductCard = ({
         <Badge
           size="sm"
           theme={isNew ? "brand" : "gray"}
-          className="absolute rounded-full left-2 top-2 px-2!"
+          className="absolute rounded-full left-2.25 top-2.5 px-2!"
           leading={<AiIcon />}
         >
           {isNew ? "Новий" : "Вживаний"}
         </Badge>
       </div>
 
-      <div className="w-full space-y-7 pt-4">
-        <div className="flex w-full flex-col gap-2 pt-2 ">
+      <div className="flex w-full flex-1 flex-col pt-4">
+        <div className="flex w-full flex-1 flex-col gap-2 pt-2">
           <h3 className="text-[14px] leading-5">{title}</h3>
           <span className="text-[20px] leading-7.5 font-semibold">
             {price} грн
           </span>
-          <div className="border-t border-stroke-secondary flex gap-2 pt-2 text-[12px] leading-4.5">
+          <div className="border-t border-stroke-secondary mt-auto flex gap-2 pt-2 text-[12px] leading-4.5">
             <div className="flex items-center gap-1.5 flex-1">
               <PinIcon className="size-4 shrink-0 text-text-secondary" />
               <span className="truncate text-text-tertiary">
