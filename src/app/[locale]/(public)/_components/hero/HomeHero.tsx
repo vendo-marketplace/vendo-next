@@ -1,12 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
+import banner from "@/assets/home/banner.png";
 import { ChevronLeftIcon, ChevronRightIcon } from "@/components/ui/icons";
 
 import { Button } from "@/components/ui/button/button";
-import HomeHeroSlide from "./slides/HomeHeroSlide";
-import { heroSlides } from "./slides/slides";
+
+const heroSlides = [banner, banner, banner];
 
 const firstRealSlideIndex = 1;
 const lastRealSlideIndex = heroSlides.length;
@@ -82,12 +84,17 @@ export default function HomeHero() {
             .join(" ")}
           style={{ transform: `translateX(-${trackIndex * 100}%)` }}
         >
-          {sliderSlides.map((slide, index) => (
-            <HomeHeroSlide
-              key={`${slide.id} - ${index}`}
-              image={slide.image}
-              eager={index === firstRealSlideIndex}
-            />
+          {sliderSlides.map((image, index) => (
+            <div key={index} className="relative h-83 w-full shrink-0">
+              <Image
+                src={image}
+                alt="Slide"
+                fill
+                sizes="(max-width: 1320px) 100vw, 1320px"
+                loading={index === firstRealSlideIndex ? "eager" : "lazy"}
+                className="object-cover"
+              />
+            </div>
           ))}
         </div>
 
