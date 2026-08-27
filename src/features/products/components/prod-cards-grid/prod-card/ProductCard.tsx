@@ -53,7 +53,7 @@ const ProductCard = ({
         <Badge
           size="sm"
           theme={isNew ? "brand" : "gray"}
-          className="absolute rounded-full left-2.25 top-2.5 px-2!"
+          className="absolute rounded-full left-1 top-1 px-2!"
           leading={<AiIcon />}
         >
           {isNew ? "Новий" : "Вживаний"}
