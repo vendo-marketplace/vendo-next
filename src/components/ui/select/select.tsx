@@ -1,6 +1,6 @@
 "use client";
 
-import { AngleDownIcon, AngleRightIcon } from "@/assets/icons";
+import { AngleDownIcon, AngleRightIcon, TickIcon } from "@/assets/icons";
 import type { SelectOption } from "@/types/types";
 import { cn } from "@/utils/utils";
 import { Select as RadixSelect } from "radix-ui";
@@ -37,10 +37,13 @@ const Select = <T extends string>({
       onValueChange={handleValueChange}
     >
       <RadixSelect.Trigger
-        className={`flex justify-between items-center gap-2 font-medium text-text-secondary text-[14px] leading-5 w-fit px-4 py-1.5 rounded-lg border border-stroke-primary ${className}`}
+        className={`group flex justify-between items-center gap-2 font-medium text-text-secondary text-[14px] leading-5 w-fit px-4 py-1.5 rounded-lg border border-stroke-primary ${className}`}
       >
         <RadixSelect.Value placeholder={placeholder} />
-        <RadixSelect.Icon aria-hidden="true">
+        <RadixSelect.Icon
+          aria-hidden="true"
+          className="transition-transform duration-200 group-data-[state=open]:rotate-180"
+        >
           <AngleDownIcon className="size-4" />
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
@@ -66,7 +69,7 @@ const Select = <T extends string>({
                 <RadixSelect.ItemText>{opt.label}</RadixSelect.ItemText>
                 {opt.value === value && (
                   <RadixSelect.Icon aria-hidden="true">
-                    <AngleRightIcon className="size-3.5 text-text-secondary" />
+                    <TickIcon className="size-3.5 text-text-secondary" />
                   </RadixSelect.Icon>
                 )}
               </RadixSelect.Item>
