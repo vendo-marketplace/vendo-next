@@ -6,6 +6,8 @@ import type { ProductCardType } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge/badge";
+import { AiIcon } from "@/assets/icons";
 
 interface Props {
   card: ProductCardType;
@@ -48,6 +50,14 @@ const ProductCard = ({
         >
           <HeartIcon className="size-5" />
         </Button>
+        <Badge
+          size="sm"
+          theme={isNew ? "brand" : "gray"}
+          className="absolute rounded-full px-2!"
+          leading={<AiIcon />}
+        >
+          {isNew ? "Новий" : "Вживаний"}
+        </Badge>
       </div>
 
       <div className="w-full space-y-7 pt-4">
