@@ -20,7 +20,7 @@ const ProductCardsGrid = ({ cards, isLoading = false }: Props) => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="w-full grid grid-cols-3 gap-7">
+    <div className="w-full grid grid-cols-4 gap-5">
       {cards.map((card, index) => (
         <ProductCard
           key={card.id}

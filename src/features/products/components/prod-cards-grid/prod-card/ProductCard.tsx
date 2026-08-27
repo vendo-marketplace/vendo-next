@@ -26,62 +26,44 @@ const ProductCard = ({
   const t = useTranslations("Favorites");
 
   return (
-    <div className="border-border-base relative w-105.25 rounded-lg border bg-neutral-50 p-6 shadow-[0_1px_0.5px_0.05px_#1D293D05]">
-      <div className="relative w-full h-73.25 overflow-hidden rounded-lg">
+    <div className="border-border-base relative w-full rounded-[8px] border bg-neutral-50 p-4 pb-8 shadow-sm">
+      <div className="relative w-full h-50 overflow-hidden rounded-lg">
         <Image
           src={images[0]}
           alt={title}
           fill
-          sizes="371px"
+          sizes="200px"
           loading={eager ? "eager" : "lazy"}
           className="object-contain "
         />
+        <Button
+          variant="secondary"
+          size="none"
+          disabled={favoriteDisabled}
+          aria-label={t(favorite ? "removeLabel" : "addLabel")}
+          onClick={onToggleFavorite}
+          className={`absolute top-2 right-2 size-9 rounded-full  ${
+            favorite ? "text-red-500" : "text-neutral-600"
+          }`}
+        >
+          <HeartIcon className="size-5" />
+        </Button>
       </div>
-      <Button
-        variant="secondary"
-        size="none"
-        disabled={favoriteDisabled}
-        aria-label={t(favorite ? "removeLabel" : "addLabel")}
-        onClick={onToggleFavorite}
-        className={`absolute top-2 right-2 size-9 rounded-full  ${
-          favorite ? "text-red-500" : "text-neutral-600"
-        }`}
-      >
-        <HeartIcon className="size-5" />
-      </Button>
-      <div className="w-full space-y-7 pt-6">
-        <div className="space-y-4">
-          <span
-            className={`block w-fit rounded-lg ${isNew ? "bg-brand-50" : "bg-[#F3F4F6]"} px-3 py-2 text-base font-medium`}
-          >
-            {isNew ? "Новий" : "Б/у"}
+
+      <div className="w-full space-y-7 pt-4">
+        <div className="flex w-full flex-col gap-2 pt-2 ">
+          <h3 className="text-[14px] leading-5">{title}</h3>
+          <span className="text-[20px] leading-7.5 font-semibold">
+            {price} грн
           </span>
-          <h3 className="mt-4 text-base font-semibold">{title}</h3>
-        </div>
-        <div className="mt-3 flex items-center justify-between gap-3 text-sm text-neutral-600">
-          <div className="flex min-w-0 items-end gap-2">
-            <PinIcon className="size-4 shrink-0" />
-            <span className="truncate">{address.city}</span>
-          </div>
-          <span className="shrink-0 text-neutral-400">
-            {formatRelativeTime(createdAt)}
-          </span>
-        </div>
-        <div className="mt-6 flex items-center justify-between gap-3 ">
-          <strong className="text-2xl font-bold">{price} грн</strong>
-          <div className="flex items-center gap-3">
-            <Button type="button" className="size-9 min-w-32.25">
-              Купити
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              size="lg"
-              aria-label="Написати продавцю"
-              className="size-9 p-0"
-            >
-              <ChatBubbleIcon className="size-4 " />
-            </Button>
+          <div className="border-t border-neutral-100 flex gap-2 pt-2 text-[12px] leading-4.5">
+            <div className="flex items-center gap-1.5 flex-1">
+              <PinIcon className="size-4 shrink-0 text-neutral-600" />
+              <span className="truncate text-neutral-400">{address.city}</span>
+            </div>
+            <span className="shrink-0 text-neutral-400">
+              {formatRelativeTime(createdAt)}
+            </span>
           </div>
         </div>
       </div>
