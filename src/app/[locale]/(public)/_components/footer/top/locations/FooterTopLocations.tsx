@@ -8,9 +8,9 @@ const FooterTopLocations = () => {
       {LOCATIONS.map((city, index) => (
         <Fragment key={city}>
           {index > 0 && (
-            <div className="size-1.5 rounded-full bg-neutral-300" />
+            <div className="size-1.5 rounded-full bg-stroke-primary" />
           )}
-          <span className="text-text-heading">{city}</span>
+          <span className="text-text-primary">{city}</span>
         </Fragment>
       ))}
     </div>

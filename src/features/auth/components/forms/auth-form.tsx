@@ -41,7 +41,7 @@ export function AuthForm({ activeTab }: AuthFormProps) {
       />
 
       <Tabs.List
-        className="flex items-center justify-center gap-1 p-1 bg-brand-50 rounded-lg"
+        className="flex items-center justify-center gap-1 p-1 bg-surface-brand-subtle rounded-lg"
         aria-label="Авторизація"
       >
         <Tabs.Trigger value="sign-in" asChild>
@@ -82,9 +82,9 @@ export function AuthForm({ activeTab }: AuthFormProps) {
       </Tabs.Content>
 
       <div className="flex items-center justify-between gap-4">
-        <div className="h-px w-full bg-neutral-100" />
-        <span className="font-medium text-neutral-600">або</span>
-        <div className="h-px w-full bg-neutral-100" />
+        <div className="h-px w-full bg-stroke-secondary" />
+        <span className="font-medium text-text-secondary">або</span>
+        <div className="h-px w-full bg-stroke-secondary" />
       </div>
       <GoogleLoginButton label={content.googleLabel} />
     </Tabs.Root>

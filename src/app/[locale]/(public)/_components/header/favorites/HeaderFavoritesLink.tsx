@@ -21,7 +21,7 @@ const HeaderFavoritesLink = () => {
       <Link href="/favorites" aria-label={t("title")}>
         <HeartIcon className="size-6" aria-hidden="true" />
         {!isLoading && favoritesCount > 0 && (
-          <span className="bg-brand-600 absolute rounded-full size-3 top-[1.5px] right-px text-[8px] text-center leading-3 font-medium text-[#FCFCFC]">
+          <span className="bg-surface-brand absolute rounded-full size-3 top-[1.5px] right-px text-[8px] text-center leading-3 font-medium text-text-invert">
             {favoritesCount}
           </span>
         )}

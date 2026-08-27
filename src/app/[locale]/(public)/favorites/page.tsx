@@ -17,7 +17,7 @@ const FavoritesPage = () => {
       ) : favorites.length > 0 ? (
         <ProductCardsGrid cards={favorites} />
       ) : (
-        <p className="text-neutral-600">{t("empty")}</p>
+        <p className="text-text-secondary">{t("empty")}</p>
       )}
     </section>
   );

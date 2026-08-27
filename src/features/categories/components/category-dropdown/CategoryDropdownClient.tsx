@@ -13,10 +13,10 @@ interface CategoryDropdownClientProps {
 }
 
 const menuContentClassName =
-  "z-50 min-w-72 max-h-screen overflow-y-auto rounded-xl border border-neutral-200 bg-white p-2 shadow-xl outline-none";
+  "z-50 min-w-72 max-h-screen overflow-y-auto rounded-xl border border-stroke-secondary bg-surface-primary p-2 shadow-xl outline-none";
 
 const menuItemClassName =
-  "flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-neutral-700 outline-none select-none data-[highlighted]:bg-neutral-100 data-[highlighted]:text-neutral-950";
+  "flex min-h-10 cursor-pointer items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm text-text-secondary outline-none select-none data-[highlighted]:bg-surface-tertiary data-[highlighted]:text-text-primary";
 
 interface CategoryMenuItemProps {
   category: CategoryOption;
@@ -38,7 +38,7 @@ function CategoryMenuItem({ category, parentSlug }: CategoryMenuItemProps) {
             sideOffset={6}
             collisionPadding={12}
           >
-            <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-neutral-500">
+            <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-text-tertiary">
               {category.title}
             </DropdownMenu.Label>
 
@@ -89,7 +89,7 @@ export default function CategoryDropdownClient({
           loop
           className={menuContentClassName}
         >
-          <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-neutral-500">
+          <DropdownMenu.Label className="px-3 py-2 text-xs font-semibold text-text-tertiary">
             Категорії
           </DropdownMenu.Label>
           {unavailable && <span>Failed to fetch categories</span>}

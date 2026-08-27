@@ -84,12 +84,12 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
       </div>
 
       <div className="space-y-1">
-        <h1 className="text-[24px] leading-7.5 font-semibold text-neutral-950">
+        <h1 className="text-[24px] leading-7.5 font-semibold text-text-primary">
           Підтвердіть Ваш e-mail
         </h1>
-        <p className="text-[14px] leading-5 text-neutral-400">
+        <p className="text-[14px] leading-5 text-text-tertiary">
           Ми відправили код підтвердження на адресу{" "}
-          <span className="underline text-brand-800">{email}</span>. Введіть
+          <span className="underline text-text-brand-dark">{email}</span>. Введіть
           його нижче.
         </p>
       </div>
@@ -112,10 +112,10 @@ export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
         </Button>
       </form>
 
-      <p className="text-center text-[14px] text-neutral-400">
+      <p className="text-center text-[14px] text-text-tertiary">
         Не отримали лист?{" "}
         <button
-          className="font-medium text-brand-600 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="font-medium text-text-brand hover:text-text-hover disabled:cursor-not-allowed disabled:opacity-50"
           type="button"
           disabled={isResendPending || resendCooldown > 0}
           onClick={handleResend}

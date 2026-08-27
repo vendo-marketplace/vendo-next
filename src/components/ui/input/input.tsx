@@ -29,8 +29,8 @@ export function getInputClassName({
   invalid,
 }: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
-    "flex group focus-within:border-brand-600 items-center gap-2 border rounded-lg p-2.5 bg-neutral-50 border-neutral-300 shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
-    invalid && "border-red-500",
+    "flex group focus-within:border-stroke-brand items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
+    invalid && "border-stroke-error",
     inputVariants.size[size],
   );
 }
@@ -58,8 +58,8 @@ export function Input({
         <div
           data-slot="input-start"
           className={cn(
-            "flex justify-center shrink-0 items-center size-4 text-neutral-400 group-focus-within:text-brand-600",
-            invalid && "text-red-700",
+            "flex justify-center shrink-0 items-center size-4 text-text-tertiary group-focus-within:text-text-brand",
+            invalid && "text-text-error",
           )}
         >
           {start}
@@ -72,8 +72,8 @@ export function Input({
         disabled={disabled}
         aria-invalid={invalid || undefined}
         className={cn(
-          "w-full placeholder:text-neutral-400 outline-none text-neutral-950 text-[14px] leading-5",
-          invalid && "border-red-500 focus-within:border-red-500",
+          "w-full placeholder:text-text-placeholder outline-none text-text-primary text-[14px] leading-5",
+          invalid && "border-stroke-error focus-within:border-stroke-error",
           className,
         )}
       />
@@ -84,8 +84,8 @@ export function Input({
           type="button"
           onClick={onClear}
           className={cn(
-            "size-4 flex justify-center items-center text-neutral-600 group-focus-within:text-brand-600",
-            invalid && "text-red-700",
+            "size-4 flex justify-center items-center text-text-secondary group-focus-within:text-text-brand",
+            invalid && "text-text-error",
           )}
         >
           <CrossIcon />
@@ -96,8 +96,8 @@ export function Input({
         <div
           data-slot="input-end"
           className={cn(
-            "flex shrink-0 items-center justify-center text-neutral-600 group-focus-within:text-brand-600",
-            invalid && "text-red-700",
+            "flex shrink-0 items-center justify-center text-text-secondary group-focus-within:text-text-brand",
+            invalid && "text-text-error",
           )}
         >
           {end}

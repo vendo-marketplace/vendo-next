@@ -47,7 +47,7 @@ export default function RecommendedProducts() {
 
   return (
     <section className="py-4 px-15 space-y-7">
-      <h2 className="text-3xl font-semibold text-neutral-950">
+      <h2 className="text-3xl font-semibold text-text-primary">
         Товари, що вам можуть сподобатись
       </h2>
       <div className="flex justify-end">

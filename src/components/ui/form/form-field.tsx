@@ -40,7 +40,7 @@ export const FormField = ({
         })}
 
         {error && (
-          <p id={errorId} role="alert" className="text-sm text-red-700">
+          <p id={errorId} role="alert" className="text-sm text-text-error">
             {error}
           </p>
         )}

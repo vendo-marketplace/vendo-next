@@ -79,7 +79,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className={mazzardH.variable} suppressHydrationWarning>
-      <body className="min-h-screen flex flex-col bg-[#FCFCFC] antialiased">
+      <body className="min-h-screen flex flex-col bg-surface-secondary text-text-primary antialiased">
         <NextIntlClientProvider messages={messages}>
           <Providers>
             <div className="w-full max-w-360 flex flex-col mx-auto h-full flex-1">

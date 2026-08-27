@@ -28,7 +28,7 @@ const ProductCard = ({
   const t = useTranslations("Favorites");
 
   return (
-    <div className="border-border-base relative w-full rounded-[8px] border bg-neutral-50 p-4 pb-8 shadow-sm">
+    <div className="border-stroke-primary-subtle relative w-full rounded-[8px] border bg-surface-primary p-4 pb-8 shadow-sm">
       <div className="relative w-full h-50 overflow-hidden rounded-lg">
         <Image
           src={images[0]}
@@ -45,7 +45,7 @@ const ProductCard = ({
           aria-label={t(favorite ? "removeLabel" : "addLabel")}
           onClick={onToggleFavorite}
           className={`absolute top-2 right-2 size-9 rounded-full  ${
-            favorite ? "text-red-500" : "text-neutral-600"
+            favorite ? "text-text-error" : "text-text-secondary"
           }`}
         >
           <HeartIcon className="size-5" />
@@ -53,7 +53,7 @@ const ProductCard = ({
         <Badge
           size="sm"
           theme={isNew ? "brand" : "gray"}
-          className="absolute rounded-full px-2!"
+          className="absolute rounded-full left-2 top-2 px-2!"
           leading={<AiIcon />}
         >
           {isNew ? "Новий" : "Вживаний"}
@@ -66,12 +66,14 @@ const ProductCard = ({
           <span className="text-[20px] leading-7.5 font-semibold">
             {price} грн
           </span>
-          <div className="border-t border-neutral-100 flex gap-2 pt-2 text-[12px] leading-4.5">
+          <div className="border-t border-stroke-secondary flex gap-2 pt-2 text-[12px] leading-4.5">
             <div className="flex items-center gap-1.5 flex-1">
-              <PinIcon className="size-4 shrink-0 text-neutral-600" />
-              <span className="truncate text-neutral-400">{address.city}</span>
+              <PinIcon className="size-4 shrink-0 text-text-secondary" />
+              <span className="truncate text-text-tertiary">
+                {address.city}
+              </span>
             </div>
-            <span className="shrink-0 text-neutral-400">
+            <span className="shrink-0 text-text-tertiary">
               {formatRelativeTime(createdAt)}
             </span>
           </div>

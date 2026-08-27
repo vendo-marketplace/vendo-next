@@ -16,7 +16,7 @@ type AccountCompletionProps = {
 export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
   return (
     <>
-      <div className="flex justify-center mx-auto items-center size-14 bg-brand-50 rounded-full text-brand-600">
+      <div className="flex justify-center mx-auto items-center size-14 bg-surface-brand-subtle rounded-full text-text-brand">
         <TickIcon className="size-8" aria-hidden="true" />
       </div>
 
@@ -29,7 +29,7 @@ export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
       <AccountCompletionForm onSuccess={onSuccess} />
 
       <Link
-        className="font-medium cursor-pointer flex items-center justify-center gap-2 text-[14px] leading-5 text-neutral-600"
+        className="font-medium cursor-pointer flex items-center justify-center gap-2 text-[14px] leading-5 text-text-secondary"
         href="/"
       >
         <span>Пропустити</span>

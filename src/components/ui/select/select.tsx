@@ -37,7 +37,7 @@ const Select = <T extends string>({
       onValueChange={handleValueChange}
     >
       <RadixSelect.Trigger
-        className={`flex justify-between items-center gap-2 font-medium text-neutral-600 text-[14px] leading-5 w-fit px-4 py-1.5 rounded-lg border border-neutral-300 ${className}`}
+        className={`flex justify-between items-center gap-2 font-medium text-text-secondary text-[14px] leading-5 w-fit px-4 py-1.5 rounded-lg border border-stroke-primary ${className}`}
       >
         <RadixSelect.Value placeholder={placeholder} />
         <RadixSelect.Icon aria-hidden="true">
@@ -52,21 +52,21 @@ const Select = <T extends string>({
           sideOffset={4}
           className="min-w-(--radix-select-trigger-width) font-medium"
         >
-          <RadixSelect.Viewport className="rounded-lg bg-neutral-50 p-2 gap-6 cursor-pointer border border-border-base text-neutral-600 text-[14px] leading-5">
+          <RadixSelect.Viewport className="rounded-lg bg-surface-primary p-2 gap-6 cursor-pointer border border-stroke-primary-subtle text-text-secondary text-[14px] leading-5">
             {options.map((opt) => (
               <RadixSelect.Item
                 key={opt.value}
                 value={opt.value}
                 className={cn(
                   "flex items-center justify-between rounded-lg border-0 gap-2 px-2 py-1.5 outline-none",
-                  opt.value === value && "text-neutral-950",
-                  "hover:bg-brand-50 hover:font-semibold data-highlighted:bg-brand-50 data-highlighted:font-semibold",
+                  opt.value === value && "text-text-primary",
+                  "hover:bg-surface-brand-subtle hover:font-semibold data-highlighted:bg-surface-brand-subtle data-highlighted:font-semibold",
                 )}
               >
                 <RadixSelect.ItemText>{opt.label}</RadixSelect.ItemText>
                 {opt.value === value && (
                   <RadixSelect.Icon aria-hidden="true">
-                    <AngleRightIcon className="size-3.5 text-neutral-600" />
+                    <AngleRightIcon className="size-3.5 text-text-secondary" />
                   </RadixSelect.Icon>
                 )}
               </RadixSelect.Item>

@@ -12,12 +12,12 @@ const badgeVariants = {
     lg: "size-3.5",
   },
   theme: {
-    gray: "border-border-base bg-[#F3F4F6] text-neutral-950",
-    white: "border-border-base bg-neutral-50 text-neutral-950",
-    brand: "border-brand-200 bg-brand-50 text-brand-600",
-    danger: "border-red-200 bg-red-50 text-red-700",
-    warning: "border-orange-200 bg-orange-50 text-orange-700",
-    success: "border-[#B9F8CF] bg-[#F0FDF4] text-[#008236]",
+    gray: "border-stroke-primary-subtle bg-surface-primary-subtle text-text-primary",
+    white: "border-stroke-primary-subtle bg-surface-primary text-text-primary",
+    brand: "border-stroke-brand-subtle bg-surface-brand-subtle text-text-brand",
+    danger: "border-stroke-error-subtle bg-surface-error-subtle text-text-error",
+    warning: "border-stroke-warning-subtle bg-surface-warning-subtle text-text-warning",
+    success: "border-stroke-success-subtle bg-surface-success-subtle text-text-success",
   },
 } as const;
 

@@ -20,12 +20,12 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
       role="search"
       onSubmit={handleSubmit}
     >
-      <div className="flex items-center h-full gap-2 rounded-lg px-2.5 border border-neutral-300 flex-1 group-focus-within:border-brand-600">
+      <div className="flex items-center h-full gap-2 rounded-lg px-2.5 border border-stroke-primary flex-1 group-focus-within:border-stroke-brand">
         <Button
           variant="none"
           type="submit"
           size="none"
-          className="size-4 rounded-none text-neutral-400 group-focus-within:text-brand-600 focus:text-brand-600 hover:text-brand-600"
+          className="size-4 rounded-none text-text-tertiary group-focus-within:text-text-brand focus:text-text-brand hover:text-text-hover"
         >
           <SearchIcon className="size-4" />
         </Button>
@@ -33,7 +33,7 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
           name="query"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
-          className="w-full text-sm placeholder:text-sm outline-none placeholder:text-neutral-300"
+          className="w-full text-sm placeholder:text-sm outline-none placeholder:text-text-placeholder"
           placeholder="Пошук товарів"
           aria-label="Пошук товарів"
           autoComplete="off"
@@ -42,7 +42,7 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
           variant="none"
           size="none"
           type="button"
-          className="size-4 rounded-none text-neutral-400 focus:text-brand-600 hover:text-brand-600"
+          className="size-4 rounded-none text-text-tertiary focus:text-text-brand hover:text-text-hover"
         >
           <CameraIcon className="size-4" />
         </Button>

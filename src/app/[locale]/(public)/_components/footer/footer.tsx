@@ -6,7 +6,7 @@ import FooterTop from "./top/FooterTop";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#FCFCFC]">
+    <footer className="bg-surface-secondary">
       <FooterTop />
       <FooterNavigation />
       <FooterBottom />

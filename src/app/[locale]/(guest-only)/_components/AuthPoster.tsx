@@ -13,7 +13,7 @@ const AuthPoster = () => (
       loading="eager"
       className="rounded-lg object-cover"
     />
-    <div className="absolute right-9 bottom-16 left-9 space-y-3 text-neutral-50">
+    <div className="absolute right-9 bottom-16 left-9 space-y-3 text-text-invert">
       <AuthBackgroundIcon />
       <div className="space-y-2">
         <p className="text-[30px] font-semibold">

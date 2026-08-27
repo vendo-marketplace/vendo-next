@@ -79,7 +79,7 @@ export function AccountCompletionForm({
             autoComplete="bday"
             disabled={isSubmitting}
             clearable={false}
-            className="[&::-webkit-calendar-picker-indicator]:hidden text-neutral-600"
+            className="[&::-webkit-calendar-picker-indicator]:hidden text-text-secondary"
             start={<CalendarIcon className="size-full" />}
             onFocus={(event) => event.currentTarget.showPicker()}
           />

@@ -83,12 +83,12 @@ export function ForgotPassword() {
         </div>
 
         <div className="space-y-1">
-          <h1 className="text-[24px] leading-8 font-semibold text-neutral-950">
+          <h1 className="text-[24px] leading-8 font-semibold text-text-primary">
             Перевірте свою пошту!
           </h1>
-          <p className="text-[16px] leading-6 text-neutral-400">
+          <p className="text-[16px] leading-6 text-text-tertiary">
             Ми надіслали на адресу{" "}
-            <span className="text-brand-800 underline">{submittedEmail}</span>{" "}
+            <span className="text-text-brand-dark underline">{submittedEmail}</span>{" "}
             посилання для скидання пароля. Воно буде дійсне недовго, тож
             скористайтеся ним якомога швидше.
           </p>
@@ -98,10 +98,10 @@ export function ForgotPassword() {
           <Link href="/sign-in">Продовжити</Link>
         </Button>
 
-        <p className="text-center text-[14px] text-neutral-400">
+        <p className="text-center text-[14px] text-text-tertiary">
           Не отримали лист?{" "}
           <button
-            className="font-medium text-brand-600 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="font-medium text-text-brand hover:text-text-hover disabled:cursor-not-allowed disabled:opacity-50"
             type="button"
             disabled={isResendPending || resendCooldown > 0}
             onClick={resendPasswordReset}

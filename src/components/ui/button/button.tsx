@@ -6,9 +6,9 @@ import { cn } from "@/utils/utils";
 const buttonVariants = {
   variants: {
     brand:
-      "bg-brand-600 text-neutral-50 hover:bg-brand-700 focus-visible:bg-brand-700 focus-visible:shadow-[0_0_0_2px_#BEDBFF]",
+      "bg-surface-brand text-text-invert hover:bg-surface-hover focus-visible:bg-surface-hover focus-visible:shadow-[0_0_0_2px_var(--color-stroke-brand-subtle)]",
     secondary:
-      "bg-[#FCFCFC] border border-border-base text-neutral-600 hover:bg-brand-50 focus-visible:bg-brand-50 hover:border-brand-400 focus-visible:border-brand-400 focus-visible:shadow-[0_0_0_2px_#EDF6FF] hover:text-brand-400 focus-visible:text-brand-400",
+      "bg-surface-secondary border border-stroke-primary-subtle text-text-secondary hover:bg-surface-brand-subtle focus-visible:bg-surface-brand-subtle hover:border-stroke-brand-light focus-visible:border-stroke-brand-light focus-visible:shadow-[0_0_0_2px_var(--color-surface-brand-subtle)] hover:text-text-brand-light focus-visible:text-text-brand-light",
     none: "",
   },
   size: {
@@ -36,7 +36,7 @@ export function getButtonClassName({
   className,
 }: Pick<ButtonProps, "variant" | "size" | "className"> = {}) {
   return cn(
-    "cursor-pointer w-fit font-mazzard font-medium outline-0 shadow-[0px_1px_0.5px_0.05px_#1D293D05] inline-flex rounded-lg items-center justify-center shrink-0 whitespace-nowrap gap-2 disabled:bg-neutral-100 disabled:border-neutral-100 disabled:cursor-not-allowed",
+    "cursor-pointer w-fit font-mazzard font-medium outline-0 shadow-[0px_1px_0.5px_0.05px_#1D293D05] inline-flex rounded-lg items-center justify-center shrink-0 whitespace-nowrap gap-2 disabled:bg-surface-tertiary disabled:border-stroke-secondary disabled:cursor-not-allowed",
     buttonVariants.variants[variant],
     buttonVariants.size[size],
     className,

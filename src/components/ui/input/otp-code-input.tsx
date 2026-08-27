@@ -34,7 +34,7 @@ export function OtpCodeInput({
           <InputOTPSlot
             key={index}
             index={index}
-            className="w-16 h-13 py-3.5 px-4 font-normal ring-0! text-neutral-950 text-[16px] leading-6 rounded-lg border bg-neutral-50 border-neutral-300 data-[active=true]:border-brand-600"
+            className="w-16 h-13 py-3.5 px-4 font-normal ring-0! text-text-primary text-[16px] leading-6 rounded-lg border bg-surface-primary border-stroke-primary data-[active=true]:border-stroke-brand"
           />
         ))}
       </InputOTPGroup>

@@ -11,14 +11,14 @@ export function Label({ children, className, required, ...props }: LabelProps) {
     <label
       data-slot="label"
       className={cn(
-        "text-neutral-950 font-medium text-[14px] leading-5",
+        "text-text-primary font-medium text-[14px] leading-5",
         className,
       )}
       {...props}
     >
       {children}
       {required && (
-        <span aria-hidden="true" className="ml-1 text-red-700">
+        <span aria-hidden="true" className="ml-1 text-text-error">
           *
         </span>
       )}

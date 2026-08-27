@@ -38,7 +38,7 @@ export function ResetPassword({ code }: ResetPasswordProps) {
   if (isSuccess) {
     return (
       <>
-        <div className="flex justify-center mx-auto items-center size-14 bg-brand-50 rounded-full text-brand-600">
+        <div className="flex justify-center mx-auto items-center size-14 bg-surface-brand-subtle rounded-full text-text-brand">
           <TickIcon className="size-8" aria-hidden="true" />
         </div>
 

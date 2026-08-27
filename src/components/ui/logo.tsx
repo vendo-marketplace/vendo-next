@@ -44,7 +44,7 @@ export const Logo = ({ size = "md" }: LogoProps) => {
         className="h-auto"
       />
 
-      <span className={`text-brand-800 font-medium uppercase ${variant.label}`}>
+      <span className={`text-text-brand-dark font-medium uppercase ${variant.label}`}>
         Vendo
       </span>
     </div>

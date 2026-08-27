@@ -40,7 +40,7 @@ const ImageSelect = <T extends string>({
       disabled={disabled}
       onValueChange={handleValueChange}
     >
-      <Select.Trigger className="flex cursor-pointer items-center gap-2 border-none text-neutral-600">
+      <Select.Trigger className="flex cursor-pointer items-center gap-2 border-none text-text-secondary">
         <Select.Value placeholder={placeholder}>
           {selectedOption && (
             <div className="flex items-center gap-2 h-5 ">
@@ -65,12 +65,12 @@ const ImageSelect = <T extends string>({
 
       <Select.Portal>
         <Select.Content position="popper" sideOffset={4} className="min-w-36">
-          <Select.Viewport className="space-y-1 rounded-md border border-neutral-400">
+          <Select.Viewport className="space-y-1 rounded-md border border-stroke-tertiary">
             {options.map(({ image, label, value }) => (
               <Select.Item
                 key={value}
                 value={value}
-                className="flex cursor-pointer items-center gap-2 border-none outline-none focus:bg-neutral-400"
+                className="flex cursor-pointer items-center gap-2 border-none outline-none focus:bg-surface-tertiary"
               >
                 <div className="flex items-center gap-2">
                   <div className="flex items-center justify-center">
