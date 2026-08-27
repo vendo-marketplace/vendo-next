@@ -1,6 +1,6 @@
 "use client";
 
-import { AngleDownIcon, AngleRightIcon, TickIcon } from "@/assets/icons";
+import { AngleDownIcon, TickIcon } from "@/assets/icons";
 import type { SelectOption } from "@/types/types";
 import { cn } from "@/utils/utils";
 import { Select as RadixSelect } from "radix-ui";
