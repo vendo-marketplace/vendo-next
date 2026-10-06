@@ -1,6 +1,30 @@
-import type { PaginatedQuery } from "./types";
+export interface AttributeValueFilter {
+  id: string;
+  values: string[];
+}
 
-export type SearchProductsQuery = PaginatedQuery<"CREATED_AT" | "PRICE">;
+export interface SearchProductsQuery {
+  categoryId?: string;
+  active?: boolean;
+  isNew?: boolean;
+  sort: {
+    sortBy: "CREATED_AT" | "PRICE";
+    direction: "ASC" | "DESC";
+  };
+  ids?: string[];
+  addressFilter?: {
+    city: string;
+  };
+  attributeFilter?: {
+    attributes: AttributeValueFilter[];
+  };
+  priceRangeFilter?: {
+    minPrice?: number;
+    maxPrice?: number;
+  };
+  size: number;
+  page: number;
+}
 
 export interface ProductCardType {
   id: string;

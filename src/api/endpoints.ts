@@ -17,6 +17,7 @@ export const apiEndpoints = {
   },
   categories: {
     tree: "/categories/tree",
+    attributes: (categoryId: string) => `/categories/${categoryId}/attributes`,
   },
   products: {
     search: "/search",

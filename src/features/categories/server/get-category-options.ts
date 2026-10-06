@@ -14,6 +14,7 @@ const toCategoryOption = (category: Category): CategoryOption => {
     id: category.id,
     title: category.title,
     slug: category.slug,
+    type: category.type,
     children: category.children.map(toCategoryOption),
   };
 };

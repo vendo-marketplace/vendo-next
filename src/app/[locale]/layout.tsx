@@ -82,7 +82,7 @@ export default async function RootLayout({
       <body className="min-h-screen flex flex-col bg-surface-secondary text-text-primary antialiased">
         <NextIntlClientProvider messages={messages}>
           <Providers>
-            <div className="w-full max-w-360 flex flex-col mx-auto h-full flex-1">
+            <div className="flex min-h-screen w-full flex-1 flex-col">
               {children}
             </div>
           </Providers>

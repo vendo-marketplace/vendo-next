@@ -6,14 +6,10 @@ import type {
 import { apiEndpoints } from "./endpoints";
 
 export const productsApi = {
-  search: async (q: string, query: SearchProductsQuery) =>
+  search: async (q: string | undefined, query: SearchProductsQuery) =>
     client.post<SearchProductsResponse>(
       apiEndpoints.products.search,
       query,
-      {
-        params: {
-          q,
-        },
-      },
+      q ? { params: { q } } : undefined,
     ),
 };
