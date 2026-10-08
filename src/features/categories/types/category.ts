@@ -13,7 +13,12 @@ export interface CategoryAttribute {
   slug: string;
   type: CategoryAttributeType;
   required: boolean;
-  allowedValues: string[];
+  allowedValues?: string[];
+}
+
+export interface CategoryImage {
+  key: string;
+  url: string;
 }
 
 export interface Category {
@@ -21,8 +26,8 @@ export interface Category {
   title: string;
   slug: string;
   type: CategoryType;
+  image?: CategoryImage;
   attributes: CategoryAttribute[];
-  path: string[];
   children: Category[];
 }
 
@@ -35,5 +40,6 @@ export interface CategoryOption {
   title: string;
   slug: string;
   type: CategoryType;
+  image?: CategoryImage;
   children: CategoryOption[];
 }

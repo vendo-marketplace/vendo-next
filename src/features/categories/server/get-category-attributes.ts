@@ -37,7 +37,7 @@ export const getCategoryAttributes = async (
   try {
     const categoriesResponse = await fetch(
       getApiUrl(apiEndpoints.categories.tree),
-      { next: { revalidate: false, tags: ["categories"] } },
+      { cache: "no-store" },
     );
 
     if (!categoriesResponse.ok) {

@@ -19,6 +19,7 @@ import {
   Wrench,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button/button";
@@ -276,7 +277,17 @@ export default function CategoryDropdownClient({
                               : "text-text-secondary hover:bg-surface-secondary hover:text-text-primary"
                           }`}
                         >
-                          <Icon aria-hidden="true" className="size-5 shrink-0" />
+                          {category.image ? (
+                            <Image
+                              src={category.image.url}
+                              alt=""
+                              width={24}
+                              height={24}
+                              className="size-6 shrink-0 object-contain"
+                            />
+                          ) : (
+                            <Icon aria-hidden="true" className="size-5 shrink-0" />
+                          )}
                           <span className="min-w-0 flex-1 truncate">
                             {category.title}
                           </span>

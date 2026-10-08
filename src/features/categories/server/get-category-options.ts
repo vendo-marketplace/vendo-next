@@ -15,6 +15,7 @@ const toCategoryOption = (category: Category): CategoryOption => {
     title: category.title,
     slug: category.slug,
     type: category.type,
+    image: category.image,
     children: category.children.map(toCategoryOption),
   };
 };
@@ -25,12 +26,7 @@ export const getCategoryOptions = async (): Promise<
   try {
     const endpoint = getApiUrl(apiEndpoints.categories.tree);
 
-    const response = await fetch(endpoint, {
-      next: {
-        revalidate: false,
-        tags: ["categories"],
-      },
-    });
+    const response = await fetch(endpoint, { cache: "no-store" });
     if (!response.ok)
       return { success: false, errorMessage: "Failed to get categories" };
     const result = (await response.json()) as CategoriesResponse;

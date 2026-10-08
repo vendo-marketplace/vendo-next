@@ -243,8 +243,8 @@ export default function CategoryProducts({
             city,
             attributes: attributeValues,
           });
-          setIsFiltersOpen(false);
         }}
+        className="grid gap-5 rounded-xl border border-stroke-secondary bg-surface-primary p-5 lg:sticky lg:top-24"
       >
         <div className="flex items-center justify-between gap-4">
           <h2 className="text-lg font-semibold text-text-primary">Фільтри</h2>
