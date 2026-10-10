@@ -233,7 +233,6 @@ export default function CategoryProducts({
   return (
     <div className="mt-8 grid items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
       <form
-        className="grid gap-5 rounded-xl border border-stroke-secondary bg-surface-primary p-5"
         onSubmit={(event) => {
           event.preventDefault();
           setAppliedFilters({

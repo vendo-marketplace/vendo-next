@@ -16,6 +16,7 @@ const toCategoryOption = (category: Category): CategoryOption => {
     slug: category.slug,
     type: category.type,
     image: category.image,
+    attributes: category.attributes,
     children: category.children.map(toCategoryOption),
   };
 };

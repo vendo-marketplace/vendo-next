@@ -42,6 +42,17 @@ export interface ProductCardType {
   createdAt: string;
 }
 
+export interface CreateProductRequest {
+  title: string;
+  description: string;
+  price: number;
+  quantity: number;
+  isNew: boolean;
+  categoryId: string;
+  address: ProductAddress;
+  attributes: ProductAttribute[];
+}
+
 export interface ProductAddress {
   region: string;
   city: string;

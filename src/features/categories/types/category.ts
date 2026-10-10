@@ -41,5 +41,6 @@ export interface CategoryOption {
   slug: string;
   type: CategoryType;
   image?: CategoryImage;
+  attributes: CategoryAttribute[];
   children: CategoryOption[];
 }

@@ -8,6 +8,7 @@ import HeaderAuth from "./auth/HeaderAuth";
 import HeaderFavoritesLink from "./favorites/HeaderFavoritesLink";
 import Logo from "./logo/Logo";
 import SearchBar from "./search-bar/SearchBar";
+import { Link } from "@/i18n/navigation";
 
 const Header = () => {
   return (
@@ -28,11 +29,14 @@ const Header = () => {
           </Button>
           <HeaderAuth />
           <Button
+            asChild
             aria-label="Додати оголошення"
             className="size-9 p-0 sm:h-10 sm:w-auto sm:px-3 lg:px-4"
           >
-            <Plus aria-hidden="true" className="size-5 sm:hidden" />
-            <span className="hidden sm:inline">Додати оголошення</span>
+            <Link href="/create">
+              <Plus aria-hidden="true" className="size-5 sm:hidden" />
+              <span className="hidden sm:inline">Додати оголошення</span>
+            </Link>
           </Button>
         </div>
 
