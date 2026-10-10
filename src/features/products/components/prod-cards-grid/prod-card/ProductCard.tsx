@@ -3,9 +3,10 @@
 import { AiIcon } from "@/assets/icons";
 import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
-import { HeartIcon, PinIcon } from "@/components/ui/icons";
+import { PinIcon } from "@/components/ui/icons";
 import type { ProductCardType } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
+import { Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 
@@ -39,16 +40,19 @@ const ProductCard = ({
           className="object-contain "
         />
         <Button
-          variant="secondary"
+          variant="none"
           size="none"
           disabled={favoriteDisabled}
           aria-label={t(favorite ? "removeLabel" : "addLabel")}
+          aria-pressed={favorite}
           onClick={onToggleFavorite}
-          className={`absolute top-2 right-2 size-9 rounded-full  ${
-            favorite ? "text-text-error" : "text-text-secondary"
-          }`}
+          className={`absolute top-1 right-1 size-8 rounded-full border border-stroke-primary-subtle bg-white/95 p-0 shadow-sm transition-transform hover:bg-white active:scale-90 ${favorite ? "text-text-error" : "text-text-secondary"}`}
         >
-          <HeartIcon className="size-5" />
+          <Heart
+            aria-hidden="true"
+            className={`size-[18px] transition-colors ${favorite ? "fill-current" : "fill-transparent"}`}
+            strokeWidth={2.25}
+          />
         </Button>
         <Badge
           size="sm"

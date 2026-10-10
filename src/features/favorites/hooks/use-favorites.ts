@@ -20,6 +20,7 @@ export const useFavorites = () => {
   const t = useTranslations("Favorites");
   const guestFavorites = useFavoritesStore((state) => state.favorites);
   const toggleGuestFavorite = useFavoritesStore((state) => state.toggle);
+  const removeGuestFavorites = useFavoritesStore((state) => state.removeMany);
   const addFavorite = useAddFavorite();
   const removeFavorite = useRemoveFavorite();
   const { data: currentUser, isLoading: isAuthLoading } = useMe();
@@ -32,17 +33,20 @@ export const useFavorites = () => {
   const {
     data: authenticatedFavorites = emptyFavorites,
     isLoading: isAuthenticatedFavoritesLoading,
+    isError: isAuthenticatedFavoritesError,
+    refetch: refetchAuthenticatedFavorites,
   } = useFavoriteProducts(isHydrated && isAuthenticated);
 
-  const favorites = useMemo(
-    () =>
-      isAuthenticated
-        ? authenticatedFavorites
-        : isHydrated
-          ? guestFavorites
-          : emptyFavorites,
-    [authenticatedFavorites, guestFavorites, isAuthenticated, isHydrated],
-  );
+  const favorites = useMemo(() => {
+    if (!isHydrated) return emptyFavorites;
+    if (!isAuthenticated) return guestFavorites;
+
+    const accountIds = new Set(authenticatedFavorites.map(({ id }) => id));
+    return [
+      ...authenticatedFavorites,
+      ...guestFavorites.filter(({ id }) => !accountIds.has(id)),
+    ];
+  }, [authenticatedFavorites, guestFavorites, isAuthenticated, isHydrated]);
 
   const favoriteIds = useMemo(
     () => new Set(favorites.map(({ id }) => id)),
@@ -58,17 +62,35 @@ export const useFavorites = () => {
       return;
     }
 
+    const isGuestOnlyFavorite =
+      guestFavorites.some(({ id }) => id === product.id) &&
+      !authenticatedFavorites.some(({ id }) => id === product.id);
+    if (isGuestOnlyFavorite) {
+      toggleGuestFavorite(product);
+      toast.success(t("removed"));
+      return;
+    }
+
     if (wasFavorite) {
       removeFavorite.mutate(product.id, {
-        onSuccess: () => toast.success(t("removed")),
+        onSuccess: () => {
+          removeGuestFavorites([product.id]);
+          toast.success(t("removed"));
+        },
+        onError: () => toast.error(t("updateError")),
       });
       return;
     }
 
     addFavorite.mutate(product, {
       onSuccess: () => toast.success(t("added")),
+      onError: () => toast.error(t("updateError")),
     });
   };
+
+  const isFavoritePending = (productId: string) =>
+    (addFavorite.isPending && addFavorite.variables?.id === productId) ||
+    (removeFavorite.isPending && removeFavorite.variables === productId);
 
   return {
     isLoading:
@@ -78,5 +100,8 @@ export const useFavorites = () => {
     favorites,
     favoriteIds,
     toggleFavorite,
+    isFavoritePending,
+    favoritesError: isAuthenticated && isAuthenticatedFavoritesError,
+    refetchFavorites: refetchAuthenticatedFavorites,
   };
 };

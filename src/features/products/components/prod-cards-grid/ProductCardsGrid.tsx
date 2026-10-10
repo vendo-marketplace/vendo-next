@@ -14,6 +14,7 @@ const ProductCardsGrid = ({ cards, isLoading = false }: Props) => {
   const {
     favoriteIds,
     isLoading: areFavoritesLoading,
+    isFavoritePending,
     toggleFavorite,
   } = useFavorites();
 
@@ -27,7 +28,7 @@ const ProductCardsGrid = ({ cards, isLoading = false }: Props) => {
           card={card}
           eager={index < 3}
           favorite={favoriteIds.has(card.id)}
-          favoriteDisabled={areFavoritesLoading}
+          favoriteDisabled={areFavoritesLoading || isFavoritePending(card.id)}
           onToggleFavorite={() => toggleFavorite(card)}
         />
       ))}
