@@ -54,12 +54,7 @@ export interface CreateProductRequest {
 }
 
 export interface ProductAddress {
-  region: string;
   city: string;
-  location: {
-    lat: number;
-    lon: number;
-  };
 }
 
 export interface ProductAttribute {
