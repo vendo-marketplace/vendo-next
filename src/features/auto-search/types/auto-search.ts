@@ -8,7 +8,8 @@ export interface AutoSearchProduct {
   quantity: number;
   isNew: boolean;
   price: number;
-  imageKeys: string[];
+  imageKeys?: string[];
+  images?: string[];
   ownerId: string;
   address: { city: string };
   categoryId: string;

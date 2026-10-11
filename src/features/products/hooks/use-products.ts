@@ -11,4 +11,5 @@ export const useSearchProducts = (
 export const useSearchProductsPage = (
   searchTerm: string,
   query: SearchProductsQuery,
-) => useQuery(productQueries.searchPage(searchTerm, query));
+  enabled = true,
+) => useQuery({ ...productQueries.searchPage(searchTerm, query), enabled });

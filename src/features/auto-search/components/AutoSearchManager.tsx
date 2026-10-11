@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronUp,
+  Image as ImageIcon,
   MapPin,
   Pencil,
   Plus,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button/button";
@@ -120,19 +122,41 @@ const AutoSearchProducts = ({ id }: { id: string }) => {
     <ul className="divide-y divide-stroke-secondary rounded-xl border border-stroke-primary-subtle bg-surface-primary">
       {products.map((product) => (
         <li key={product.id} className="flex flex-col gap-1.5 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            <p className="truncate font-medium text-text-primary">{product.title}</p>
-            <p className="mt-1 line-clamp-2 text-sm text-text-secondary">
-              {product.description}
-            </p>
-            <p className="mt-2 flex items-center gap-1 text-xs text-text-tertiary">
-              <MapPin aria-hidden="true" className="size-3.5" />
-              {product.address?.city ?? t("unknownCity")}
-            </p>
-          </div>
-          <span className="shrink-0 font-semibold text-text-primary">
-            {formatPrice(product.price)}
-          </span>
+          <Link
+            href={`/product/${product.id}?q=${encodeURIComponent(product.title)}`}
+            className="flex min-w-0 flex-1 flex-col gap-3 rounded-lg outline-none transition-colors hover:bg-surface-secondary focus-visible:ring-2 focus-visible:ring-stroke-brand sm:flex-row sm:items-center sm:justify-between sm:px-2 sm:py-1"
+          >
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-surface-secondary sm:size-16">
+                {(product.images?.[0] ?? product.imageKeys?.[0]) ? (
+                  <Image
+                    src={product.images?.[0] ?? product.imageKeys?.[0] ?? ""}
+                    alt={product.title}
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="grid h-full place-items-center text-text-tertiary">
+                    <ImageIcon aria-hidden="true" className="size-5" />
+                  </span>
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate font-medium text-text-primary">{product.title}</p>
+                <p className="mt-1 line-clamp-2 text-sm text-text-secondary">
+                  {product.description}
+                </p>
+                <p className="mt-2 flex items-center gap-1 text-xs text-text-tertiary">
+                  <MapPin aria-hidden="true" className="size-3.5" />
+                  {product.address?.city ?? t("unknownCity")}
+                </p>
+              </div>
+            </div>
+            <span className="shrink-0 font-semibold text-text-primary">
+              {formatPrice(product.price)}
+            </span>
+          </Link>
         </li>
       ))}
     </ul>
