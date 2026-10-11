@@ -1,10 +1,13 @@
 "use client";
 
 import { useGoogleLogin as useGoogleOAuthLogin } from "@react-oauth/google";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "sonner";
 
 import { useGoogleLogin } from "@/features/auth/hooks/use-google-login";
+import { authKeys } from "@/features/auth/queries/auth.keys";
+import type { MeResponse } from "@/features/auth/types/auth";
 import { GoogleIcon } from "./icons";
 import { Button } from "./button/button";
 
@@ -14,6 +17,7 @@ type GoogleLoginButtonProps = {
 
 export function GoogleLoginButton({ label }: GoogleLoginButtonProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { mutate: loginWithGoogle, isPending } = useGoogleLogin();
 
   const requestGoogleAuthCode = useGoogleOAuthLogin({
@@ -22,7 +26,10 @@ export function GoogleLoginButton({ label }: GoogleLoginButtonProps) {
       loginWithGoogle(
         { authCode: code },
         {
-          onSuccess: () => router.push("/"),
+          onSuccess: () => {
+            const user = queryClient.getQueryData<MeResponse>(authKeys.me());
+            router.push(user && !user.emailVerified ? "/onboarding" : "/");
+          },
           onError: (error) => {
             toast.error(error.response?.data.message ?? "Google login failed");
           },

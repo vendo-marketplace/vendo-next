@@ -1,11 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { useMemo, useState } from "react";
 
-import LoadingSpinner from "@/components/ui/loading-spinner";
-import { useSearchProducts } from "@/features/products/hooks/use-products";
-import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
+import { useSearchProductsPage } from "@/features/products/hooks/use-products";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
 import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
 import { useProductSortParams } from "@/features/products/hooks/use-product-sort-params";
@@ -13,35 +10,34 @@ import { getProductSortQuery } from "@/features/products/lib/product-sort";
 import type { SearchProductsQuery } from "@/types/product";
 
 export default function RecommendedProducts() {
-  const { sort, setSort } = useProductSortParams();
-  const { ref, inView } = useInView({ rootMargin: "300px" });
-  const productsQuery = {
-    page: 1,
+  const { sort, setSort: updateSort } = useProductSortParams();
+  const [page, setPage] = useState(1);
+  const setSort = (value: Parameters<typeof updateSort>[0]) => {
+    setPage(1);
+    updateSort(value);
+  };
+  const productsQuery = useMemo(() => ({
+    page,
     size: 25,
     sort: getProductSortQuery(sort),
-  } satisfies SearchProductsQuery;
+  }) satisfies SearchProductsQuery, [page, sort]);
   const {
     data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchNextPageError,
-    isFetchingNextPage,
+    isFetching,
     isLoading,
-  } = useSearchProducts("", productsQuery);
+  } = useSearchProductsPage("", productsQuery);
 
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {
-      void fetchNextPage();
-    }
-  }, [
-    fetchNextPage,
-    hasNextPage,
-    inView,
-    isFetchNextPageError,
-    isFetchingNextPage,
-  ]);
-
-  const cards = data?.pages.flatMap((page) => page.data) ?? [];
+  const cards = data?.data ?? [];
+  const pagination = data?.metadata;
+  const visiblePages = pagination
+    ? Array.from({ length: Math.min(5, pagination.totalPages) }, (_, index) => {
+        const start = Math.min(
+          Math.max(1, page - 2),
+          Math.max(1, pagination.totalPages - 4),
+        );
+        return start + index;
+      })
+    : [];
 
   if (!isLoading && cards.length === 0) return null;
 
@@ -54,12 +50,44 @@ export default function RecommendedProducts() {
         <ProductSortSelect value={sort} onChange={setSort} />
       </div>
 
-      <ProductCardsGrid cards={cards} isLoading={isLoading} />
-
-      <div ref={ref} className="h-px" aria-hidden="true" />
-      {isFetchingNextPage && <LoadingSpinner />}
-      {isFetchNextPageError && (
-        <NextPageFetchError onRetry={() => void fetchNextPage()} />
+      <ProductCardsGrid cards={cards} isLoading={isLoading || isFetching} />
+      {pagination && pagination.totalPages > 1 && (
+        <nav
+          aria-label="Сторінки рекомендованих товарів"
+          className="flex flex-wrap items-center justify-center gap-2"
+        >
+          <button
+            type="button"
+            onClick={() => setPage((current) => current - 1)}
+            disabled={!pagination.hasPrevious}
+            className="h-10 rounded-lg border border-stroke-secondary px-4 text-sm font-medium text-text-primary transition-colors hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Назад
+          </button>
+          {visiblePages.map((pageNumber) => (
+            <button
+              key={pageNumber}
+              type="button"
+              aria-current={pageNumber === page ? "page" : undefined}
+              onClick={() => setPage(pageNumber)}
+              className={`size-10 rounded-lg border text-sm font-medium transition-colors ${
+                pageNumber === page
+                  ? "border-surface-brand bg-surface-brand text-text-invert"
+                  : "border-stroke-secondary text-text-primary hover:bg-surface-secondary"
+              }`}
+            >
+              {pageNumber}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setPage((current) => current + 1)}
+            disabled={!pagination.hasNext}
+            className="h-10 rounded-lg border border-stroke-secondary px-4 text-sm font-medium text-text-primary transition-colors hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Далі
+          </button>
+        </nav>
       )}
     </section>
   );

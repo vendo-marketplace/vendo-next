@@ -13,6 +13,10 @@ export function SignUp() {
   const signUp = (credentials: LoginCredentials) => {
     mutate(credentials, {
       onSuccess: () => {
+        window.sessionStorage.setItem(
+          "pending-verification-email",
+          credentials.email,
+        );
         router.push("/onboarding");
       },
     });

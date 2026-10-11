@@ -27,4 +27,9 @@ export const apiEndpoints = {
     list: "/favorites",
     product: (productId: string) => `/favorites/${productId}`,
   },
+  autoSearch: {
+    list: "/auto-search",
+    item: (id: string) => `/auto-search/${id}`,
+    products: (id: string) => `/auto-search/${id}/products`,
+  },
 } as const;

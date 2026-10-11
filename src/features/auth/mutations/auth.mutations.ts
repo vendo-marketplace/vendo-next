@@ -53,14 +53,14 @@ export const authMutations = {
         const response = await authApi.signUp(credentials);
         return response.data;
       },
-      onSuccess: async (tokens, credentials) => {
+      onSuccess: (tokens, credentials) => {
         localStorage.setItem("access-token", tokens["access-token"]);
         localStorage.setItem("refresh-token", tokens["refresh-token"]);
 
-        await Promise.all([
-          authApi.sendVerification(credentials.email),
-          queryClient.fetchQuery(authQueries.me()),
-        ]);
+        void authApi.sendVerification(credentials.email).catch(() => {
+          toast.error("Не вдалося надіслати код автоматично. Ви зможете запросити його на наступному кроці.");
+        });
+        void queryClient.fetchQuery(authQueries.me()).catch(() => undefined);
       },
     }),
   validateVerification: (queryClient: QueryClient) =>

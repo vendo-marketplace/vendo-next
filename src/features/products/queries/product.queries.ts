@@ -1,10 +1,18 @@
 import { productsApi } from "@/api/products";
 import type { SearchProductsQuery } from "@/types/product";
-import { infiniteQueryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import { productKeys } from "./product.keys";
 
 export const productQueries = {
+  searchPage: (searchTerm: string, query: SearchProductsQuery) =>
+    queryOptions({
+      queryKey: [...productKeys.search(searchTerm, query), "page"] as const,
+      queryFn: async () => {
+        const res = await productsApi.search(searchTerm, query);
+        return res.data;
+      },
+    }),
   search: (searchTerm: string, query: SearchProductsQuery) =>
     infiniteQueryOptions({
       queryKey: productKeys.search(searchTerm, query),

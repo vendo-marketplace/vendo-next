@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
+import messages from "../../messages/uk.json";
 
 export default getRequestConfig(async ({ locale }) => {
   if (!locale) {
@@ -17,6 +18,6 @@ export default getRequestConfig(async ({ locale }) => {
 
   return {
     locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
+    messages,
   };
 });

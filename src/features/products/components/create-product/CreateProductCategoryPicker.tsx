@@ -84,9 +84,23 @@ export default function CreateProductCategoryPicker({
             <p className="truncate text-sm font-medium text-text-primary">
               {selectedCategory.title}
             </p>
-            <p className="mt-1 truncate text-xs text-text-tertiary">
-              {selectedCategoryTrail.map((category) => category.title).join(" / ")}
-            </p>
+            {selectedCategoryTrail.length > 1 && (
+              <div className="mt-2 flex flex-wrap items-center gap-1">
+                {selectedCategoryTrail.slice(0, -1).map((category, index) => (
+                  <span key={category.id} className="inline-flex items-center gap-1">
+                    {index > 0 && (
+                      <ChevronRight
+                        aria-hidden="true"
+                        className="size-3.5 text-text-tertiary"
+                      />
+                    )}
+                    <span className="rounded-md bg-white px-2 py-1 text-xs text-text-tertiary">
+                      {category.title}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
           <button
             type="button"
@@ -117,11 +131,18 @@ export default function CreateProductCategoryPicker({
                 {breadcrumbs.length ? "Оберіть підкатегорію" : "З чого почнемо?"}
               </p>
               {breadcrumbs.length > 0 && (
-                <div className="ml-auto hidden min-w-0 items-center gap-1 overflow-hidden text-xs text-text-tertiary sm:flex">
+                <div className="ml-auto hidden min-w-0 items-center gap-1 overflow-hidden sm:flex">
                   {breadcrumbs.map((category, index) => (
                     <span key={category.id} className="flex min-w-0 items-center gap-1">
-                      <span className="truncate">{category.title}</span>
-                      {index < breadcrumbs.length - 1 && <span>/</span>}
+                      {index > 0 && (
+                        <ChevronRight
+                          aria-hidden="true"
+                          className="size-3.5 shrink-0 text-text-tertiary"
+                        />
+                      )}
+                      <span className="max-w-32 truncate rounded-md bg-surface-primary-subtle px-2 py-1 text-xs text-text-tertiary">
+                        {category.title}
+                      </span>
                     </span>
                   ))}
                 </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { Search } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button/button";
@@ -65,6 +66,12 @@ export default function HeaderAuth() {
         <DropdownLabel className="max-w-64 truncate">
           {user.email}
         </DropdownLabel>
+        <DropdownItem asChild>
+          <Link href="/auto-search">
+            <Search aria-hidden="true" className="size-4" />
+            Мої автопошуки
+          </Link>
+        </DropdownItem>
         <DropdownSeparator />
         <DropdownItem onSelect={logout}>Logout</DropdownItem>
       </DropdownContent>
