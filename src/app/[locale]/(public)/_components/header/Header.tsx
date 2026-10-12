@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button/button";
 import { ChatBubbleIcon } from "@/components/ui/icons";
@@ -21,24 +21,16 @@ const Header = () => {
         <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:gap-2 lg:order-last lg:ml-auto">
           <HeaderFavoritesLink />
           <Button
+            asChild
             variant="secondary"
             aria-label="Повідомлення"
             className="hidden size-8 border-0 p-0 sm:inline-flex"
           >
-            <ChatBubbleIcon className="size-6" />
-          </Button>
-          <HeaderAuth />
-          <Button
-            asChild
-            variant="secondary"
-            aria-label="Мої автопошуки"
-            className="size-8 border-0 p-0 sm:h-10 sm:w-auto sm:px-3 lg:px-4"
-          >
-            <Link href="/auto-search">
-              <Search aria-hidden="true" className="size-4 sm:size-[18px]" />
-              <span className="hidden sm:inline">Автопошук</span>
+            <Link href="/chats">
+              <ChatBubbleIcon className="size-6" />
             </Link>
           </Button>
+          <HeaderAuth />
           <Button
             asChild
             aria-label="Додати оголошення"
