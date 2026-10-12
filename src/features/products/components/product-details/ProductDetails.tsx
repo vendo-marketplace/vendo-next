@@ -258,10 +258,10 @@ function ProductPageContent({
                 : formatRelativeTime(product.createdAt)}
             </span>
           </div>
-          <h1 className="mt-4 text-xl leading-snug font-semibold text-text-primary sm:text-2xl">
+          <h1 className="mt-4 text-lg leading-snug font-medium text-text-primary sm:text-xl">
             {product.title}
           </h1>
-          <p className="mt-3 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
+          <p className="mt-3 text-xl font-medium tracking-tight text-text-primary sm:text-2xl">
             {formatPrice(product.price)}
           </p>
 

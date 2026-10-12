@@ -53,7 +53,7 @@ const Select = <T extends string>({
           position="popper"
           align="end"
           sideOffset={4}
-          className="min-w-(--radix-select-trigger-width) font-medium"
+          className="z-[60] min-w-(--radix-select-trigger-width) font-medium"
         >
           <RadixSelect.Viewport className="rounded-lg bg-surface-primary p-2 gap-6 cursor-pointer border border-stroke-primary-subtle text-text-secondary text-[14px] leading-5">
             {options.map((opt) => (

@@ -5,6 +5,7 @@ import {
   BookOpen,
   Building2,
   CarFront,
+  ChevronDown,
   ChevronRight,
   Dumbbell,
   Grid2X2,
@@ -193,22 +194,33 @@ export default function CategoryDropdownClient({
           title="Каталог товарів"
           aria-haspopup="dialog"
           aria-expanded={isOpen}
+          aria-controls="catalog-dialog"
           onClick={() => setIsOpen((open) => !open)}
+          className={
+            isOpen
+              ? "border-surface-brand bg-surface-secondary-brand text-text-brand hover:border-surface-brand hover:bg-surface-secondary-brand hover:text-text-brand"
+              : ""
+          }
         >
           <Grid2X2 aria-hidden="true" className="size-4" />
           <span>Каталог</span>
+          <ChevronDown
+            aria-hidden="true"
+            className={`size-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          />
         </Button>
       </div>
 
       {isOpen && (
         <div
-          className="fixed inset-x-0 top-28 z-50 h-[min(78vh,calc(100dvh-7rem))] bg-black/30 lg:top-20 lg:h-[min(78vh,calc(100dvh-5rem))]"
+          className="fixed inset-x-0 top-28 z-50 h-[min(90vh,calc(100dvh-7rem))] lg:top-[88px] lg:h-[min(90vh,calc(100dvh-5.5rem))]"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setIsOpen(false);
           }}
         >
           <section
             role="dialog"
+            id="catalog-dialog"
             aria-modal="true"
             aria-label="Каталог товарів"
             tabIndex={-1}
@@ -233,7 +245,7 @@ export default function CategoryDropdownClient({
                 first?.focus();
               }
             }}
-            className="flex h-full w-full flex-col overflow-hidden bg-surface-primary shadow-2xl"
+            className="mx-auto flex h-full w-[calc(100%-1rem)] flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl md:w-[82vw]"
           >
             <div className="flex items-center justify-between border-b border-stroke-secondary px-5 py-3 md:hidden">
               <p className="text-base font-semibold text-text-primary">
@@ -258,8 +270,8 @@ export default function CategoryDropdownClient({
                 Категорії поки відсутні.
               </p>
             ) : (
-              <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[260px_minmax(0,1fr)]">
-                <div className="hidden min-h-0 overflow-y-auto border-r border-stroke-secondary p-5 md:block">
+              <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[320px_minmax(0,1fr)]">
+                <div className="hidden min-h-0 border-r border-stroke-secondary p-5 md:block">
                   <nav aria-label="Основні категорії" className="grid gap-1">
                     {categories.map((category, index) => {
                       const Icon = categoryIcons[index % categoryIcons.length];
@@ -301,7 +313,7 @@ export default function CategoryDropdownClient({
                   </nav>
                 </div>
 
-                <div className="min-h-0 overflow-y-auto p-4 md:p-6 lg:p-8">
+                <div className="min-h-0 p-4 md:p-6 lg:p-8">
                   <label className="mb-5 grid gap-2 text-xs font-semibold uppercase tracking-wide text-text-tertiary md:hidden">
                     Основна категорія
                     <select

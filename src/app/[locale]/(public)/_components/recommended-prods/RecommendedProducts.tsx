@@ -18,7 +18,7 @@ export default function RecommendedProducts() {
   };
   const productsQuery = useMemo(() => ({
     page,
-    size: 25,
+    size: 28,
     sort: getProductSortQuery(sort),
   }) satisfies SearchProductsQuery, [page, sort]);
   const {

@@ -12,8 +12,8 @@ import { Link } from "@/i18n/navigation";
 
 const Header = () => {
   return (
-    <header className="font-mazzard sticky top-0 left-0 z-10 flex h-28 w-full items-center justify-center border-b border-stroke-primary-subtle bg-surface-primary lg:h-20">
-      <div className="mx-auto grid h-full w-full max-w-330 grid-cols-[auto_minmax(0,1fr)] grid-rows-[48px_64px] items-center gap-x-3 px-4 sm:px-6 lg:flex lg:gap-5 lg:px-0">
+    <header className="font-mazzard sticky top-0 left-0 z-50 flex h-28 w-full items-center justify-center border-b border-stroke-primary-subtle bg-surface-primary lg:h-[88px]">
+      <div className="mx-auto grid h-full w-full max-w-330 grid-cols-[auto_minmax(0,1fr)] grid-rows-[48px_64px] items-center gap-x-3 px-4 sm:px-6 lg:flex lg:gap-3 lg:px-4 xl:gap-4 xl:px-0">
         <div className="col-start-1 row-start-1 lg:shrink-0">
           <Logo className="h-7 sm:h-8 lg:h-9" />
         </div>
@@ -55,7 +55,7 @@ const Header = () => {
           <CategoryDropdown />
         </div>
 
-        <div className="col-start-2 row-start-2 min-w-0 lg:flex-1">
+        <div className="col-start-2 row-start-2 min-w-0 lg:max-w-[520px] lg:flex-1">
           <Suspense fallback={null}>
             <SearchBar />
           </Suspense>

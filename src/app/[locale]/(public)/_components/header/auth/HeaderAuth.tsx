@@ -44,11 +44,35 @@ export default function HeaderAuth() {
 
   if (!user) {
     return (
-      <Button asChild variant="secondary" className="size-8 border-0 p-0">
-        <Link href="/sign-in" aria-label="Sign in">
-          <CircleUserIcon className="size-6" />
-        </Link>
-      </Button>
+      <div className="flex items-center gap-1 sm:gap-2">
+        <Button
+          asChild
+          variant="secondary"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
+        >
+          <Link href="/sign-in">Вхід</Link>
+        </Button>
+        <span
+          aria-hidden="true"
+          className="hidden h-6 w-px bg-stroke-secondary sm:block"
+        />
+        <Button
+          asChild
+          variant="secondary"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
+        >
+          <Link href="/sign-up">Реєстрація</Link>
+        </Button>
+        <Button
+          asChild
+          variant="secondary"
+          className="size-8 border-0 p-0 sm:hidden"
+        >
+          <Link href="/sign-in" aria-label="Увійти або зареєструватися">
+            <CircleUserIcon className="size-6" />
+          </Link>
+        </Button>
+      </div>
     );
   }
 
