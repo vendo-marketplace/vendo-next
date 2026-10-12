@@ -2,7 +2,7 @@
 
 import type { AxiosError } from "axios";
 import Image from "next/image";
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import img from "@/assets/gifs/emailSent.gif";
@@ -11,6 +11,7 @@ import { OtpCodeInput } from "@/components/ui/input/otp-code-input";
 import type { ApiError } from "@/types/types";
 
 import { useResendVerification } from "../hooks/use-resend-verification";
+import { useStartVerification } from "../hooks/use-start-verification";
 import { useValidateVerification } from "../hooks/use-validate-verification";
 
 const CODE_LENGTH = 6;
@@ -19,15 +20,41 @@ const RESEND_COOLDOWN_SECONDS = 60;
 type VerifyCodeProps = {
   email: string;
   onSuccess?: () => void;
+  sendOnMount?: boolean;
 };
 
-export function VerifyCode({ email, onSuccess }: VerifyCodeProps) {
+export function VerifyCode({
+  email,
+  onSuccess,
+  sendOnMount = false,
+}: VerifyCodeProps) {
   const [code, setCode] = useState("");
   const [resendCooldown, setResendCooldown] = useState(RESEND_COOLDOWN_SECONDS);
+  const autoSendStarted = useRef(false);
   const { mutate: resendVerification, isPending: isResendPending } =
     useResendVerification();
+  const { mutate: startVerification } = useStartVerification();
   const { mutate: validateVerification, isPending: isValidationPending } =
     useValidateVerification();
+
+  useEffect(() => {
+    if (!sendOnMount || !email || autoSendStarted.current) return;
+
+    autoSendStarted.current = true;
+    startVerification(email, {
+      onSuccess: () => {
+        setResendCooldown(RESEND_COOLDOWN_SECONDS);
+        toast.success("Код підтвердження надіслано");
+      },
+      onError: (error: AxiosError<ApiError>) => {
+        setResendCooldown(0);
+        toast.error(
+          error.response?.data.message ??
+            "Не вдалося надіслати код. Спробуйте ще раз.",
+        );
+      },
+    });
+  }, [email, sendOnMount, startVerification]);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;

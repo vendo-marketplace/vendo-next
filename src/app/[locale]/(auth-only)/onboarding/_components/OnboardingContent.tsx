@@ -8,10 +8,16 @@ import { useMe } from "@/features/auth/hooks/use-me";
 import type { AccountCompletionCredentials } from "@/features/auth/types/auth";
 import { useRouter } from "@/i18n/navigation";
 import LoadingSpinner from "@/components/ui/loading-spinner";
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 export function OnboardingContent() {
   const router = useRouter();
+  const [sendVerificationOnMount] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.sessionStorage.getItem("send-verification-code-on-onboarding") ===
+        "true",
+  );
   const { data: user } = useMe();
   const registrationEmail = useSyncExternalStore(
     () => () => {},
@@ -19,6 +25,12 @@ export function OnboardingContent() {
     () => "",
   );
   const { mutate: completeAccount } = useCompleteAccount();
+
+  useEffect(() => {
+    if (sendVerificationOnMount) {
+      window.sessionStorage.removeItem("send-verification-code-on-onboarding");
+    }
+  }, [sendVerificationOnMount]);
 
   useEffect(() => {
     if (user?.emailVerified) {
@@ -39,7 +51,12 @@ export function OnboardingContent() {
         {user?.emailVerified ? (
           <AccountCompletion onSuccess={onSuccess} />
         ) : (
-          <VerifyCode email={email} />
+          <VerifyCode
+            email={email}
+            sendOnMount={Boolean(
+              user && !user.emailVerified && sendVerificationOnMount,
+            )}
+          />
         )}
       </AuthContentContainer>
     </>

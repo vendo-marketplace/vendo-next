@@ -112,7 +112,15 @@ export default function HeaderAuth() {
           </DropdownLabel>
           {!user.emailVerified && (
             <DropdownItem asChild>
-              <Link href="/onboarding">
+              <Link
+                href="/onboarding"
+                onClick={() =>
+                  window.sessionStorage.setItem(
+                    "send-verification-code-on-onboarding",
+                    "true",
+                  )
+                }
+              >
                 <ShieldCheck aria-hidden="true" className="size-4" />
                 Підтвердити email
               </Link>
