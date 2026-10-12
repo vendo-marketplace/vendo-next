@@ -3,7 +3,6 @@
 import {
   ArrowLeft,
   CalendarDays,
-  Check,
   ChevronLeft,
   ChevronRight,
   Copy,
@@ -173,7 +172,7 @@ function ProductPageContent({
     <section className="mx-auto w-full max-w-330 px-4 py-6 sm:py-9">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.8fr)] lg:gap-8">
         <div className="min-w-0">
-          <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary sm:aspect-[16/11]">
+          <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)] sm:aspect-[16/11]">
             {image ? (
               <Image
                 src={image}
@@ -192,11 +191,6 @@ function ProductPageContent({
               <Badge theme={product.isNew ? "brand" : "gray"} size="lg">
                 {product.isNew ? "Новий" : "Вживаний"}
               </Badge>
-              {product.active && (
-                <Badge theme="success" size="lg" leading={<Check />}>
-                  Активне оголошення
-                </Badge>
-              )}
             </div>
             {images.length > 1 && (
               <>
@@ -246,7 +240,7 @@ function ProductPageContent({
           )}
         </div>
 
-        <aside className="h-fit rounded-2xl border border-stroke-secondary bg-surface-primary p-5 shadow-sm sm:p-7 lg:sticky lg:top-24">
+        <aside className="h-fit rounded-2xl border border-stroke-secondary bg-surface-primary p-5 shadow-[0_2px_12px_rgba(20,31,54,0.04)] sm:p-7 lg:sticky lg:top-24">
           <div className="flex items-center justify-between gap-3 text-xs text-text-tertiary">
             <span className="inline-flex items-center gap-1.5">
               <MapPin aria-hidden="true" className="size-4" />
@@ -306,7 +300,7 @@ function ProductPageContent({
         </aside>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary">
+      <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)]">
         <Tabs.Root defaultValue="description">
           <Tabs.List
             aria-label="Інформація про товар"
