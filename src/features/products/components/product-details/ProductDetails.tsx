@@ -8,6 +8,7 @@ import {
   Copy,
   Heart,
   MapPin,
+  MessageCircle,
   PackageCheck,
   ShieldCheck,
   Sparkles,
@@ -23,9 +24,10 @@ import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/ui/button/button";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { categoriesApi } from "@/api/categories";
+import { useMe } from "@/features/auth/hooks/use-me";
 import { useFavorites } from "@/features/favorites/hooks/use-favorites";
 import { useSearchProductsPage } from "@/features/products/hooks/use-products";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import type { ProductCardType, SearchProductsQuery } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 
@@ -150,6 +152,8 @@ function ProductPageContent({
   favoriteDisabled: boolean;
   onToggleFavorite: () => void;
 }) {
+  const router = useRouter();
+  const { data: user } = useMe();
   const images = product.images.filter(Boolean);
   const image = images[activeImage] ?? images[0];
   const { data: categoryAttributes = [] } = useQuery({
@@ -166,6 +170,18 @@ function ProductPageContent({
     } catch {
       toast.error("Не вдалося скопіювати посилання");
     }
+  };
+
+  const openChat = () => {
+    if (!user) {
+      router.push("/sign-in");
+      return;
+    }
+    if (user.id === product.ownerId) {
+      toast.error("Не можна написати собі на власне оголошення.");
+      return;
+    }
+    router.push(`/chats?productId=${encodeURIComponent(product.id)}`);
   };
 
   return (
@@ -277,6 +293,18 @@ function ProductPageContent({
               Поділитися
             </Button>
           </div>
+
+          {user?.id !== product.ownerId && (
+            <Button
+              variant="secondary"
+              onClick={openChat}
+              disabled={!product.active}
+              className="mt-3 w-full"
+            >
+              <MessageCircle aria-hidden="true" className="size-4" />
+              {product.active ? "Написати продавцю" : "Оголошення недоступне"}
+            </Button>
+          )}
 
           <div className="mt-6 grid grid-cols-2 gap-3 border-t border-stroke-secondary pt-5">
             <QuickFact

@@ -32,4 +32,9 @@ export const apiEndpoints = {
     item: (id: string) => `/auto-search/${id}`,
     products: (id: string) => `/auto-search/${id}/products`,
   },
+  conversations: {
+    list: "/conversations",
+    item: (id: string) => `/conversations/${id}`,
+    messages: (id: string) => `/conversations/${id}/messages`,
+  },
 } as const;
