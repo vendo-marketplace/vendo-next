@@ -27,13 +27,4 @@ export const chatQueries = {
       },
       enabled: Boolean(id),
     }),
-  messages: (id: string) =>
-    queryOptions({
-      queryKey: chatKeys.messages(id),
-      queryFn: async () => {
-        const response = await conversationsApi.messages(id);
-        return response.data;
-      },
-      enabled: Boolean(id),
-    }),
 };

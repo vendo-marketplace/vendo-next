@@ -2,16 +2,16 @@
 
 import {
   ArrowLeft,
-  CalendarDays,
   ChevronLeft,
   ChevronRight,
-  Copy,
   Heart,
   MapPin,
   MessageCircle,
   PackageCheck,
-  ShieldCheck,
+  Recycle,
+  Share2,
   Sparkles,
+  Tag,
   UserRound,
 } from "lucide-react";
 import { Tabs } from "radix-ui";
@@ -163,6 +163,35 @@ function ProductPageContent({
       return response.data;
     },
   });
+  const attributeSpecs = product.attributes
+    .map((attribute) => ({
+      label:
+        categoryAttributes.find((categoryAttribute) => categoryAttribute.id === attribute.id)
+          ?.title,
+      value: attribute.values?.filter(Boolean).join(", "),
+    }))
+    .filter(
+      (attribute): attribute is { label: string; value: string } =>
+        Boolean(attribute.label && attribute.value),
+    );
+  const productSpecs = [
+    {
+      label: "Стан",
+      value: product.isNew ? "Новий" : "Вживаний",
+      icon: product.isNew ? Sparkles : Recycle,
+    },
+    ...attributeSpecs.slice(0, 2).map((attribute) => ({
+      ...attribute,
+      icon: Tag,
+    })),
+  ];
+  if (productSpecs.length < 3) {
+    productSpecs.push({
+      label: "Кількість",
+      value: `${product.quantity} шт.`,
+      icon: PackageCheck,
+    });
+  }
   const shareProduct = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -172,7 +201,7 @@ function ProductPageContent({
     }
   };
 
-  const openChat = () => {
+  const openChat = (intent: "message" | "purchase" = "message") => {
     if (!user) {
       router.push("/sign-in");
       return;
@@ -181,7 +210,12 @@ function ProductPageContent({
       toast.error("Не можна написати собі на власне оголошення.");
       return;
     }
-    router.push(`/chats?productId=${encodeURIComponent(product.id)}`);
+
+    const params = new URLSearchParams({ productId: product.id });
+    if (intent === "purchase") {
+      params.set("firstMessage", "Вітаю! Хочу придбати цей товар.");
+    }
+    router.push(`/chats?${params.toString()}`);
   };
 
   return (
@@ -257,74 +291,80 @@ function ProductPageContent({
         </div>
 
         <aside className="h-fit rounded-2xl border border-stroke-secondary bg-surface-primary p-5 shadow-[0_2px_12px_rgba(20,31,54,0.04)] sm:p-7 lg:sticky lg:top-24">
-          <div className="flex items-center justify-between gap-3 text-xs text-text-tertiary">
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin aria-hidden="true" className="size-4" />
-              {product.address?.city || "Місто не вказано"}
-            </span>
-            <span>
-              {formatPublishedDate(product.createdAt)
-                ? `Опубліковано ${formatPublishedDate(product.createdAt)}`
-                : formatRelativeTime(product.createdAt)}
-            </span>
+          <p className="text-xs text-text-tertiary">
+            Опубліковано {formatPublishedDate(product.createdAt) || formatRelativeTime(product.createdAt)}
+          </p>
+
+          <div className="mt-3 flex items-start gap-3">
+            <h1 className="min-w-0 flex-1 text-lg leading-snug font-medium text-text-primary sm:text-xl">
+              {product.title}
+            </h1>
+            <div className="flex shrink-0 items-center gap-2">
+              <Button
+                variant="secondary"
+                aria-label="Поділитися товаром"
+                onClick={shareProduct}
+                className="size-10 rounded-full border-0 bg-surface-brand-subtle p-0 text-text-brand shadow-none hover:bg-surface-brand-subtle"
+              >
+                <Share2 aria-hidden="true" className="size-4" />
+              </Button>
+              <Button
+                variant="secondary"
+                aria-label={favorite ? "Прибрати з обраного" : "Додати в обране"}
+                aria-pressed={favorite}
+                disabled={favoriteDisabled}
+                onClick={onToggleFavorite}
+                className="size-10 rounded-full border-0 bg-surface-brand-subtle p-0 text-text-brand shadow-none hover:bg-surface-brand-subtle disabled:opacity-50"
+              >
+                <Heart
+                  aria-hidden="true"
+                  className={`size-4 ${favorite ? "fill-current text-text-error" : ""}`}
+                />
+              </Button>
+            </div>
           </div>
-          <h1 className="mt-4 text-lg leading-snug font-medium text-text-primary sm:text-xl">
-            {product.title}
-          </h1>
-          <p className="mt-3 text-xl font-medium tracking-tight text-text-primary sm:text-2xl">
+
+          <p className="mt-5 text-2xl font-semibold tracking-tight text-text-primary sm:text-3xl">
             {formatPrice(product.price)}
           </p>
 
-          <div className="mt-6 grid grid-cols-2 gap-3">
-            <Button
-              disabled={favoriteDisabled}
-              variant={favorite ? "secondary" : "brand"}
-              onClick={onToggleFavorite}
-              className="w-full"
-            >
-              <Heart
-                aria-hidden="true"
-                className={`size-4 ${favorite ? "fill-current text-text-error" : ""}`}
-              />
-              {favorite ? "В обраному" : "В обране"}
-            </Button>
-            <Button variant="secondary" onClick={shareProduct} className="w-full">
-              <Copy aria-hidden="true" className="size-4" />
-              Поділитися
-            </Button>
+          <div className="mt-5 grid grid-cols-3 divide-x divide-stroke-secondary border-y border-stroke-secondary py-2.5">
+            {productSpecs.map(({ label, value, icon: Icon }) => (
+              <div key={label} className="min-w-0 px-2 first:pl-0 last:pr-0 sm:px-3">
+                <p className="truncate text-[11px] text-text-tertiary sm:text-xs">{label}</p>
+                <p className="mt-1.5 flex min-w-0 items-center gap-1.5 text-xs font-medium text-text-primary sm:text-sm">
+                  <Icon aria-hidden="true" className="size-4 shrink-0 text-text-brand" />
+                  <span className="truncate">{value}</span>
+                </p>
+              </div>
+            ))}
           </div>
+
+          <p className="mt-5 flex items-center gap-2 text-sm text-text-secondary">
+            <MapPin aria-hidden="true" className="size-4 shrink-0" />
+            {product.address?.city || "Місто не вказано"}
+          </p>
 
           {user?.id !== product.ownerId && (
-            <Button
-              variant="secondary"
-              onClick={openChat}
-              disabled={!product.active}
-              className="mt-3 w-full"
-            >
-              <MessageCircle aria-hidden="true" className="size-4" />
-              {product.active ? "Написати продавцю" : "Оголошення недоступне"}
-            </Button>
+            <div className="mt-6 grid grid-cols-2 gap-3 border-b border-stroke-secondary pb-5">
+              <Button
+                onClick={() => openChat("purchase")}
+                disabled={!product.active}
+                className="h-12 w-full min-w-0 px-2 text-sm sm:px-4"
+              >
+                Купити
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => openChat()}
+                disabled={!product.active}
+                className="h-12 w-full min-w-0 px-2 text-sm sm:px-4"
+              >
+                <MessageCircle aria-hidden="true" className="size-4" />
+                <span className="truncate">Написати продавцю</span>
+              </Button>
+            </div>
           )}
-
-          <div className="mt-6 grid grid-cols-2 gap-3 border-t border-stroke-secondary pt-5">
-            <QuickFact
-              icon={<PackageCheck aria-hidden="true" className="size-4" />}
-              label="Кількість"
-              value={`${product.quantity} шт.`}
-            />
-            <QuickFact
-              icon={<CalendarDays aria-hidden="true" className="size-4" />}
-              label="Опубліковано"
-              value={formatRelativeTime(product.createdAt)}
-            />
-          </div>
-
-          <div className="mt-5 flex gap-3 rounded-xl bg-surface-secondary p-4">
-            <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-text-brand" />
-            <p className="text-xs leading-5 text-text-secondary">
-              Перевірте стан товару та узгодьте зручний спосіб передачі з продавцем.
-            </p>
-          </div>
         </aside>
       </div>
 
@@ -413,26 +453,6 @@ function ProductPageContent({
         Кожне оголошення має власну сторінку з повною інформацією про товар.
       </div>
     </section>
-  );
-}
-
-function QuickFact({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="min-w-0">
-      <div className="flex items-center gap-1.5 text-xs text-text-tertiary">
-        {icon}
-        {label}
-      </div>
-      <p className="mt-1 truncate text-sm font-medium text-text-primary">{value}</p>
-    </div>
   );
 }
 

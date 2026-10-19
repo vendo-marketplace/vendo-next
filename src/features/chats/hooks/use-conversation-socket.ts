@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
 
 import { chatKeys } from "@/features/chats/queries/chat.queries";
 import type { Message, MessagePage } from "@/features/chats/types/chat";
@@ -47,16 +48,52 @@ function parseMessageFrame(frame: string): Message | null {
   }
 }
 
-function appendMessage(page: MessagePage | undefined, message: Message) {
-  if (!page || page.content.some(({ id }) => id === message.id)) return page;
+function appendMessage(
+  data: InfiniteData<MessagePage> | undefined,
+  message: Message,
+) {
+  if (!data) return data;
+
+  const hasMessage = data.pages.some((page) =>
+    page.content.some(({ id }) => id === message.id),
+  );
+  if (hasMessage) return data;
+
+  const optimisticMessage = data.pages
+    .flatMap((page) => page.content)
+    .find(
+      (candidate) =>
+        candidate.id.startsWith("optimistic-") &&
+        candidate.senderId === message.senderId &&
+        candidate.content === message.content &&
+        Math.abs(Date.parse(candidate.createdAt) - Date.parse(message.createdAt)) < 30_000,
+    );
+
+  if (optimisticMessage) {
+    return {
+      ...data,
+      pages: data.pages.map((page) => ({
+        ...page,
+        content: page.content
+          .map((item) => (item.id === optimisticMessage.id ? message : item))
+          .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt)),
+      })),
+    };
+  }
 
   return {
-    ...page,
-    content: [...page.content, message].sort(
-      (left, right) => Date.parse(left.createdAt) - Date.parse(right.createdAt),
+    ...data,
+    pages: data.pages.map((page, index) =>
+      index === 0
+        ? {
+            ...page,
+            content: [...page.content, message].sort(
+              (left, right) =>
+                Date.parse(right.createdAt) - Date.parse(left.createdAt),
+            ),
+          }
+        : page,
     ),
-    totalElements: page.totalElements + 1,
-    empty: false,
   };
 }
 
@@ -107,9 +144,6 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
       if (!socket || socket.readyState !== WebSocket.OPEN) return;
 
       sendSubscribeFrame(socket, conversationId);
-      void queryClient.invalidateQueries({
-        queryKey: chatKeys.messages(conversationId),
-      });
       void queryClient.invalidateQueries({ queryKey: chatKeys.list() });
       heartbeatTimer = setInterval(() => socket?.send("\n"), HEARTBEAT_INTERVAL);
     };
@@ -131,9 +165,9 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
       const message = parseMessageFrame(frame);
       if (!message || message.conversationId !== conversationId) return;
 
-      queryClient.setQueryData<MessagePage>(
+      queryClient.setQueryData<InfiniteData<MessagePage>>(
         chatKeys.messages(conversationId),
-        (page) => appendMessage(page, message),
+        (data) => appendMessage(data, message),
       );
       void queryClient.invalidateQueries({ queryKey: chatKeys.list() });
     };

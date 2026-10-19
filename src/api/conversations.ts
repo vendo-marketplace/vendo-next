@@ -21,9 +21,9 @@ export const conversationsApi = {
     ),
   remove: async (id: string) =>
     client.delete<void>(apiEndpoints.conversations.item(id)),
-  messages: async (id: string, page = 0, size = 100) =>
+  messages: async (id: string, page = 0) =>
     client.get<MessagePage>(apiEndpoints.conversations.messages(id), {
-      params: { page, size, sort: "createdAt,ASC" },
+      params: { page },
     }),
   sendMessage: async (id: string, request: SendMessageRequest) =>
     client.post<void>(apiEndpoints.conversations.messages(id), request),

@@ -5,6 +5,7 @@ import {
   Check,
   CheckCheck,
   Image as ImageIcon,
+  LoaderCircle,
   MessageCircle,
   MoreHorizontal,
   Plus,
@@ -16,7 +17,13 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import {
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import type { FormEvent, KeyboardEvent, ReactNode } from "react";
 import { toast } from "sonner";
 
@@ -302,6 +309,10 @@ function MessageHistory({
   isLoading,
   isError,
   onRetry,
+  hasMore,
+  isLoadingMore,
+  onLoadMore,
+  scrollToBottomKey,
 }: {
   messages: Message[];
   userId: string;
@@ -309,83 +320,157 @@ function MessageHistory({
   isLoading: boolean;
   isError: boolean;
   onRetry: () => void;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  onLoadMore: () => Promise<unknown>;
+  scrollToBottomKey: number;
 }) {
-  if (isLoading) return <LoadingSpinner />;
-  if (isError) {
-    return (
-      <div className="m-auto text-center">
-        <p className="text-sm text-text-secondary">Не вдалося завантажити повідомлення.</p>
-        <button
-          type="button"
-          onClick={onRetry}
-          className="mt-2 text-sm font-medium text-text-brand"
-        >
-          Спробувати ще раз
-        </button>
-      </div>
-    );
-  }
-  if (!messages.length) {
-    return (
-      <p className="m-auto text-center text-sm text-text-secondary">
-        Поки що немає повідомлень. Напишіть першим.
-      </p>
-    );
-  }
+  const containerRef = useRef<HTMLDivElement>(null);
+  const hasScrolledToInitialPosition = useRef(false);
+  const isNearBottom = useRef(true);
+  const previousScrollToBottomKey = useRef(scrollToBottomKey);
+  const latestScrollToBottomKey = useRef(scrollToBottomKey);
+  const previousScrollPosition = useRef<{ height: number; top: number } | null>(null);
+  const isLoadingOlderRef = useRef(false);
+
+  useLayoutEffect(() => {
+    latestScrollToBottomKey.current = scrollToBottomKey;
+    const container = containerRef.current;
+    if (!container || isLoading || isError) return;
+
+    const shouldForceScroll = previousScrollToBottomKey.current !== scrollToBottomKey;
+    previousScrollToBottomKey.current = scrollToBottomKey;
+
+    if (!hasScrolledToInitialPosition.current || isNearBottom.current || shouldForceScroll) {
+      container.scrollTop = container.scrollHeight;
+      hasScrolledToInitialPosition.current = true;
+      isNearBottom.current = true;
+    }
+  }, [isError, isLoading, messages.length, scrollToBottomKey]);
+
+  const loadMoreMessages = async () => {
+    if (!hasMore || isLoadingMore || isLoadingOlderRef.current) return;
+
+    isLoadingOlderRef.current = true;
+    const scrollKeyBeforeLoad = scrollToBottomKey;
+    const container = containerRef.current;
+    if (container) {
+      previousScrollPosition.current = {
+        height: container.scrollHeight,
+        top: container.scrollTop,
+      };
+      isNearBottom.current = false;
+    }
+
+    try {
+      await onLoadMore();
+    } finally {
+      requestAnimationFrame(() => {
+        const currentContainer = containerRef.current;
+        const previousPosition = previousScrollPosition.current;
+        if (currentContainer && scrollKeyBeforeLoad !== latestScrollToBottomKey.current) {
+          currentContainer.scrollTop = currentContainer.scrollHeight;
+          isNearBottom.current = true;
+        } else if (currentContainer && previousPosition) {
+          currentContainer.scrollTop =
+            currentContainer.scrollHeight - previousPosition.height + previousPosition.top;
+        }
+
+        previousScrollPosition.current = null;
+        isLoadingOlderRef.current = false;
+      });
+    }
+  };
 
   return (
-    <>
-      <div className="mx-auto mb-2 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-text-tertiary shadow-sm">
-        Історія повідомлень
-      </div>
-      {messages.map((message, index) => {
-        const fromMe = message.senderId === userId;
-        const previous = messages[index - 1];
-        const showAvatar = !fromMe && (!previous || previous.senderId === userId);
+    <div
+      ref={containerRef}
+      onScroll={(event) => {
+        const container = event.currentTarget;
+        isNearBottom.current =
+          container.scrollHeight - container.scrollTop - container.clientHeight < 120;
 
-        return (
-          <div
-            key={message.id}
-            className={`flex items-end gap-2 ${fromMe ? "justify-end" : "justify-start"}`}
+        if (container.scrollTop <= 80) void loadMoreMessages();
+      }}
+      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-[#f8fafc] px-4 py-5 sm:px-8"
+    >
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : isError ? (
+        <div className="m-auto text-center">
+          <p className="text-sm text-text-secondary">Не вдалося завантажити повідомлення.</p>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="mt-2 text-sm font-medium text-text-brand"
           >
-            {!fromMe &&
-              (showAvatar ? (
-                <ParticipantAvatar
-                  label={peerRole}
-                  color="bg-blue-100 text-blue-700"
-                  size="size-7"
-                />
-              ) : (
-                <span className="w-7 shrink-0" />
-              ))}
-            <div
-              className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 sm:max-w-[70%] ${
-                fromMe
-                  ? "rounded-br-md bg-surface-brand text-white"
-                  : "rounded-bl-md border border-stroke-primary-subtle bg-white text-text-primary"
-              }`}
-            >
-              <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                {message.content}
-              </p>
-              <div
-                className={`mt-1 flex items-center justify-end gap-1 text-[10px] ${
-                  fromMe ? "text-white/75" : "text-text-tertiary"
-                }`}
-              >
-                <span>{formatTime(message.createdAt)}</span>
-                {fromMe &&
-                  (index === messages.length - 1 ? (
-                    <CheckCheck className="size-3.5" />
-                  ) : (
-                    <Check className="size-3" />
-                  ))}
-              </div>
+            Спробувати ще раз
+          </button>
+        </div>
+      ) : !messages.length ? (
+        <p className="m-auto text-center text-sm text-text-secondary">
+          Поки що немає повідомлень. Напишіть першим.
+        </p>
+      ) : (
+        <>
+          {isLoadingMore && (
+            <div role="status" className="mx-auto flex justify-center py-1">
+              <LoaderCircle aria-label="Завантаження" className="size-6 animate-spin text-text-brand" />
             </div>
+          )}
+          <div className="mx-auto mb-2 rounded-full bg-white px-3 py-1 text-[11px] font-medium text-text-tertiary shadow-sm">
+            Історія повідомлень
           </div>
-        );
-      })}
-    </>
+          {messages.map((message, index) => {
+            const fromMe = message.senderId === userId;
+            const previous = messages[index - 1];
+            const showAvatar = !fromMe && (!previous || previous.senderId === userId);
+
+            return (
+              <div
+                key={message.id}
+                className={`flex items-end gap-2 ${fromMe ? "justify-end" : "justify-start"}`}
+              >
+                {!fromMe &&
+                  (showAvatar ? (
+                    <ParticipantAvatar
+                      label={peerRole}
+                      color="bg-blue-100 text-blue-700"
+                      size="size-7"
+                    />
+                  ) : (
+                    <span className="w-7 shrink-0" />
+                  ))}
+                <div
+                  className={`max-w-[82%] rounded-2xl px-3.5 py-2.5 sm:max-w-[70%] ${
+                    fromMe
+                      ? "rounded-br-md bg-surface-brand text-white"
+                      : "rounded-bl-md border border-stroke-primary-subtle bg-white text-text-primary"
+                  }`}
+                >
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                    {message.content}
+                  </p>
+                  <div
+                    className={`mt-1 flex items-center justify-end gap-1 text-[10px] ${
+                      fromMe ? "text-white/75" : "text-text-tertiary"
+                    }`}
+                  >
+                    <span>{formatTime(message.createdAt)}</span>
+                    {fromMe &&
+                      (index === messages.length - 1 ? (
+                        <CheckCheck className="size-3.5" />
+                      ) : (
+                        <Check className="size-3" />
+                      ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </>
+      )}
+    </div>
   );
 }
 
@@ -466,6 +551,7 @@ export default function ChatsPage() {
   const searchParams = useSearchParams();
   const requestedConversationId = searchParams.get("conversationId") ?? "";
   const requestedProductId = searchParams.get("productId") ?? "";
+  const firstMessage = searchParams.get("firstMessage") ?? "";
   const sessionSnapshot = useSyncExternalStore(
     subscribeToSession,
     getSessionSnapshot,
@@ -476,7 +562,8 @@ export default function ChatsPage() {
   const [selectedId, setSelectedId] = useState(requestedConversationId);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<ConversationFilter>("all");
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState(firstMessage);
+  const [scrollToBottomKey, setScrollToBottomKey] = useState(0);
 
   const { data: user, isLoading: isUserLoading } = useMe(
     isSessionChecked && hasStoredSession,
@@ -538,8 +625,18 @@ export default function ChatsPage() {
     isLoading: areMessagesLoading,
     isError: messagesError,
     refetch: refetchMessages,
+    hasNextPage: hasOlderMessages,
+    isFetchingNextPage: isFetchingOlderMessages,
+    fetchNextPage,
   } = useConversationMessages(activeId);
-  const messages = messagePage?.content ?? [];
+  const messages = useMemo(
+    () =>
+      (messagePage?.pages.flatMap((page) => page.content) ?? []).sort(
+        (left, right) =>
+          Date.parse(left.createdAt) - Date.parse(right.createdAt),
+      ),
+    [messagePage],
+  );
   const activeProduct = activeConversation
     ? productById.get(activeConversation.productId)
     : isDraftConversation
@@ -567,9 +664,12 @@ export default function ChatsPage() {
 
     if (activeConversation) {
       sendMutation.mutate(
-        { id: activeConversation.id, request: { message } },
+        { id: activeConversation.id, request: { message }, senderId: user?.id ?? "" },
         {
-          onSuccess: () => setDraft(""),
+          onSuccess: () => {
+            setDraft("");
+            setScrollToBottomKey((key) => key + 1);
+          },
           onError: () =>
             toast.error("Не вдалося надіслати повідомлення. Спробуйте ще раз."),
         },
@@ -729,8 +829,8 @@ export default function ChatsPage() {
             <div className="border-b border-stroke-primary-subtle px-4 py-3 sm:px-6">
               <ConversationProduct product={activeProduct} />
             </div>
-            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-[#f8fafc] px-4 py-5 sm:px-8">
               <MessageHistory
+                key={activeId || requestedProductId}
                 messages={messages}
                 userId={user.id}
                 peerRole={peerRole}
@@ -740,12 +840,15 @@ export default function ChatsPage() {
                   (Boolean(activeId) && isConversationLoading && !activeListItem)
                 }
                 isError={messagesError || conversationError}
+                hasMore={Boolean(hasOlderMessages)}
+                isLoadingMore={isFetchingOlderMessages}
+                onLoadMore={fetchNextPage}
+                scrollToBottomKey={scrollToBottomKey}
                 onRetry={() => {
                   void refetchMessages();
                   void refetchConversation();
                 }}
               />
-            </div>
             <MessageComposer
               value={draft}
               onChange={setDraft}
