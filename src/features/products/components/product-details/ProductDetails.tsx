@@ -53,31 +53,26 @@ const formatPublishedDate = (value: string) => {
 
 export default function ProductDetails({
   productId,
-  searchTerm,
 }: {
   productId: string;
-  searchTerm: string;
 }) {
   const [activeImage, setActiveImage] = useState(0);
   const searchQuery = useMemo(
     () =>
       ({
+        ids: [productId],
         page: 1,
-        size: 30,
+        size: 1,
         sort: { sortBy: "CREATED_AT", direction: "DESC" },
       }) satisfies SearchProductsQuery,
-    [],
+    [productId],
   );
   const {
     data: searchResults,
     isLoading,
     isError,
     refetch,
-  } = useSearchProductsPage(
-    searchTerm,
-    searchQuery,
-    Boolean(searchTerm),
-  );
+  } = useSearchProductsPage("", searchQuery);
   const product = searchResults?.data.find((item) => item.id === productId);
   const {
     favoriteIds,

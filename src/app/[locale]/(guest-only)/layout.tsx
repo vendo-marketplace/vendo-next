@@ -18,7 +18,7 @@ export default function GuestOnlyLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.replace("/");
+      router.replace(user.emailVerified ? "/" : "/onboarding");
     }
   }, [isLoading, router, user]);
 

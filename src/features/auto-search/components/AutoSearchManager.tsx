@@ -166,18 +166,19 @@ const AutoSearchProducts = ({ id }: { id: string }) => {
 const AutoSearchCard = ({
   autoSearch,
   categoryTrail,
+  showProducts,
   isDeleting,
   onEdit,
   onDelete,
 }: {
   autoSearch: AutoSearch;
   categoryTrail: string[];
+  showProducts: boolean;
   isDeleting: boolean;
   onEdit: () => void;
   onDelete: () => void;
 }) => {
   const t = useTranslations("AutoSearch");
-  const [showProducts, setShowProducts] = useState(false);
   const status: AutoSearchStatus = autoSearch.status;
   const priceSummary =
     autoSearch.minPrice !== undefined || autoSearch.maxPrice !== undefined
@@ -245,20 +246,23 @@ const AutoSearchCard = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            size="sm"
-            onClick={() => setShowProducts((current) => !current)}
-            className="h-10"
-          >
-            <Search aria-hidden="true" className="size-4" />
-            {t("matchedProducts")}
-            {showProducts ? (
-              <ChevronUp aria-hidden="true" className="size-4" />
-            ) : (
-              <ChevronDown aria-hidden="true" className="size-4" />
-            )}
+          <Button asChild variant="secondary" size="sm" className="h-10">
+            <Link
+              href={
+                showProducts
+                  ? "/auto-search"
+                  : `/auto-search/${autoSearch.id}/products`
+              }
+              aria-expanded={showProducts}
+            >
+              <Search aria-hidden="true" className="size-4" />
+              {t("matchedProducts")}
+              {showProducts ? (
+                <ChevronUp aria-hidden="true" className="size-4" />
+              ) : (
+                <ChevronDown aria-hidden="true" className="size-4" />
+              )}
+            </Link>
           </Button>
           <Button
             type="button"
@@ -295,7 +299,11 @@ const AutoSearchCard = ({
   );
 };
 
-export default function AutoSearchManager({ categories, categoryError = false }: Props) {
+export default function AutoSearchManager({
+  categories,
+  categoryError = false,
+  selectedAutoSearchId,
+}: Props & { selectedAutoSearchId?: string }) {
   const t = useTranslations("AutoSearch");
   const hasStoredSession = useSyncExternalStore(
     emptySubscribe,
@@ -430,6 +438,16 @@ export default function AutoSearchManager({ categories, categoryError = false }:
             {t("retry")}
           </Button>
         </div>
+      ) : selectedAutoSearchId &&
+        !autoSearches.some(({ id }) => id === selectedAutoSearchId) ? (
+        <div className="rounded-2xl border border-stroke-primary-subtle bg-surface-primary px-6 py-12 text-center">
+          <h2 className="text-lg font-semibold text-text-primary">
+            {t("searchNotFound")}
+          </h2>
+          <Button asChild variant="secondary" className="mt-5">
+            <Link href="/auto-search">{t("backToAutoSearches")}</Link>
+          </Button>
+        </div>
       ) : autoSearches.length === 0 && !isCreating && !editingSearch ? (
         <div className="rounded-2xl border border-dashed border-stroke-primary-subtle bg-surface-primary px-6 py-14 text-center">
           <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-surface-brand-subtle text-text-brand">
@@ -451,6 +469,7 @@ export default function AutoSearchManager({ categories, categoryError = false }:
               key={autoSearch.id}
               autoSearch={autoSearch}
               categoryTrail={categoryTrails.get(autoSearch.categoryId) ?? []}
+              showProducts={autoSearch.id === selectedAutoSearchId}
               isDeleting={deletingId === autoSearch.id}
               onEdit={() => {
                 setIsCreating(false);
