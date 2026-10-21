@@ -37,7 +37,7 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
   const { data: favorites = [], isLoading: favoritesLoading } =
     useFavoriteProducts(open);
   const { data: autoSearches = [], isLoading: autoSearchesLoading } =
-    useAutoSearches(open);
+    useAutoSearches(open, user.id);
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>

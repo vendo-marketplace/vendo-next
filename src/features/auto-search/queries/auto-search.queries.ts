@@ -18,18 +18,23 @@ const toArray = <T>(value: unknown): T[] => {
 
 export const autoSearchKeys = {
   all: ["auto-search"] as const,
-  list: () => [...autoSearchKeys.all, "list"] as const,
+  list: (userId?: string) =>
+    userId
+      ? ([...autoSearchKeys.all, "list", userId] as const)
+      : ([...autoSearchKeys.all, "list"] as const),
   products: (id: string) => [...autoSearchKeys.all, "products", id] as const,
 };
 
 export const autoSearchQueries = {
-  list: () =>
+  list: (userId?: string) =>
     queryOptions({
-      queryKey: autoSearchKeys.list(),
+      queryKey: autoSearchKeys.list(userId),
       queryFn: async () => {
         const response = await autoSearchApi.list();
         return toArray<AutoSearch>(response.data);
       },
+      staleTime: 0,
+      refetchOnMount: "always",
     }),
   products: (id: string) =>
     queryOptions({

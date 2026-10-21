@@ -13,9 +13,11 @@ import {
   Plus,
   Search,
   Trash2,
+  X,
 } from "lucide-react";
 import { useMemo, useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
+import { Dialog } from "radix-ui";
 import Image from "next/image";
 import { toast } from "sonner";
 
@@ -53,11 +55,11 @@ const formatPrice = (price: number) =>
     maximumFractionDigits: 0,
   }).format(price);
 
-const toLocalDateTime = (value: string) => {
+const toLocalDate = (value: string) => {
   const date = new Date(value);
   if (!Number.isFinite(date.getTime())) return "";
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-  return date.toISOString().slice(0, 16);
+  return date.toISOString().slice(0, 10);
 };
 
 const getFormValues = (autoSearch: AutoSearch): AutoSearchFormValues => ({
@@ -65,7 +67,7 @@ const getFormValues = (autoSearch: AutoSearch): AutoSearchFormValues => ({
   minPrice: autoSearch.minPrice?.toString() ?? "",
   maxPrice: autoSearch.maxPrice?.toString() ?? "",
   city: autoSearch.address?.city ?? "",
-  expirationDate: toLocalDateTime(autoSearch.expirationDate),
+  expirationDate: toLocalDate(autoSearch.expirationDate),
   status: autoSearch.status === "EXPIRED" ? "CANCELLED" : autoSearch.status,
 });
 
@@ -194,12 +196,18 @@ const AutoSearchCard = ({
               {categoryTrail.at(-1) ?? t("unknownCategory")}
             </h2>
             <span
-              className={`rounded-full px-2.5 py-1 text-xs font-medium ${
+              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
                 status === "ACTIVE"
                   ? "bg-surface-brand-subtle text-text-brand"
                   : "bg-surface-secondary text-text-secondary"
               }`}
             >
+              <span
+                aria-hidden="true"
+                className={`size-1.5 rounded-full ${
+                  status === "ACTIVE" ? "bg-text-brand" : "bg-text-tertiary"
+                }`}
+              />
               {t(status === "ACTIVE" ? "active" : status === "CANCELLED" ? "paused" : "expired")}
             </span>
           </div>
@@ -225,22 +233,26 @@ const AutoSearchCard = ({
             </nav>
           )}
 
-          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-text-secondary">
-            <span>{priceSummary}</span>
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-text-secondary">
+            <span className="rounded-lg bg-surface-secondary px-3 py-1.5 font-medium text-text-primary">
+              {priceSummary}
+            </span>
             {autoSearch.address?.city && (
-              <span className="inline-flex items-center gap-1.5">
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-surface-secondary px-3 py-1.5">
                 <MapPin aria-hidden="true" className="size-4" />
                 {autoSearch.address.city}
               </span>
             )}
-            <span className="inline-flex items-center gap-1.5">
-              <CalendarClock aria-hidden="true" className="size-4" />
-              {t("expires", {
-                date: new Intl.DateTimeFormat("uk-UA", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                }).format(new Date(autoSearch.expirationDate)),
-              })}
+            <span className="inline-flex items-center gap-2 rounded-lg border border-stroke-primary-subtle bg-surface-primary px-3 py-1.5">
+              <CalendarClock aria-hidden="true" className="size-4 text-text-brand" />
+              <span className="text-xs text-text-tertiary">{t("expirationShort")}</span>
+              <span className="font-medium text-text-primary">
+                {new Intl.DateTimeFormat("uk-UA", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }).format(new Date(`${autoSearch.expirationDate.slice(0, 10)}T12:00:00`))}
+              </span>
             </span>
           </div>
         </div>
@@ -313,7 +325,7 @@ export default function AutoSearchManager({
   const { data: user, isPending: isAuthPending } = useMe(hasStoredSession);
   const isAuthenticated = hasStoredSession && Boolean(user);
   const { data: autoSearches = [], isLoading, isError, refetch } =
-    useAutoSearches(isAuthenticated);
+    useAutoSearches(isAuthenticated, user?.id);
   const { create, update, remove } = useAutoSearchMutations();
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -411,22 +423,62 @@ export default function AutoSearchManager({
         </div>
       )}
 
-      {(isCreating || editingSearch) && !categoryError && (
+      {isCreating && !categoryError && (
         <div className="mb-6">
           <AutoSearchForm
-            key={editingSearch?.id ?? "new"}
+            key="new"
             categories={categories}
-            initialValues={editingSearch ? getFormValues(editingSearch) : undefined}
-            isEditing={Boolean(editingSearch)}
-            isSaving={create.isPending || update.isPending}
+            isSaving={create.isPending}
             onCancel={() => {
               setIsCreating(false);
-              setEditingId(null);
             }}
-            onSave={editingSearch ? handleUpdate : async (filters) => handleCreate(filters)}
+            onSave={async (filters) => handleCreate(filters)}
           />
         </div>
       )}
+
+      <Dialog.Root
+        open={Boolean(editingSearch)}
+        onOpenChange={(open) => {
+          if (!open) setEditingId(null);
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[min(90dvh,640px)] w-[min(560px,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-stroke-primary-subtle bg-surface-primary p-5 shadow-xl outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 sm:p-6">
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div>
+                <Dialog.Title className="text-lg font-semibold text-text-primary">
+                  {t("editTitle")}
+                </Dialog.Title>
+                <Dialog.Description className="mt-1 text-sm text-text-secondary">
+                  {t("editFormDescription")}
+                </Dialog.Description>
+              </div>
+              <Dialog.Close asChild>
+                <button
+                  type="button"
+                  aria-label={t("cancel")}
+                  className="grid size-9 shrink-0 place-items-center rounded-full text-text-tertiary transition-colors hover:bg-surface-secondary hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stroke-brand"
+                >
+                  <X aria-hidden="true" className="size-5" />
+                </button>
+              </Dialog.Close>
+            </div>
+            {editingSearch && (
+              <AutoSearchForm
+                key={editingSearch.id}
+                categories={categories}
+                initialValues={getFormValues(editingSearch)}
+                isEditing
+                isSaving={update.isPending}
+                onCancel={() => setEditingId(null)}
+                onSave={handleUpdate}
+              />
+            )}
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
       {isLoading ? (
         <LoadingSpinner />
