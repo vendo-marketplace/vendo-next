@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 
-import { CalendarIcon } from "@/assets/icons";
 import { Button } from "@/components/ui/button/button";
 import { FormField } from "@/components/ui/form/form-field";
 import { UserIcon } from "@/components/ui/icons";
@@ -29,7 +28,7 @@ export function AccountCompletionForm({
     setValue,
   } = useForm<AccountCompletionCredentials>({
     resolver: zodResolver(accountCompletionSchema),
-    defaultValues: { fullName: "", birthDate: "" },
+    defaultValues: { fullName: "" },
     mode: "onChange",
   });
 
@@ -61,27 +60,6 @@ export function AccountCompletionForm({
             onClear={clearFullName}
             placeholder="Введіть своє ім’я"
             start={<UserIcon className="size-full" />}
-          />
-        )}
-      </FormField>
-
-      <FormField
-        id="account-completion-birth-date"
-        label="Дата народження"
-        error={errors.birthDate?.message}
-        required
-      >
-        {(fieldProps) => (
-          <Input
-            {...fieldProps}
-            {...register("birthDate")}
-            type="date"
-            autoComplete="bday"
-            disabled={isSubmitting}
-            clearable={false}
-            className="[&::-webkit-calendar-picker-indicator]:hidden text-text-secondary"
-            start={<CalendarIcon className="size-full" />}
-            onFocus={(event) => event.currentTarget.showPicker()}
           />
         )}
       </FormField>

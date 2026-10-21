@@ -2,7 +2,6 @@
 
 import {
   BadgeCheck,
-  CalendarDays,
   Heart,
   Mail,
   Search,
@@ -109,13 +108,6 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
                     icon={<Mail aria-hidden="true" className="size-4" />}
                     label="Електронна пошта"
                     value={user.email}
-                  />
-                  <InfoCard
-                    icon={<CalendarDays aria-hidden="true" className="size-4" />}
-                    label="Дата народження"
-                    value={
-                      user.birthDate ? formatDate(user.birthDate) : "Ще не вказано"
-                    }
                   />
                   <InfoCard
                     icon={<ShieldCheck aria-hidden="true" className="size-4" />}

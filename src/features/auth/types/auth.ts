@@ -12,7 +12,6 @@ export type ResetPasswordCredentials = {
 
 export type AccountCompletionCredentials = {
   fullName: string;
-  birthDate: string;
 };
 
 export type GoogleLoginCredentials = {
@@ -36,7 +35,6 @@ export type MeResponse = {
   status: string;
   roles: string[];
   providerType: string;
-  birthDate: string;
   fullName: string;
   createdAt: string;
   updatedAt: string;
