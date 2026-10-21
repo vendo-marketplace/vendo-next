@@ -109,18 +109,25 @@ export default function AutoSearchForm({
     const maxPrice = values.maxPrice.trim() ? Number(values.maxPrice) : undefined;
     const expirationDate = new Date(values.expirationDate);
 
-    if (!values.categoryId) {
+    if (!isEditing && !values.categoryId) {
       setError(t("categoryRequired"));
       return;
     }
     if (
+      !isEditing &&
       (minPrice !== undefined && (!Number.isFinite(minPrice) || minPrice < 0)) ||
+      !isEditing &&
       (maxPrice !== undefined && (!Number.isFinite(maxPrice) || maxPrice < 0))
     ) {
       setError(t("priceInvalid"));
       return;
     }
-    if (minPrice !== undefined && maxPrice !== undefined && minPrice > maxPrice) {
+    if (
+      !isEditing &&
+      minPrice !== undefined &&
+      maxPrice !== undefined &&
+      minPrice > maxPrice
+    ) {
       setError(t("priceOrder"));
       return;
     }
@@ -154,60 +161,66 @@ export default function AutoSearchForm({
           <h2 className="text-lg font-semibold text-text-primary">
             {isEditing ? t("editTitle") : t("createTitle")}
           </h2>
-          <p className="mt-1 text-sm text-text-secondary">{t("formDescription")}</p>
+          <p className="mt-1 text-sm text-text-secondary">
+            {t(isEditing ? "editFormDescription" : "formDescription")}
+          </p>
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <CreateProductCategoryPicker
-            categories={categories}
-            selectedCategory={selectedCategory}
-            selectedCategoryTrail={selectedCategoryTrail}
-            isOpen={isCategoryPickerOpen}
-            onOpenChange={setIsCategoryPickerOpen}
-            onSelect={(path) => {
-              update("categoryId", path.at(-1) ?? "");
-              setIsCategoryPickerOpen(false);
-            }}
-          />
-        </div>
+        {!isEditing && (
+          <>
+            <div className="sm:col-span-2">
+              <CreateProductCategoryPicker
+                categories={categories}
+                selectedCategory={selectedCategory}
+                selectedCategoryTrail={selectedCategoryTrail}
+                isOpen={isCategoryPickerOpen}
+                onOpenChange={setIsCategoryPickerOpen}
+                onSelect={(path) => {
+                  update("categoryId", path.at(-1) ?? "");
+                  setIsCategoryPickerOpen(false);
+                }}
+              />
+            </div>
 
-        <fieldset className="sm:col-span-2">
-          <legend className="mb-2 text-sm font-medium">{t("priceRange")}</legend>
-          <div className="grid grid-cols-2 gap-3">
-            <Input
-              type="number"
-              min="0"
-              step="0.01"
-              value={values.minPrice}
-              onChange={(event) => update("minPrice", event.target.value)}
-              placeholder={t("fromPrice")}
-              aria-label={t("fromPrice")}
-              className="h-11"
-            />
-            <Input
-              type="number"
-              min="0"
-              step="0.01"
-              value={values.maxPrice}
-              onChange={(event) => update("maxPrice", event.target.value)}
-              placeholder={t("toPrice")}
-              aria-label={t("toPrice")}
-              className="h-11"
-            />
-          </div>
-        </fieldset>
+            <fieldset className="sm:col-span-2">
+              <legend className="mb-2 text-sm font-medium">{t("priceRange")}</legend>
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={values.minPrice}
+                  onChange={(event) => update("minPrice", event.target.value)}
+                  placeholder={t("fromPrice")}
+                  aria-label={t("fromPrice")}
+                  className="h-11"
+                />
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={values.maxPrice}
+                  onChange={(event) => update("maxPrice", event.target.value)}
+                  placeholder={t("toPrice")}
+                  aria-label={t("toPrice")}
+                  className="h-11"
+                />
+              </div>
+            </fieldset>
 
-        <label className="flex flex-col gap-2 text-sm font-medium">
-          {t("cityOptional")}
-          <Input
-            value={values.city}
-            onChange={(event) => update("city", event.target.value)}
-            placeholder={t("cityPlaceholder")}
-            className="h-11"
-          />
-        </label>
+            <label className="flex flex-col gap-2 text-sm font-medium">
+              {t("cityOptional")}
+              <Input
+                value={values.city}
+                onChange={(event) => update("city", event.target.value)}
+                placeholder={t("cityPlaceholder")}
+                className="h-11"
+              />
+            </label>
+          </>
+        )}
 
         <label className="flex flex-col gap-2 text-sm font-medium">
           {t("expiration")}

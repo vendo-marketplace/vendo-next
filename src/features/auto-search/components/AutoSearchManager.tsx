@@ -64,7 +64,7 @@ const getFormValues = (autoSearch: AutoSearch): AutoSearchFormValues => ({
   categoryId: autoSearch.categoryId,
   minPrice: autoSearch.minPrice?.toString() ?? "",
   maxPrice: autoSearch.maxPrice?.toString() ?? "",
-  city: "",
+  city: autoSearch.address?.city ?? "",
   expirationDate: toLocalDateTime(autoSearch.expirationDate),
   status: autoSearch.status === "EXPIRED" ? "CANCELLED" : autoSearch.status,
 });
