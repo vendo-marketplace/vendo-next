@@ -130,9 +130,6 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
   useEffect(() => {
     if (!conversationId || !enabled) return;
 
-    const token = localStorage.getItem("access-token");
-    if (!token) return;
-
     let socket: WebSocket | null = null;
     let retryTimer: ReturnType<typeof setTimeout>;
     let heartbeatTimer: ReturnType<typeof setInterval>;
@@ -174,6 +171,11 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
 
     const connect = () => {
       if (disposed) return;
+
+      // Browsers don't allow setting Authorization on the WebSocket handshake.
+      // Authenticate the STOMP session with the latest access token instead.
+      const token = localStorage.getItem("access-token");
+      if (!token) return;
 
       const url = getSocketUrl();
       const host = new URL(url).host;
