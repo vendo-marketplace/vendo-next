@@ -12,12 +12,14 @@ const MAX_RECONNECT_DELAY = 30_000;
 const FRAME_END = "\0";
 const STOMP_SUBPROTOCOLS = ["v12.stomp", "v11.stomp", "v10.stomp"];
 
-function getSocketUrl() {
+function getSocketUrl(token: string) {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!baseUrl) throw new Error("NEXT_PUBLIC_API_URL is not configured");
 
   const url = new URL(`${baseUrl.replace(/\/+$/, "")}/ws`);
   url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
+  // The browser WebSocket API cannot set Authorization on the HTTP handshake.
+  url.searchParams.set("access_token", token);
   return url.toString();
 }
 
@@ -172,12 +174,10 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
     const connect = () => {
       if (disposed) return;
 
-      // Browsers don't allow setting Authorization on the WebSocket handshake.
-      // Authenticate the STOMP session with the latest access token instead.
       const token = localStorage.getItem("access-token");
       if (!token) return;
 
-      const url = getSocketUrl();
+      const url = getSocketUrl(token);
       const host = new URL(url).host;
       socket = new WebSocket(url, STOMP_SUBPROTOCOLS);
       socket.onopen = () => {
