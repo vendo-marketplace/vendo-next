@@ -11,6 +11,7 @@ interface RetryableRequestConfig extends InternalAxiosRequestConfig {
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 15_000,
+  withCredentials: true,
   headers: {
     Accept: "application/json",
   },
