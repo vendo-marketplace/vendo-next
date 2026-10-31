@@ -42,8 +42,8 @@ export default function RecommendedProducts() {
   if (!isLoading && cards.length === 0) return null;
 
   return (
-    <section className="py-4 px-15 space-y-7">
-      <h2 className="text-3xl font-semibold text-text-primary">
+    <section className="page-container space-y-5 py-4 lg:space-y-7">
+      <h2 className="text-xl font-semibold text-text-primary sm:text-2xl lg:text-3xl">
         Товари, що вам можуть сподобатись
       </h2>
       <div className="flex justify-end">
