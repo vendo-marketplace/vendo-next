@@ -6,35 +6,22 @@ import Providers from "@/providers/Providers";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import localFont from "next/font/local";
+import { Montserrat, Montserrat_Alternates } from "next/font/google";
 import type { ReactNode } from "react";
 import "../globals.css";
 
-const mazzardH = localFont({
-  variable: "--font-mazzard",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
-  src: [
-    {
-      path: "../../assets/fonts/mazzard/MazzardH-Regular.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../../assets/fonts/mazzard/MazzardH-Medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../../assets/fonts/mazzard/MazzardH-SemiBold.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../../assets/fonts/mazzard/MazzardH-Bold.woff2",
-      weight: "700",
-      style: "normal",
-    },
-  ],
+});
+
+const montserratAlternates = Montserrat_Alternates({
+  variable: "--font-montserrat-alternates",
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -78,7 +65,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={mazzardH.variable} suppressHydrationWarning>
+    <html lang={locale} className={`${montserrat.variable} ${montserratAlternates.variable}`} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-surface-secondary text-text-primary antialiased">
         <NextIntlClientProvider messages={messages}>
           <Providers>
