@@ -1,8 +1,8 @@
 import { apiEndpoints } from "@/api/endpoints";
-import type { RefreshResponse } from "@/features/auth/types/auth";
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 
 const UNAUTHORIZED_STATUS = 401;
+const REFRESH_COOKIE_NAME = "refresh-token";
 
 interface RetryableRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -19,6 +19,20 @@ const client = axios.create({
 
 let refreshRequest: Promise<void> | null = null;
 
+const refreshExcludedEndpoints = [
+  apiEndpoints.auth.login,
+  apiEndpoints.auth.signUp,
+  apiEndpoints.auth.google,
+  apiEndpoints.auth.complete,
+  apiEndpoints.auth.forgotPassword,
+  apiEndpoints.auth.resendPassword,
+  apiEndpoints.auth.resetPassword,
+  apiEndpoints.auth.refresh,
+  apiEndpoints.verification.send,
+  apiEndpoints.verification.resend,
+  apiEndpoints.verification.validate,
+];
+
 const isAuthEndpoint = (url: string | undefined, endpoint: string): boolean => {
   if (!url) return false;
 
@@ -31,18 +45,30 @@ const isAuthEndpoint = (url: string | undefined, endpoint: string): boolean => {
   );
 };
 
+const readCookie = (name: string): string | null => {
+  if (typeof document === "undefined") return null;
+
+  const cookie = document.cookie
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${name}=`));
+
+  return cookie ? decodeURIComponent(cookie.slice(name.length + 1)) : null;
+};
+
 const refreshAccessToken = (): Promise<void> => {
   if (!refreshRequest) {
-    const refreshToken = localStorage.getItem("refresh-token");
+    const refreshToken = readCookie(REFRESH_COOKIE_NAME);
+
+    if (!refreshToken) {
+      return Promise.reject(new Error("Refresh cookie is unavailable"));
+    }
 
     refreshRequest = client
-      .post<RefreshResponse>(apiEndpoints.auth.refresh, {
+      .post<void>(apiEndpoints.auth.refresh, {
         refreshToken,
       })
-      .then(({ data }) => {
-        localStorage.setItem("access-token", data["access-token"]);
-        localStorage.setItem("refresh-token", data["refresh-token"]);
-      })
+      .then(() => undefined)
       .finally(() => {
         refreshRequest = null;
       });
@@ -50,18 +76,6 @@ const refreshAccessToken = (): Promise<void> => {
 
   return refreshRequest;
 };
-
-client.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const accessToken = localStorage.getItem("access-token");
-
-    if (accessToken) {
-      config.headers.set("Authorization", `Bearer ${accessToken}`);
-    }
-  }
-
-  return config;
-});
 
 client.interceptors.response.use(
   (response) => response,
@@ -72,12 +86,9 @@ client.interceptors.response.use(
       error.response?.status !== UNAUTHORIZED_STATUS ||
       !originalRequest ||
       originalRequest._retry ||
-      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.login) ||
-      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.google) ||
-      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.forgotPassword) ||
-      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.resendPassword) ||
-      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.resetPassword) ||
-      isAuthEndpoint(originalRequest.url, apiEndpoints.auth.refresh) ||
+      refreshExcludedEndpoints.some((endpoint) =>
+        isAuthEndpoint(originalRequest.url, endpoint),
+      ) ||
       typeof window === "undefined"
     ) {
       throw error;

@@ -23,21 +23,9 @@ export default function HeaderAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [hasStoredSession, setHasStoredSession] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      Boolean(
-        localStorage.getItem("access-token") ||
-        localStorage.getItem("refresh-token"),
-      ),
-  );
-
-  const { data: user } = useMe(hasStoredSession);
+  const { data: user } = useMe();
 
   const logout = () => {
-    localStorage.removeItem("access-token");
-    localStorage.removeItem("refresh-token");
-    setHasStoredSession(false);
     queryClient.removeQueries({ queryKey: authKeys.all });
     router.refresh();
   };

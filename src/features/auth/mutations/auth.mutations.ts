@@ -2,7 +2,7 @@ import { authApi } from "@/api/auth";
 import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 
 import { ApiError } from "@/types/types";
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 import { toast } from "sonner";
 import { authQueries } from "../queries/auth.queries";
 import type {
@@ -10,53 +10,37 @@ import type {
   ForgotPasswordCredentials,
   GoogleLoginCredentials,
   LoginCredentials,
-  LoginResponse,
   ResetPasswordCredentials,
 } from "../types/auth";
 
+const createSessionMutation = <TCredentials,>(
+  queryClient: QueryClient,
+  signIn: (credentials: TCredentials) => Promise<unknown>,
+) =>
+  mutationOptions<void, AxiosError<ApiError>, TCredentials>({
+    mutationFn: async (credentials) => {
+      await signIn(credentials);
+    },
+    onSuccess: async () => {
+      await queryClient.fetchQuery({ ...authQueries.me(), staleTime: 0 });
+      toast.success("Вхід виконано");
+    },
+  });
+
 export const authMutations = {
   login: (queryClient: QueryClient) =>
-    mutationOptions<LoginResponse, AxiosError<ApiError>, LoginCredentials>({
-      mutationFn: async (credentials: LoginCredentials) => {
-        const response = await authApi.login(credentials);
-        return response.data;
-      },
-      onSuccess: async (tokens) => {
-        localStorage.setItem("access-token", tokens["access-token"]);
-        localStorage.setItem("refresh-token", tokens["refresh-token"]);
-
-        await queryClient.fetchQuery(authQueries.me());
-        toast.success("Вхід виконано");
-      },
-    }),
+    createSessionMutation<LoginCredentials>(queryClient, authApi.login),
   googleLogin: (queryClient: QueryClient) =>
-    mutationOptions<
-      LoginResponse,
-      AxiosError<ApiError>,
-      GoogleLoginCredentials
-    >({
-      mutationFn: async (credentials: GoogleLoginCredentials) => {
-        const response = await authApi.googleLogin(credentials);
-        return response.data;
-      },
-      onSuccess: async (tokens) => {
-        localStorage.setItem("access-token", tokens["access-token"]);
-        localStorage.setItem("refresh-token", tokens["refresh-token"]);
-
-        await queryClient.fetchQuery(authQueries.me());
-        toast.success("Вхід виконано");
-      },
-    }),
+    createSessionMutation<GoogleLoginCredentials>(
+      queryClient,
+      authApi.googleLogin,
+    ),
   signUp: (queryClient: QueryClient) =>
-    mutationOptions<LoginResponse, AxiosError<ApiError>, LoginCredentials>({
+    mutationOptions<void, AxiosError<ApiError>, LoginCredentials>({
       mutationFn: async (credentials) => {
-        const response = await authApi.signUp(credentials);
-        return response.data;
+        await authApi.signUp(credentials);
       },
-      onSuccess: (tokens, credentials) => {
-        localStorage.setItem("access-token", tokens["access-token"]);
-        localStorage.setItem("refresh-token", tokens["refresh-token"]);
-
+      onSuccess: (_data, credentials) => {
         void authApi.sendVerification(credentials.email).catch(() => {
           toast.error("Не вдалося надіслати код автоматично. Ви зможете запросити його на наступному кроці.");
         });

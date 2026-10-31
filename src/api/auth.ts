@@ -5,20 +5,19 @@ import type {
   ForgotPasswordCredentials,
   GoogleLoginCredentials,
   LoginCredentials,
-  LoginResponse,
   MeResponse,
   ResetPasswordCredentials,
 } from "@/features/auth/types/auth";
 
 export const authApi = {
   login: async (credentials: LoginCredentials) =>
-    client.post<LoginResponse>(apiEndpoints.auth.login, credentials),
+    client.post<void>(apiEndpoints.auth.login, credentials),
   googleLogin: async (credentials: GoogleLoginCredentials) =>
-    client.post<LoginResponse>(apiEndpoints.auth.google, undefined, {
+    client.post<void>(apiEndpoints.auth.google, undefined, {
       params: credentials,
     }),
   signUp: async (credentials: LoginCredentials) =>
-    client.post<LoginResponse>(apiEndpoints.auth.signUp, credentials),
+    client.post<void>(apiEndpoints.auth.signUp, credentials),
   completeAccount: async (credentials: AccountCompletionCredentials) =>
     client.patch<void>(apiEndpoints.auth.complete, credentials),
   sendVerification: async (email: string) =>

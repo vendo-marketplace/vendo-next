@@ -7,14 +7,7 @@ import { useMe } from "@/features/auth/hooks/use-me";
 
 export default function GuestOnlyLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const hasStoredSession =
-    typeof window !== "undefined" &&
-    Boolean(
-      localStorage.getItem("access-token") ||
-      localStorage.getItem("refresh-token"),
-    );
-
-  const { data: user, isLoading } = useMe(hasStoredSession);
+  const { data: user, isLoading } = useMe();
 
   useEffect(() => {
     if (!isLoading && user) {

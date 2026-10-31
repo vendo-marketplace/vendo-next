@@ -97,14 +97,13 @@ function appendMessage(
   };
 }
 
-function sendConnectFrame(socket: WebSocket, host: string, token: string) {
+function sendConnectFrame(socket: WebSocket, host: string) {
   socket.send(
     [
       "CONNECT",
       "accept-version:1.2",
       `host:${host}`,
       `heart-beat:${HEARTBEAT_INTERVAL},${HEARTBEAT_INTERVAL}`,
-      `Authorization:Bearer ${token}`,
       "",
       FRAME_END,
     ].join("\n"),
@@ -172,14 +171,11 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
     const connect = () => {
       if (disposed) return;
 
-      const token = localStorage.getItem("access-token");
-      if (!token) return;
-
       const url = getSocketUrl();
       const host = new URL(url).host;
       socket = new WebSocket(url, STOMP_SUBPROTOCOLS);
       socket.onopen = () => {
-        if (socket) sendConnectFrame(socket, host, token);
+        if (socket) sendConnectFrame(socket, host);
       };
       socket.onmessage = ({ data }: MessageEvent<string>) => {
         frameBuffer += data;

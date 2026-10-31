@@ -11,7 +11,6 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
   type ChangeEvent,
   type FormEvent,
 } from "react";
@@ -38,14 +37,6 @@ import {
 import { Link, useRouter } from "@/i18n/navigation";
 import type { CreateProductRequest } from "@/types/product";
 
-const subscribeToSession = (callback: () => void) => {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-};
-
-const getSessionSnapshot = () =>
-  Boolean(localStorage.getItem("access-token") || localStorage.getItem("refresh-token"));
-
 type CreateProductFormProps = {
   categories: CategoryOption[];
   categoryError?: string;
@@ -66,12 +57,7 @@ export default function CreateProductForm({
   const [attributes, setAttributes] = useState<Record<string, string[]>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
-  const hasStoredSession = useSyncExternalStore(
-    subscribeToSession,
-    getSessionSnapshot,
-    () => false,
-  );
-  const { data: user, isPending: authPending } = useMe(hasStoredSession);
+  const { data: user, isPending: authPending } = useMe();
 
   useEffect(
     () => () => previewUrls.current.forEach((url) => URL.revokeObjectURL(url)),
@@ -206,7 +192,7 @@ export default function CreateProductForm({
     }
   };
 
-  if (hasStoredSession && authPending) {
+  if (authPending) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center text-sm text-text-secondary">
         Перевіряємо вхід…

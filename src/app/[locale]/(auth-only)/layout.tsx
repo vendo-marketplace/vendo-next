@@ -14,22 +14,15 @@ export default function AuthenticatedOnlyLayout({
   const router = useRouter();
   const pathname = usePathname();
   const isOnboarding = pathname.endsWith("/onboarding");
-  const hasStoredSession =
-    typeof window !== "undefined" &&
-    Boolean(
-      localStorage.getItem("access-token") ||
-      localStorage.getItem("refresh-token"),
-    );
-
-  const { data: user, isPending, isError } = useMe(hasStoredSession);
+  const { data: user, isPending, isError } = useMe();
 
   useEffect(() => {
-    if (!isOnboarding && (!hasStoredSession || (!isPending && (isError || !user)))) {
+    if (!isOnboarding && !isPending && (isError || !user)) {
       router.replace("/");
     }
-  }, [hasStoredSession, isError, isOnboarding, isPending, router, user]);
+  }, [isError, isOnboarding, isPending, router, user]);
 
-  if (!isOnboarding && (!hasStoredSession || isPending || !user)) {
+  if (!isOnboarding && (isPending || !user)) {
     return <LoadingSpinner />;
   }
 

@@ -22,7 +22,6 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
 } from "react";
 import type { FormEvent, KeyboardEvent, ReactNode } from "react";
 import { toast } from "sonner";
@@ -76,19 +75,6 @@ const formatPrice = (price: number) =>
     currency: "UAH",
     maximumFractionDigits: 0,
   }).format(price);
-
-const subscribeToSession = (callback: () => void) => {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-};
-
-const getSessionSnapshot = (): boolean | null =>
-  typeof window === "undefined"
-    ? null
-    : Boolean(
-        localStorage.getItem("access-token") ||
-          localStorage.getItem("refresh-token"),
-      );
 
 function ParticipantAvatar({
   label,
@@ -552,22 +538,13 @@ export default function ChatsPage() {
   const requestedConversationId = searchParams.get("conversationId") ?? "";
   const requestedProductId = searchParams.get("productId") ?? "";
   const firstMessage = searchParams.get("firstMessage") ?? "";
-  const sessionSnapshot = useSyncExternalStore(
-    subscribeToSession,
-    getSessionSnapshot,
-    () => null,
-  );
-  const hasStoredSession = sessionSnapshot === true;
-  const isSessionChecked = sessionSnapshot !== null;
   const [selectedId, setSelectedId] = useState(requestedConversationId);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<ConversationFilter>("all");
   const [draft, setDraft] = useState(firstMessage);
   const [scrollToBottomKey, setScrollToBottomKey] = useState(0);
 
-  const { data: user, isLoading: isUserLoading } = useMe(
-    isSessionChecked && hasStoredSession,
-  );
+  const { data: user, isLoading: isUserLoading } = useMe();
   const {
     data: conversations = [],
     isLoading,
@@ -703,7 +680,7 @@ export default function ChatsPage() {
     });
   };
 
-  if (!isSessionChecked || isUserLoading || (isLoading && !conversations.length)) {
+  if (isUserLoading || (user && isLoading && !conversations.length)) {
     return (
       <div className="grid min-h-[60vh] place-items-center">
         <LoadingSpinner />
@@ -711,7 +688,7 @@ export default function ChatsPage() {
     );
   }
 
-  if (!hasStoredSession) {
+  if (!user) {
     return (
       <section className="mx-auto flex min-h-[60vh] w-full max-w-330 flex-1 flex-col items-center justify-center px-4 text-center">
         <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-surface-secondary text-text-brand">
@@ -722,20 +699,6 @@ export default function ChatsPage() {
         </h1>
         <p className="mt-2 max-w-md text-sm leading-6 text-text-secondary">
           Тут будуть ваші розмови з продавцями та покупцями.
-        </p>
-        <Button asChild className="mt-5">
-          <Link href="/sign-in">Увійти</Link>
-        </Button>
-      </section>
-    );
-  }
-
-  if (!user) {
-    return (
-      <section className="mx-auto flex min-h-[60vh] w-full max-w-330 flex-col items-center justify-center px-4 text-center">
-        <h1 className="text-xl font-semibold text-text-primary">Сесія завершилася</h1>
-        <p className="mt-2 text-sm text-text-secondary">
-          Увійдіть знову, щоб продовжити листування.
         </p>
         <Button asChild className="mt-5">
           <Link href="/sign-in">Увійти</Link>

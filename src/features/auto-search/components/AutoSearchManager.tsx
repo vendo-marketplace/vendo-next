@@ -15,7 +15,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
 import Image from "next/image";
@@ -42,11 +42,6 @@ type Props = {
   categories: CategoryOption[];
   categoryError?: boolean;
 };
-
-const emptySubscribe = () => () => undefined;
-const getClientSessionSnapshot = () =>
-  Boolean(localStorage.getItem("access-token") || localStorage.getItem("refresh-token"));
-const getServerSessionSnapshot = () => false;
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("uk-UA", {
@@ -317,13 +312,8 @@ export default function AutoSearchManager({
   selectedAutoSearchId,
 }: Props & { selectedAutoSearchId?: string }) {
   const t = useTranslations("AutoSearch");
-  const hasStoredSession = useSyncExternalStore(
-    emptySubscribe,
-    getClientSessionSnapshot,
-    getServerSessionSnapshot,
-  );
-  const { data: user, isPending: isAuthPending } = useMe(hasStoredSession);
-  const isAuthenticated = hasStoredSession && Boolean(user);
+  const { data: user, isPending: isAuthPending } = useMe();
+  const isAuthenticated = Boolean(user);
   const { data: autoSearches = [], isLoading, isError, refetch } =
     useAutoSearches(isAuthenticated, user?.id);
   const { create, update, remove } = useAutoSearchMutations();
@@ -333,7 +323,7 @@ export default function AutoSearchManager({
   const categoryTrails = useMemo(() => getCategoryTrails(categories), [categories]);
   const editingSearch = autoSearches.find(({ id }) => id === editingId);
 
-  if (hasStoredSession && isAuthPending) {
+  if (isAuthPending) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center text-sm text-text-secondary">
         <LoadingSpinner />
