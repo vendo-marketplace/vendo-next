@@ -21,10 +21,11 @@ import {
   X,
 } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
+import { useCatalogDialog } from "../../hooks/use-catalog-dialog";
 import type { CategoryOption } from "../../types/category";
 
 interface CategoryDropdownClientProps {
@@ -168,23 +169,12 @@ export default function CategoryDropdownClient({
     setOpenPath([]);
   };
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const previousOverflow = document.body.style.overflow;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsOpen(false);
-    };
-
-    dialogRef.current?.focus();
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-      triggerRef.current?.querySelector("button")?.focus();
-    };
-  }, [isOpen]);
+  useCatalogDialog({
+    isOpen,
+    onClose: () => setIsOpen(false),
+    dialogRef,
+    triggerRef,
+  });
 
   return (
     <>
@@ -212,12 +202,7 @@ export default function CategoryDropdownClient({
       </div>
 
       {isOpen && (
-        <div
-          className="fixed inset-x-0 top-28 z-50 lg:top-[88px]"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setIsOpen(false);
-          }}
-        >
+        <div className="page-container fixed inset-x-0 top-28 z-50 lg:top-[88px]">
           <section
             role="dialog"
             id="catalog-dialog"
@@ -245,9 +230,9 @@ export default function CategoryDropdownClient({
                 first?.focus();
               }
             }}
-            className="mx-auto w-[calc(100%-1rem)] overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl md:w-[82vw]"
+            className="flex max-h-[calc(100dvh-8rem)] w-full flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl lg:max-h-[calc(100dvh-88px-1rem)]"
           >
-            <div className="flex items-center justify-between border-b border-stroke-secondary px-5 py-3 md:hidden">
+            <div className="flex shrink-0 items-center justify-between border-b border-stroke-secondary px-4 py-2 sm:px-5 md:hidden">
               <p className="text-base font-semibold text-text-primary">
                 Каталог
               </p>
@@ -270,9 +255,12 @@ export default function CategoryDropdownClient({
                 Категорії поки відсутні.
               </p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-[320px_minmax(0,1fr)]">
-                <div className="hidden min-h-0 border-r border-stroke-secondary p-5 pb-8 md:block">
-                  <nav aria-label="Основні категорії" className="grid gap-1">
+              <div className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto overscroll-contain md:grid-cols-[260px_minmax(0,1fr)] md:overflow-hidden lg:grid-cols-[300px_minmax(0,1fr)]">
+                <div className="hidden min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain border-r border-stroke-secondary p-4 pb-8 md:block lg:p-5 lg:pb-8">
+                  <nav
+                    aria-label="Основні категорії"
+                    className="grid grid-cols-[minmax(0,1fr)] gap-1"
+                  >
                     {categories.map((category, index) => {
                       const Icon = categoryIcons[index % categoryIcons.length];
                       const isSelected = category.id === selectedCategory?.id;
@@ -300,7 +288,7 @@ export default function CategoryDropdownClient({
                           ) : (
                             <Icon aria-hidden="true" className="size-5 shrink-0" />
                           )}
-                          <span className="min-w-0 flex-1 truncate">
+                          <span className="min-w-0 flex-1 leading-snug break-words">
                             {category.title}
                           </span>
                           <ChevronRight
@@ -313,7 +301,7 @@ export default function CategoryDropdownClient({
                   </nav>
                 </div>
 
-                <div className="min-h-0 p-4 pb-8 md:p-6 md:pb-8 lg:p-8">
+                <div className="min-h-0 p-4 pb-8 md:overflow-y-auto md:overscroll-contain md:p-6 md:pb-8 lg:p-8">
                   <label className="mb-5 grid gap-2 text-xs font-semibold uppercase tracking-wide text-text-tertiary md:hidden">
                     Основна категорія
                     <select
