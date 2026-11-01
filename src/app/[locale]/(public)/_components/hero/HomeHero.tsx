@@ -71,8 +71,8 @@ export default function HomeHero() {
   }, [isAnimating]);
 
   return (
-    <section className="py-6 mt-4">
-      <div className="relative overflow-hidden rounded-2xl mx-auto w-full max-w-330">
+    <section className="page-container pt-4 pb-2 sm:pt-6 sm:pb-4 lg:mt-4 lg:py-6">
+      <div className="relative overflow-hidden rounded-xl sm:rounded-2xl">
         <div
           onTransitionEnd={handleTransitionEnd}
           className={[
@@ -85,7 +85,10 @@ export default function HomeHero() {
           style={{ transform: `translateX(-${trackIndex * 100}%)` }}
         >
           {sliderSlides.map((image, index) => (
-            <div key={index} className="relative h-83 w-full shrink-0">
+            <div
+              key={index}
+              className="relative h-40 w-full shrink-0 sm:h-56 md:h-68 lg:h-83"
+            >
               <Image
                 src={image}
                 alt="Slide"
@@ -102,7 +105,7 @@ export default function HomeHero() {
           variant="secondary"
           size="none"
           aria-label="Попередній слайд"
-          className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full size-10 p-0 "
+          className="absolute top-1/2 left-2 size-8 -translate-y-1/2 rounded-full p-0 sm:left-3 sm:size-10"
           onClick={handlePreviousSlide}
         >
           <ChevronLeftIcon className="size-4" />
@@ -111,7 +114,7 @@ export default function HomeHero() {
           variant="secondary"
           size="none"
           aria-label="Наступний слайд"
-          className="absolute top-1/2 right-3 -translate-y-1/2 size-10 p-0 rounded-full "
+          className="absolute top-1/2 right-2 size-8 -translate-y-1/2 rounded-full p-0 sm:right-3 sm:size-10"
           onClick={handleNextSlide}
         >
           <ChevronRightIcon className="size-4" />
