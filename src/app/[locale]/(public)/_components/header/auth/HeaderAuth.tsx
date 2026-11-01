@@ -1,6 +1,5 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import { BadgeCheck, Search, ShieldCheck, UserRound } from "lucide-react";
 import { useState } from "react";
 
@@ -15,20 +14,15 @@ import {
 } from "@/components/ui/dropdown/dropdown";
 import { CircleUserIcon } from "@/components/ui/icons";
 import { useMe } from "@/features/auth/hooks/use-me";
-import { authKeys } from "@/features/auth/queries/auth.keys";
+import { useLogout } from "@/features/auth/hooks/use-logout";
 import { Link, useRouter } from "@/i18n/navigation";
 import ProfileDialog from "./ProfileDialog";
 
 export default function HeaderAuth() {
-  const queryClient = useQueryClient();
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { data: user } = useMe();
-
-  const logout = () => {
-    queryClient.removeQueries({ queryKey: authKeys.all });
-    router.refresh();
-  };
+  const { mutate: logout, isPending: isLoggingOut } = useLogout();
 
   if (!user) {
     return (
@@ -125,7 +119,12 @@ export default function HeaderAuth() {
             </Link>
           </DropdownItem>
           <DropdownSeparator />
-          <DropdownItem onSelect={logout}>Вийти</DropdownItem>
+          <DropdownItem
+            disabled={isLoggingOut}
+            onSelect={() => logout(undefined, { onSuccess: () => router.refresh() })}
+          >
+            {isLoggingOut ? "Вихід…" : "Вийти"}
+          </DropdownItem>
         </DropdownContent>
       </Dropdown>
       <ProfileDialog

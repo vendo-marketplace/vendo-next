@@ -35,6 +35,18 @@ export const authMutations = {
       queryClient,
       authApi.googleLogin,
     ),
+  logout: (queryClient: QueryClient) =>
+    mutationOptions<void, AxiosError<ApiError>, void>({
+      mutationFn: async () => {
+        await authApi.logout();
+      },
+      onSuccess: () => {
+        queryClient.clear();
+      },
+      onError: (error) => {
+        toast.error(error.response?.data.message ?? "Не вдалося вийти з акаунта");
+      },
+    }),
   signUp: (queryClient: QueryClient) =>
     mutationOptions<void, AxiosError<ApiError>, LoginCredentials>({
       mutationFn: async (credentials) => {
