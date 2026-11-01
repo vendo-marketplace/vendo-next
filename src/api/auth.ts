@@ -18,6 +18,7 @@ export const authApi = {
     }),
   signUp: async (credentials: LoginCredentials) =>
     client.post<void>(apiEndpoints.auth.signUp, credentials),
+  logout: async () => client.post<void>(apiEndpoints.auth.logout),
   completeAccount: async (credentials: AccountCompletionCredentials) =>
     client.patch<void>(apiEndpoints.auth.complete, credentials),
   sendVerification: async (email: string) =>
