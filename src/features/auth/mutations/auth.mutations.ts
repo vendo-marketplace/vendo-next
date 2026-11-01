@@ -22,7 +22,7 @@ const createSessionMutation = <TCredentials,>(
       await signIn(credentials);
     },
     onSuccess: async () => {
-      await queryClient.fetchQuery({ ...authQueries.me(), staleTime: 0 });
+      await queryClient.fetchQuery(authQueries.me());
       toast.success("Вхід виконано");
     },
   });
@@ -65,10 +65,7 @@ export const authMutations = {
         await authApi.validateVerification(code);
       },
       onSuccess: async () => {
-        await queryClient.fetchQuery({
-          ...authQueries.me(),
-          staleTime: 0,
-        });
+        await queryClient.fetchQuery(authQueries.me());
       },
     }),
   completeAccount: (queryClient: QueryClient) =>
