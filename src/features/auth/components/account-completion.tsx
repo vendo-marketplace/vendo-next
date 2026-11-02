@@ -26,7 +26,10 @@ export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
           зробити покупки ще зручнішими."
       />
 
-      <AccountCompletionForm onSuccess={onSuccess} />
+      <AccountCompletionForm
+        onSuccess={onSuccess}
+        submitLabel="Увійти в акаунт"
+      />
 
       <Link
         className="font-medium cursor-pointer flex items-center justify-center gap-2 text-[14px] leading-5 text-text-secondary"

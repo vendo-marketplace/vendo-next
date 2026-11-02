@@ -43,11 +43,13 @@ export default function RecommendedProducts() {
 
   return (
     <section className="page-container space-y-5 py-4 lg:space-y-7">
-      <h2 className="text-xl font-semibold text-text-primary sm:text-2xl lg:text-3xl">
-        Товари, що вам можуть сподобатись
-      </h2>
-      <div className="flex justify-end">
-        <ProductSortSelect value={sort} onChange={setSort} />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="min-w-0 text-xl font-semibold text-text-primary sm:text-2xl lg:text-3xl">
+          Товари, що вам можуть сподобатись
+        </h2>
+        <div className="flex shrink-0 justify-end sm:ml-4">
+          <ProductSortSelect value={sort} onChange={setSort} />
+        </div>
       </div>
 
       <ProductCardsGrid cards={cards} isLoading={isLoading || isFetching} />

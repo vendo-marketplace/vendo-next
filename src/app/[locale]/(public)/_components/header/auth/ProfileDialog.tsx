@@ -10,11 +10,15 @@ import {
 } from "lucide-react";
 import { Dialog, Tabs } from "radix-ui";
 import type { ReactNode } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button/button";
-import { useFavoriteProducts } from "@/features/favorites/hooks/use-favorite-products";
+import { AccountCompletionForm } from "@/features/auth/components/forms/account-completion-form";
+import { useCompleteAccount } from "@/features/auth/hooks/use-complete-account";
 import { useAutoSearches } from "@/features/auto-search/hooks/use-auto-searches";
-import type { MeResponse } from "@/features/auth/types/auth";
+import { useFavoriteProducts } from "@/features/favorites/hooks/use-favorite-products";
+import { hasRequiredProfileDetails } from "@/features/auth/utils/profile";
+import type { AccountCompletionCredentials, MeResponse } from "@/features/auth/types/auth";
 import { Link } from "@/i18n/navigation";
 
 type Props = {
@@ -34,10 +38,25 @@ const tabClassName =
   "flex-1 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary outline-none transition-colors hover:bg-surface-secondary data-[state=active]:bg-surface-brand data-[state=active]:text-text-invert";
 
 export default function ProfileDialog({ user, open, onOpenChange }: Props) {
+  const displayName = user.fullName?.trim();
+  const needsName = !displayName;
+  const needsEmailVerification = !user.emailVerified;
+  const needsProfileAttention = !hasRequiredProfileDetails(user);
+  const { mutateAsync: completeAccount } = useCompleteAccount();
   const { data: favorites = [], isLoading: favoritesLoading } =
     useFavoriteProducts(open);
   const { data: autoSearches = [], isLoading: autoSearchesLoading } =
     useAutoSearches(open, user.id);
+  const handleCompleteAccount = async (
+    credentials: AccountCompletionCredentials,
+  ) => {
+    try {
+      await completeAccount(credentials);
+      toast.success("Ім’я збережено");
+    } catch {
+      toast.error("Не вдалося зберегти ім’я. Спробуйте ще раз.");
+    }
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -51,7 +70,7 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
               </div>
               <div className="min-w-0">
                 <Dialog.Title className="truncate text-xl font-semibold text-text-primary">
-                  {user.fullName || "Мій профіль"}
+                  {displayName || "Мій профіль"}
                 </Dialog.Title>
                 <Dialog.Description className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-text-secondary">
                   <span className="truncate">{user.email}</span>
@@ -85,8 +104,24 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
               aria-label="Розділи профілю"
               className="flex gap-1 border-b border-stroke-secondary px-4 py-3 sm:px-7"
             >
-              <Tabs.Trigger value="profile" className={tabClassName}>
-                Профіль
+              <Tabs.Trigger
+                value="profile"
+                className={tabClassName}
+                aria-label={
+                  needsProfileAttention
+                    ? "Профіль, потрібна дія"
+                    : "Профіль"
+                }
+              >
+                <span className="inline-flex items-center justify-center gap-2">
+                  Профіль
+                  {needsProfileAttention && (
+                    <span
+                      aria-hidden="true"
+                      className="size-2 rounded-full bg-amber-500"
+                    />
+                  )}
+                </span>
               </Tabs.Trigger>
               <Tabs.Trigger value="favorites" className={tabClassName}>
                 Обране
@@ -102,7 +137,7 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
                   <InfoCard
                     icon={<UserRound aria-hidden="true" className="size-4" />}
                     label="Ім’я"
-                    value={user.fullName || "Ще не вказано"}
+                    value={displayName || "Ще не вказано"}
                   />
                   <InfoCard
                     icon={<Mail aria-hidden="true" className="size-4" />}
@@ -113,12 +148,50 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
                     icon={<ShieldCheck aria-hidden="true" className="size-4" />}
                     label="Статус акаунта"
                     value={
-                      user.emailVerified
+                          !needsEmailVerification
                         ? "Email підтверджено"
                         : "Email не підтверджено"
                     }
                   />
                 </div>
+                {needsProfileAttention && (
+                  <div className="mt-5 space-y-4 rounded-xl border border-amber-200 bg-amber-50/70 p-4">
+                    <div>
+                      <p className="text-sm font-semibold text-text-primary">
+                        Завершіть налаштування профілю
+                      </p>
+                      <p className="mt-1 text-sm leading-5 text-text-secondary">
+                        {needsName && needsEmailVerification
+                          ? "Підтвердіть пошту та додайте ім’я, щоб писати продавцям і продавати товари."
+                          : needsEmailVerification
+                            ? "Підтвердіть пошту, щоб писати продавцям і продавати товари."
+                            : "Додайте ім’я, щоб писати продавцям і продавати товари."}
+                      </p>
+                    </div>
+                    {needsEmailVerification && (
+                      <Button asChild variant="secondary">
+                        <Link
+                          href="/onboarding"
+                          onClick={() =>
+                            window.sessionStorage.setItem(
+                              "send-verification-code-on-onboarding",
+                              "true",
+                            )
+                          }
+                        >
+                          <Mail aria-hidden="true" className="size-4" />
+                          Підтвердити email
+                        </Link>
+                      </Button>
+                    )}
+                    {needsName && (
+                      <AccountCompletionForm
+                        onSuccess={handleCompleteAccount}
+                        submitLabel="Зберегти ім’я"
+                      />
+                    )}
+                  </div>
+                )}
                 <p className="mt-5 text-sm text-text-tertiary">
                   Учасник Vendo з {formatDate(user.createdAt)}
                 </p>

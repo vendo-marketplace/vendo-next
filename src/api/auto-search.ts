@@ -2,6 +2,7 @@ import client from "@/axios/axios";
 import type {
   AutoSearchListResponse,
   AutoSearchProductsResponse,
+  AutoSearchProductsQuery,
   AutoSearchFilters,
   UpdateAutoSearchRequest,
 } from "@/features/auto-search/types/auto-search";
@@ -16,6 +17,8 @@ export const autoSearchApi = {
     client.put<void>(apiEndpoints.autoSearch.item(id), filters),
   remove: async (id: string) =>
     client.delete<void>(apiEndpoints.autoSearch.item(id)),
-  products: async (id: string) =>
-    client.get<AutoSearchProductsResponse>(apiEndpoints.autoSearch.products(id)),
+  products: async (id: string, params: AutoSearchProductsQuery) =>
+    client.get<AutoSearchProductsResponse>(apiEndpoints.autoSearch.products(id), {
+      params,
+    }),
 };

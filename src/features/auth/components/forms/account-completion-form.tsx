@@ -15,10 +15,14 @@ type AccountCompletionFormProps = {
   onSuccess: (
     credentials: AccountCompletionCredentials,
   ) => void | Promise<void>;
+  submitLabel?: string;
+  submittingLabel?: string;
 };
 
 export function AccountCompletionForm({
   onSuccess,
+  submitLabel = "Зберегти ім’я",
+  submittingLabel = "Збереження...",
 }: AccountCompletionFormProps) {
   const {
     control,
@@ -65,7 +69,7 @@ export function AccountCompletionForm({
       </FormField>
 
       <Button className="w-full" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Збереження..." : "Увійти в акаунт"}
+        {isSubmitting ? submittingLabel : submitLabel}
       </Button>
     </form>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, Search, ShieldCheck, UserRound } from "lucide-react";
+import { Search, UserRound } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button/button";
@@ -15,6 +15,7 @@ import {
 import { CircleUserIcon } from "@/components/ui/icons";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { useLogout } from "@/features/auth/hooks/use-logout";
+import { hasRequiredProfileDetails } from "@/features/auth/utils/profile";
 import { Link, useRouter } from "@/i18n/navigation";
 import ProfileDialog from "./ProfileDialog";
 
@@ -58,6 +59,9 @@ export default function HeaderAuth() {
     );
   }
 
+  const needsProfileAttention = !hasRequiredProfileDetails(user);
+  const displayName = user.fullName?.trim() || "Мій акаунт";
+
   return (
     <>
       <Dropdown>
@@ -65,52 +69,50 @@ export default function HeaderAuth() {
           <Button
             variant="secondary"
             className="size-8 border-0 p-0"
-            aria-label="Відкрити меню акаунта"
+            aria-label={
+              needsProfileAttention
+                ? "Відкрити меню акаунта, потрібна дія в профілі"
+                : "Відкрити меню акаунта"
+            }
           >
-            <CircleUserIcon className="size-6" />
+            <span className="relative grid size-6 place-items-center">
+              <CircleUserIcon className="size-6" />
+              {needsProfileAttention && (
+                <span
+                  aria-hidden="true"
+                  className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full border-2 border-surface-primary bg-amber-500"
+                />
+              )}
+            </span>
           </Button>
         </DropdownTrigger>
 
         <DropdownContent align="end" sideOffset={8} className="w-72 p-2">
           <DropdownLabel className="px-3 pb-3 pt-2">
             <span className="block truncate text-sm font-semibold text-text-primary">
-              {user.fullName || "Мій акаунт"}
+              {displayName}
             </span>
             <span className="mt-1 block truncate font-normal">{user.email}</span>
-            <span
-              className={`mt-2 inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
-                user.emailVerified
-                  ? "bg-emerald-50 text-emerald-700"
-                  : "bg-amber-50 text-amber-700"
-              }`}
-            >
-              {user.emailVerified ? (
-                <BadgeCheck aria-hidden="true" className="size-3.5" />
-              ) : (
-                <ShieldCheck aria-hidden="true" className="size-3.5" />
-              )}
-              {user.emailVerified ? "Email підтверджено" : "Підтвердити email"}
-            </span>
           </DropdownLabel>
-          {!user.emailVerified && (
-            <DropdownItem asChild>
-              <Link
-                href="/onboarding"
-                onClick={() =>
-                  window.sessionStorage.setItem(
-                    "send-verification-code-on-onboarding",
-                    "true",
-                  )
-                }
-              >
-                <ShieldCheck aria-hidden="true" className="size-4" />
-                Підтвердити email
-              </Link>
-            </DropdownItem>
-          )}
-          <DropdownItem onSelect={() => setIsProfileOpen(true)}>
-            <UserRound aria-hidden="true" className="size-4" />
-            Детальніше про профіль
+          <DropdownItem
+            onSelect={() => setIsProfileOpen(true)}
+            className={
+              needsProfileAttention
+                ? "bg-amber-50 text-amber-800 hover:bg-amber-100 hover:text-amber-900 data-highlighted:bg-amber-100 data-highlighted:text-amber-900"
+                : undefined
+            }
+          >
+            <UserRound
+              aria-hidden="true"
+              className={`size-4 ${needsProfileAttention ? "text-amber-700" : ""}`}
+            />
+            <span className="flex-1">Детальніше про профіль</span>
+            {needsProfileAttention && (
+              <span
+                aria-hidden="true"
+                className="size-2 rounded-full bg-amber-500"
+              />
+            )}
           </DropdownItem>
           <DropdownItem asChild>
             <Link href="/auto-search">
