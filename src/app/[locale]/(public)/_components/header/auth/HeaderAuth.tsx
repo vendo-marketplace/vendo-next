@@ -15,7 +15,6 @@ import {
 import { CircleUserIcon } from "@/components/ui/icons";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { useLogout } from "@/features/auth/hooks/use-logout";
-import { hasRequiredProfileDetails } from "@/features/auth/utils/profile";
 import { Link, useRouter } from "@/i18n/navigation";
 import ProfileDialog from "./ProfileDialog";
 
@@ -59,7 +58,8 @@ export default function HeaderAuth() {
     );
   }
 
-  const needsProfileAttention = !hasRequiredProfileDetails(user);
+  const needsProfileAttention =
+    !user.emailVerified || !user.fullName?.trim();
   const displayName = user.fullName?.trim() || "Мій акаунт";
 
   return (

@@ -17,7 +17,6 @@ import { AccountCompletionForm } from "@/features/auth/components/forms/account-
 import { useCompleteAccount } from "@/features/auth/hooks/use-complete-account";
 import { useAutoSearches } from "@/features/auto-search/hooks/use-auto-searches";
 import { useFavoriteProducts } from "@/features/favorites/hooks/use-favorite-products";
-import { hasRequiredProfileDetails } from "@/features/auth/utils/profile";
 import type { AccountCompletionCredentials, MeResponse } from "@/features/auth/types/auth";
 import { Link } from "@/i18n/navigation";
 
@@ -41,7 +40,8 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
   const displayName = user.fullName?.trim();
   const needsName = !displayName;
   const needsEmailVerification = !user.emailVerified;
-  const needsProfileAttention = !hasRequiredProfileDetails(user);
+  const needsProfileAttention =
+    !user.emailVerified || !user.fullName?.trim();
   const { mutateAsync: completeAccount } = useCompleteAccount();
   const { data: favorites = [], isLoading: favoritesLoading } =
     useFavoriteProducts(open);
