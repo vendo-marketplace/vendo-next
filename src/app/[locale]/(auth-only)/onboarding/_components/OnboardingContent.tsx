@@ -12,6 +12,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 
 export function OnboardingContent() {
   const router = useRouter();
+  const [isVerificationComplete, setIsVerificationComplete] = useState(false);
   const [sendVerificationOnMount] = useState(
     () =>
       typeof window !== "undefined" &&
@@ -44,15 +45,17 @@ export function OnboardingContent() {
     });
   };
   const email = user?.email ?? registrationEmail;
+  const showAccountCompletion = Boolean(user?.emailVerified || isVerificationComplete);
   if (!user && !email) return <LoadingSpinner />;
   return (
     <>
       <AuthContentContainer>
-        {user?.emailVerified ? (
+        {showAccountCompletion ? (
           <AccountCompletion onSuccess={onSuccess} />
         ) : (
           <VerifyCode
             email={email}
+            onSuccess={() => setIsVerificationComplete(true)}
             sendOnMount={Boolean(
               user && !user.emailVerified && sendVerificationOnMount,
             )}

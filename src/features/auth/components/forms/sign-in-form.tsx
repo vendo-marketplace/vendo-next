@@ -60,14 +60,6 @@ export function SignInForm({
 
   return (
     <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
-      {submitError && (
-        <p
-          role="alert"
-          className="rounded-lg border border-stroke-error bg-red-50 px-3 py-2 text-sm text-text-error"
-        >
-          {submitError}
-        </p>
-      )}
       <FormField
         id={`${idPrefix}-email`}
         label="Електронна пошта"
@@ -116,6 +108,15 @@ export function SignInForm({
           </Link>
         )}
       </div>
+
+      {submitError && (
+        <p
+          role="alert"
+          className="rounded-lg border border-stroke-error bg-red-50 px-3 py-2 text-sm text-text-error"
+        >
+          {submitError}
+        </p>
+      )}
 
       <Button className="w-full" type="submit" disabled={isPending}>
         {submitLabel}
