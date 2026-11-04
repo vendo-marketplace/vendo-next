@@ -1,7 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, TickIcon } from "@/assets/icons";
-import { Link } from "@/i18n/navigation";
+import { TickIcon } from "@/assets/icons";
 
 import type { AccountCompletionCredentials } from "../types/auth";
 import { AuthContentHeader } from "./auth-content-header";
@@ -30,14 +29,6 @@ export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
         onSuccess={onSuccess}
         submitLabel="Увійти в акаунт"
       />
-
-      <Link
-        className="font-medium cursor-pointer flex items-center justify-center gap-2 text-[14px] leading-5 text-text-secondary"
-        href="/"
-      >
-        <span>Пропустити</span>
-        <ArrowRightIcon className="size-4" />
-      </Link>
     </>
   );
 }

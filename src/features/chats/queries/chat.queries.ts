@@ -16,7 +16,6 @@ export const chatQueries = {
         const response = await conversationsApi.list();
         return response.data.data;
       },
-      refetchInterval: 15_000,
     }),
   conversation: (id: string) =>
     queryOptions({

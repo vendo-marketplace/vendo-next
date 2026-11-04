@@ -26,6 +26,7 @@ type SignInFormProps = {
 export function SignInForm({
   onSubmit,
   isPending = false,
+  submitError,
   submitLabel = "Увійти",
   passwordAutoComplete = "current-password",
   idPrefix = "sign-in",
@@ -59,6 +60,14 @@ export function SignInForm({
 
   return (
     <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
+      {submitError && (
+        <p
+          role="alert"
+          className="rounded-lg border border-stroke-error bg-red-50 px-3 py-2 text-sm text-text-error"
+        >
+          {submitError}
+        </p>
+      )}
       <FormField
         id={`${idPrefix}-email`}
         label="Електронна пошта"
