@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { productsApi } from "@/api/products";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
+import NumberInput from "@/components/ui/input/number-input";
 import { useMe } from "@/features/auth/hooks/use-me";
 import type { CategoryOption } from "@/features/categories/types/category";
 import CreateProductAttributes from "@/features/products/components/create-product/CreateProductAttributes";
@@ -202,7 +203,7 @@ export default function CreateProductForm({
 
   if (!user) {
     return (
-      <div className="min-h-[calc(100vh-5rem)] bg-[#f7f8fa] px-4 py-16 sm:px-6">
+      <div className="min-h-[calc(100vh-5rem)] bg-surface-secondary px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-lg rounded-2xl border border-stroke-primary-subtle bg-white p-8 text-center shadow-sm sm:p-10">
           <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[#edf4ff] text-text-brand">
             <Tag aria-hidden="true" className="size-6" />
@@ -223,7 +224,7 @@ export default function CreateProductForm({
   }
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] bg-[#f7f8fa] px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-5rem)] bg-surface-secondary px-4 pb-16 pt-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/"
@@ -282,11 +283,14 @@ export default function CreateProductForm({
                   </span>
                   <Input
                     id="product-title"
+                    size="sm"
+                    containerClassName="w-full min-w-0"
                     value={draft.title}
                     onChange={(event) => updateDraft("title", event.target.value)}
+                    onClear={() => updateDraft("title", "")}
                     maxLength={100}
                     placeholder="Наприклад, iPhone 15 Pro 256 ГБ"
-                    className="h-12 px-3.5"
+                    className="h-5 px-3.5"
                   />
                   <span className="text-right text-xs font-normal text-text-tertiary">{draft.title.length}/100</span>
                 </label>
@@ -337,32 +341,33 @@ export default function CreateProductForm({
                   </p>
                 </div>
               </div>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <label htmlFor="product-price" className="flex flex-col gap-2 text-sm font-medium">
+              <div className="grid min-w-0 gap-5 md:grid-cols-2">
+                <label htmlFor="product-price" className="flex min-w-0 flex-col gap-2 text-sm font-medium">
                   <span className="whitespace-nowrap">
                     Ціна <span className="text-text-brand">*</span>
                   </span>
                   <div className="relative">
                     <Input
                       id="product-price"
+                      size="sm"
+                      containerClassName="w-full min-w-0"
                       type="number"
                       min="0"
                       step="0.01"
                       value={draft.price}
                       onChange={(event) => updateDraft("price", event.target.value)}
+                      clearable={false}
                       placeholder="0"
-                      className="h-12 pr-12 text-base font-medium"
+                      end={<span className="text-sm text-text-tertiary">₴</span>}
+                      className="h-5 text-base font-medium [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
-                    <span className="absolute right-4 top-3.5 text-sm text-text-tertiary">
-                      ₴
-                    </span>
                   </div>
                 </label>
-                <div className="flex flex-col gap-2 text-sm font-medium">
+                <div className="flex min-w-0 flex-col gap-2 text-sm font-medium">
                   <span className="whitespace-nowrap">
                     Стан товару <span className="text-text-brand">*</span>
                   </span>
-                  <div className="grid grid-cols-2 rounded-xl bg-surface-primary-subtle p-1">
+                  <div className="grid w-full min-w-0 grid-cols-2 rounded-xl bg-surface-primary-subtle p-1">
                     {([
                       { value: "used", label: "Вживаний" },
                       { value: "new", label: "Новий" },
@@ -371,7 +376,7 @@ export default function CreateProductForm({
                         key={item.value}
                         type="button"
                         onClick={() => updateDraft("condition", item.value)}
-                        className={`h-10 rounded-lg text-sm transition ${
+                        className={`h-[30px] min-w-0 rounded-lg px-2 text-sm transition ${
                           draft.condition === item.value
                             ? "bg-white font-medium text-text-primary shadow-sm"
                             : "text-text-secondary hover:text-text-primary"
@@ -382,18 +387,19 @@ export default function CreateProductForm({
                     ))}
                   </div>
                 </div>
-                <label htmlFor="product-quantity" className="flex flex-col gap-2 text-sm font-medium">
-                  Кількість
-                  <Input
+                <div className="flex min-w-0 flex-col gap-2 text-sm font-medium">
+                  <label htmlFor="product-quantity">Кількість</label>
+                  <NumberInput
                     id="product-quantity"
-                    type="number"
+                    size="sm"
+                    containerClassName="w-full min-w-0 px-2.5"
                     min="1"
                     step="1"
                     value={draft.quantity}
-                    onChange={(event) => updateDraft("quantity", event.target.value)}
-                    className="h-12"
+                    onValueChange={(value) => updateDraft("quantity", value)}
+                    className="h-5"
                   />
-                </label>
+                </div>
               </div>
             </section>
 

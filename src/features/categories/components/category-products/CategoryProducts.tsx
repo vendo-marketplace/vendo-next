@@ -12,7 +12,10 @@ import { useSearchProducts } from "@/features/products/hooks/use-products";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
 import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import NumberInput from "@/components/ui/input/number-input";
 import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
+import CityAutocompleteInput from "@/features/products/components/CityAutocompleteInput";
+import { findOfficialCity } from "@/features/products/components/create-product/form-utils";
 import {
   DEFAULT_PRODUCT_SORT,
   getProductSortQuery,
@@ -97,19 +100,17 @@ function AttributeControl({
           {attribute.title}
         </legend>
         <div className="grid grid-cols-2 gap-2">
-          <input
-            className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-            type="number"
+          <NumberInput
+            containerClassName="h-10 min-w-0 rounded-lg px-2"
             value={value.min}
-            onChange={(event) => onChange({ ...value, min: event.target.value })}
+            onValueChange={(min) => onChange({ ...value, min })}
             placeholder="Від"
             aria-label={`${attribute.title}: від`}
           />
-          <input
-            className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-            type="number"
+          <NumberInput
+            containerClassName="h-10 min-w-0 rounded-lg px-2"
             value={value.max}
-            onChange={(event) => onChange({ ...value, max: event.target.value })}
+            onValueChange={(max) => onChange({ ...value, max })}
             placeholder="До"
             aria-label={`${attribute.title}: до`}
           />
@@ -120,16 +121,16 @@ function AttributeControl({
 
   if (attribute.type === "NUMBER") {
     return (
-      <label className={`grid gap-2 ${filterLabelClassName}`}>
-        {attribute.title}
-        <input
-          className="h-10 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-          type="number"
+      <div className={`grid gap-2 ${filterLabelClassName}`}>
+        <label htmlFor={`filter-${attribute.id}`}>{attribute.title}</label>
+        <NumberInput
+          id={`filter-${attribute.id}`}
+          containerClassName="h-10 rounded-lg px-2"
           value={value.min}
-          onChange={(event) => onChange({ ...value, min: event.target.value })}
+          onValueChange={(min) => onChange({ ...value, min })}
           placeholder="Значення"
         />
-      </label>
+      </div>
     );
   }
 
@@ -171,6 +172,7 @@ export default function CategoryProducts({
   const [minimumPrice, setMinimumPrice] = useState("");
   const [maximumPrice, setMaximumPrice] = useState("");
   const [city, setCity] = useState("");
+  const [cityError, setCityError] = useState("");
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
   const [attributeValues, setAttributeValues] = useState<
     Record<string, AttributeValue>
@@ -235,11 +237,17 @@ export default function CategoryProducts({
       <form
         onSubmit={(event) => {
           event.preventDefault();
+          const selectedCity = city.trim() ? findOfficialCity(city) : undefined;
+          if (city.trim() && !selectedCity) {
+            setCityError("Оберіть місто зі списку.");
+            return;
+          }
+          setCityError("");
           setAppliedFilters({
             isNew,
             minimumPrice,
             maximumPrice,
-            city,
+            city: selectedCity ?? "",
             attributes: attributeValues,
           });
         }}
@@ -270,36 +278,37 @@ export default function CategoryProducts({
             <fieldset className="grid gap-2">
               <legend className={filterLabelClassName}>Ціна</legend>
               <div className="grid grid-cols-2 gap-2">
-                <input
-                  className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-                  type="number"
+                <NumberInput
+                  containerClassName="h-10 min-w-0 rounded-lg px-2"
                   min="0"
                   value={minimumPrice}
-                  onChange={(event) => setMinimumPrice(event.target.value)}
+                  onValueChange={setMinimumPrice}
                   placeholder="Від"
                   aria-label="Ціна від"
                 />
-                <input
-                  className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-                  type="number"
+                <NumberInput
+                  containerClassName="h-10 min-w-0 rounded-lg px-2"
                   min="0"
                   value={maximumPrice}
-                  onChange={(event) => setMaximumPrice(event.target.value)}
+                  onValueChange={setMaximumPrice}
                   placeholder="До"
                   aria-label="Ціна до"
                 />
               </div>
             </fieldset>
-            <label className={`grid gap-2 ${filterLabelClassName}`}>
-              Місто
-              <input
-                className="h-10 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm font-normal"
-                type="text"
+            <div>
+              <CityAutocompleteInput
+                id="category-filter-city"
+                label="Місто"
                 value={city}
-                onChange={(event) => setCity(event.target.value)}
+                onChange={(value) => {
+                  setCity(value);
+                  setCityError("");
+                }}
                 placeholder="Наприклад, Київ"
               />
-            </label>
+              {cityError && <p role="alert" className="mt-1.5 text-xs text-text-error">{cityError}</p>}
+            </div>
             <label className="flex items-center gap-2 pt-7 text-sm leading-5 text-text-secondary">
               <input
                 type="checkbox"
@@ -343,6 +352,7 @@ export default function CategoryProducts({
                 setMinimumPrice("");
                 setMaximumPrice("");
                 setCity("");
+                setCityError("");
                 setAttributeValues({});
                 setAppliedFilters({
                   isNew: false,

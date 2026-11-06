@@ -20,6 +20,7 @@ export type InputProps = Omit<
   start?: React.ReactNode;
   end?: React.ReactNode;
   invalid?: boolean;
+  containerClassName?: string;
   onClear?: () => void;
   clearable?: boolean;
 };
@@ -40,6 +41,7 @@ export function Input({
   start,
   end,
   invalid,
+  containerClassName,
   disabled,
   className,
   clearable = true,
@@ -52,7 +54,7 @@ export function Input({
       data-size={size}
       data-invalid={invalid || undefined}
       data-disabled={disabled || undefined}
-      className={getInputClassName({ size, invalid })}
+      className={cn(getInputClassName({ size, invalid }), containerClassName)}
     >
       {start && (
         <div
