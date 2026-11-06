@@ -3,10 +3,10 @@ import { cn } from "@/utils/utils";
 
 const inputVariants = {
   size: {
-    sm: "p-2",
+    sm: "h-[38px] p-2",
     base: "",
-    lg: "py-3 px-3.5 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
-    xl: "py-3.5 px-4 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
+    lg: "h-[52px] py-3 px-3.5 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
+    xl: "h-14 py-3.5 px-4 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
   },
 } as const;
 
@@ -30,7 +30,7 @@ export function getInputClassName({
   invalid,
 }: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
-    "flex group focus-within:border-stroke-brand items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
+    "h-[38px] flex group focus-within:border-stroke-brand items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
     invalid && "border-stroke-error",
     inputVariants.size[size],
   );
