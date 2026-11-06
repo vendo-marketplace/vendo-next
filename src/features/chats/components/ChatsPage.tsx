@@ -36,6 +36,7 @@ import {
   useConversationMessages,
   useConversations,
 } from "@/features/chats/hooks/use-chats";
+import { useAutoResizeTextarea } from "@/features/chats/hooks/use-auto-resize-textarea";
 import { useConversationSocket } from "@/features/chats/hooks/use-conversation-socket";
 import type { Conversation, Message } from "@/features/chats/types/chat";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -188,7 +189,7 @@ function ConversationList({
   );
 
   return (
-    <aside className="flex min-h-0 flex-col border-r border-stroke-primary-subtle">
+    <aside className="flex min-h-0 w-full min-w-0 flex-col border-r border-stroke-primary-subtle">
       <div className="border-b border-stroke-primary-subtle p-4 sm:p-5">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-text-primary">Вхідні</h2>
@@ -473,6 +474,8 @@ function MessageComposer({
   isSending: boolean;
   disabled: boolean;
 }) {
+  const textareaRef = useAutoResizeTextarea(value);
+
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -494,13 +497,14 @@ function MessageComposer({
           <Plus className="size-5" />
         </button>
         <textarea
+          ref={textareaRef}
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
           rows={1}
           maxLength={4000}
           placeholder="Напишіть повідомлення…"
-          className="max-h-28 min-h-9 flex-1 resize-y bg-transparent py-2 text-sm text-text-primary outline-none placeholder:text-text-tertiary"
+          className="max-h-28 min-h-9 min-w-0 flex-1 resize-none overflow-y-auto bg-transparent py-2 text-sm text-text-primary outline-none placeholder:text-text-tertiary"
         />
         <button
           type="button"
@@ -724,8 +728,8 @@ export default function ChatsPage() {
         </span>
       </div>
 
-      <div className="grid min-h-[680px] flex-1 overflow-hidden rounded-2xl border border-stroke-primary-subtle bg-surface-primary shadow-sm lg:h-[min(760px,calc(100dvh-13rem))] lg:min-h-[560px] lg:flex-none lg:grid-cols-[360px_minmax(0,1fr)]">
-        <div className={isChatOpen ? "hidden lg:flex" : "flex"}>
+      <div className="grid min-h-[680px] flex-1 grid-cols-1 overflow-hidden rounded-2xl border border-stroke-primary-subtle bg-surface-primary shadow-sm lg:h-[min(760px,calc(100dvh-13rem))] lg:min-h-[560px] lg:flex-none lg:grid-cols-[360px_minmax(0,1fr)]">
+        <div className={`min-w-0 ${isChatOpen ? "hidden lg:flex" : "flex"}`}>
           <ConversationList
             conversations={conversations}
             activeId={activeId}
@@ -742,7 +746,7 @@ export default function ChatsPage() {
         </div>
 
         {isChatOpen && (activeConversation || isDraftConversation) ? (
-          <div className="flex min-h-0 flex-col">
+          <div className="flex min-h-0 min-w-0 flex-col">
             <header className="flex items-center justify-between border-b border-stroke-primary-subtle px-4 py-3 sm:px-6">
               <div className="flex min-w-0 items-center gap-3">
                 <button
