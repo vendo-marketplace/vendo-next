@@ -149,7 +149,7 @@ export default function ConversationSidebar({
   );
 
   return (
-    <aside className="flex min-h-0 flex-col border-r border-stroke-primary-subtle">
+    <aside className="flex min-h-0 w-full min-w-0 flex-col border-r border-stroke-primary-subtle">
       <div className="border-b border-stroke-primary-subtle p-4 sm:p-5">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-text-primary">Вхідні</h2>

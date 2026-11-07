@@ -225,8 +225,8 @@ export default function ChatsPage() {
         </span>
       </div>
 
-      <div className="grid min-h-[680px] flex-1 overflow-hidden rounded-2xl border border-stroke-primary-subtle bg-surface-primary shadow-sm lg:h-[min(760px,calc(100dvh-13rem))] lg:min-h-[560px] lg:flex-none lg:grid-cols-[360px_minmax(0,1fr)]">
-        <div className={isChatOpen ? "hidden lg:flex" : "flex"}>
+      <div className="grid min-h-[680px] flex-1 grid-cols-1 overflow-hidden rounded-2xl border border-stroke-primary-subtle bg-surface-primary shadow-sm lg:h-[min(760px,calc(100dvh-13rem))] lg:min-h-[560px] lg:flex-none lg:grid-cols-[360px_minmax(0,1fr)]">
+        <div className={`min-w-0 ${isChatOpen ? "hidden lg:flex" : "flex"}`}>
           <ConversationSidebar
             conversations={conversations}
             activeId={activeId}
@@ -243,7 +243,7 @@ export default function ChatsPage() {
         </div>
 
         {isChatOpen && (activeConversation || isDraftConversation) ? (
-          <div className="flex min-h-0 flex-col">
+          <div className="flex min-h-0 min-w-0 flex-col">
             <header className="flex items-center justify-between border-b border-stroke-primary-subtle px-4 py-3 sm:px-6">
               <div className="flex min-w-0 items-center gap-3">
                 <button
