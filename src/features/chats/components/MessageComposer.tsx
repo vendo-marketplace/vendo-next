@@ -1,6 +1,6 @@
 "use client";
 
-import { Image as ImageIcon, Plus, Send, Smile } from "lucide-react";
+import { Image as ImageIcon, Plus, Send } from "lucide-react";
 import type { FormEvent, KeyboardEvent } from "react";
 
 import { useAutoResizeTextarea } from "@/features/chats/hooks/use-auto-resize-textarea";
@@ -52,13 +52,6 @@ export default function MessageComposer({
           placeholder="Напишіть повідомлення…"
           className="max-h-28 min-h-9 min-w-0 flex-1 resize-none overflow-y-auto bg-transparent py-2 text-sm text-text-primary outline-none placeholder:text-text-tertiary"
         />
-        <button
-          type="button"
-          aria-label="Емодзі"
-          className="mb-0.5 hidden size-9 shrink-0 items-center justify-center rounded-xl text-text-tertiary hover:bg-surface-tertiary sm:flex"
-        >
-          <Smile aria-hidden="true" className="size-5" />
-        </button>
         <button
           type="button"
           aria-label="Додати фото"

@@ -3,7 +3,6 @@
 import {
   ArrowLeft,
   MessageCircle,
-  MoreHorizontal,
   Trash2,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -268,26 +267,17 @@ export default function ChatsPage() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                {!isDraftConversation && (
-                  <button
-                    type="button"
-                    onClick={deleteConversation}
-                    disabled={removeMutation.isPending}
-                    aria-label="Видалити розмову"
-                    className="flex size-9 items-center justify-center rounded-full text-text-secondary hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
-                  >
-                    <Trash2 className="size-[18px]" />
-                  </button>
-                )}
+              {!isDraftConversation && (
                 <button
                   type="button"
-                  aria-label="Інші дії"
-                  className="hidden size-9 items-center justify-center rounded-full text-text-secondary hover:bg-surface-secondary sm:flex"
+                  onClick={deleteConversation}
+                  disabled={removeMutation.isPending}
+                  aria-label="Видалити розмову"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full text-text-secondary hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
                 >
-                  <MoreHorizontal className="size-5" />
+                  <Trash2 className="size-[18px]" />
                 </button>
-              </div>
+              )}
             </header>
 
             <div className="border-b border-stroke-primary-subtle px-4 py-3 sm:px-6">
