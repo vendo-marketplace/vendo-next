@@ -3,7 +3,6 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { CalendarClock, Check, Pause } from "lucide-react";
-import axios from "axios";
 
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
@@ -15,7 +14,7 @@ import type {
   AutoSearchFormValues,
   UpdatableAutoSearchStatus,
 } from "@/features/auto-search/types/auto-search";
-import type { ApiError } from "@/types/types";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 type Props = {
   categories: CategoryOption[];
@@ -154,10 +153,7 @@ export default function AutoSearchForm({
     try {
       await onSave(filters, values.status);
     } catch (saveError) {
-      const apiMessage = axios.isAxiosError<ApiError>(saveError)
-        ? saveError.response?.data?.message
-        : undefined;
-      setError(apiMessage || t("saveError"));
+      setError(getApiErrorMessage(saveError, t("saveError")));
     }
   };
 

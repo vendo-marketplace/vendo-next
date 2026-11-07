@@ -25,7 +25,7 @@ export function OnboardingContent() {
     () => window.sessionStorage.getItem("pending-verification-email") ?? "",
     () => "",
   );
-  const { mutate: completeAccount } = useCompleteAccount();
+  const { mutateAsync: completeAccount } = useCompleteAccount();
 
   useEffect(() => {
     if (sendVerificationOnMount) {
@@ -39,10 +39,11 @@ export function OnboardingContent() {
     }
   }, [user?.emailVerified]);
 
-  const onSuccess = (credentials: AccountCompletionCredentials) => {
-    completeAccount(credentials, {
-      onSuccess: () => router.push("/"),
-    });
+  const submitAccountCompletion = async (
+    credentials: AccountCompletionCredentials,
+  ) => {
+    await completeAccount(credentials);
+    router.push("/");
   };
   const email = user?.email ?? registrationEmail;
   const showAccountCompletion = Boolean(user?.emailVerified || isVerificationComplete);
@@ -51,7 +52,7 @@ export function OnboardingContent() {
     <>
       <AuthContentContainer>
         {showAccountCompletion ? (
-          <AccountCompletion onSuccess={onSuccess} />
+          <AccountCompletion onSubmit={submitAccountCompletion} />
         ) : (
           <VerifyCode
             email={email}

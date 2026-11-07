@@ -37,6 +37,7 @@ import {
 } from "@/features/products/components/create-product/form-utils";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { CreateProductRequest } from "@/types/product";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 type CreateProductFormProps = {
   categories: CategoryOption[];
@@ -180,13 +181,12 @@ export default function CreateProductForm({
       toast.success("Оголошення створено");
       router.push("/");
     } catch (error) {
-      const responseMessage =
-        typeof error === "object" && error && "response" in error
-          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-          : undefined;
-      const message =
-        responseMessage ?? "Не вдалося створити оголошення. Перевірте дані та спробуйте ще раз.";
-      setFormError(message);
+      setFormError(
+        getApiErrorMessage(
+          error,
+          "Не вдалося створити оголошення. Перевірте дані та спробуйте ще раз.",
+        ),
+      );
       toast.error("Не вдалося створити оголошення");
     } finally {
       setIsSubmitting(false);

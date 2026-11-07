@@ -4,6 +4,7 @@ import { mutationOptions, type QueryClient } from "@tanstack/react-query";
 import { ApiError } from "@/types/types";
 import type { AxiosError } from "axios";
 import { toast } from "sonner";
+import { getApiErrorMessage } from "@/utils/api-error";
 import { authQueries } from "../queries/auth.queries";
 import type {
   AccountCompletionCredentials,
@@ -44,7 +45,7 @@ export const authMutations = {
         queryClient.clear();
       },
       onError: (error) => {
-        toast.error(error.response?.data.message ?? "Не вдалося вийти з акаунта");
+        toast.error(getApiErrorMessage(error, "Не вдалося вийти з акаунта"));
       },
     }),
   signUp: (queryClient: QueryClient) =>

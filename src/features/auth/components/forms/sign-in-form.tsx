@@ -9,14 +9,15 @@ import { Input } from "@/components/ui/input/input";
 import { PasswordInput } from "@/components/ui/input/password-input";
 
 import { Button } from "@/components/ui/button/button";
+import { FormErrorNotice } from "@/components/ui/form/form-error-notice";
 import { signInSchema } from "../../schemas/sign-in-schema";
 import type { LoginCredentials } from "../../types/auth";
 import { Link } from "@/i18n/navigation";
+import { applyApiErrorToForm, SERVER_ERROR_KEY } from "@/utils/api-error";
 
 type SignInFormProps = {
-  onSubmit: (credentials: LoginCredentials) => void | Promise<void>;
-  isPending?: boolean;
-  submitError?: string;
+  onSubmit: (credentials: LoginCredentials) => Promise<void>;
+  fallbackErrorMessage: string;
   submitLabel?: string;
   passwordAutoComplete?: "current-password" | "new-password";
   idPrefix?: string;
@@ -25,8 +26,7 @@ type SignInFormProps = {
 
 export function SignInForm({
   onSubmit,
-  isPending = false,
-  submitError,
+  fallbackErrorMessage,
   submitLabel = "Увійти",
   passwordAutoComplete = "current-password",
   idPrefix = "sign-in",
@@ -34,9 +34,11 @@ export function SignInForm({
 }: SignInFormProps) {
   const {
     control,
-    formState: { errors },
+    clearErrors,
+    formState: { errors, isSubmitting },
     handleSubmit,
     register,
+    setError,
     setValue,
   } = useForm<LoginCredentials>({
     resolver: zodResolver(signInSchema),
@@ -49,6 +51,11 @@ export function SignInForm({
 
   const email = useWatch({ control, name: "email" });
   const password = useWatch({ control, name: "password" });
+  const serverError = errors.root?.server?.message;
+
+  const clearServerError = () => {
+    if (serverError) clearErrors(SERVER_ERROR_KEY);
+  };
 
   const clearField = (field: keyof LoginCredentials) => {
     setValue(field, "", {
@@ -56,10 +63,27 @@ export function SignInForm({
       shouldTouch: true,
       shouldValidate: true,
     });
+    clearServerError();
   };
 
+  const submit = handleSubmit(async (credentials) => {
+    try {
+      await onSubmit(credentials);
+    } catch (error) {
+      applyApiErrorToForm(error, setError, {
+        fields: ["email", "password"],
+        fallback: fallbackErrorMessage,
+      });
+    }
+  });
+
   return (
-    <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="space-y-4"
+      noValidate
+      onSubmit={submit}
+      onChange={clearServerError}
+    >
       <FormField
         id={`${idPrefix}-email`}
         label="Електронна пошта"
@@ -109,16 +133,9 @@ export function SignInForm({
         )}
       </div>
 
-      {submitError && (
-        <p
-          role="alert"
-          className="rounded-lg border border-stroke-error bg-red-50 px-3 py-2 text-sm text-text-error"
-        >
-          {submitError}
-        </p>
-      )}
+      {serverError && <FormErrorNotice message={serverError} />}
 
-      <Button className="w-full" type="submit" disabled={isPending}>
+      <Button className="w-full" type="submit" disabled={isSubmitting}>
         {submitLabel}
       </Button>
     </form>
