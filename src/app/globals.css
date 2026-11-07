@@ -105,6 +105,7 @@
     /* Keeps the scrollbar space when overlays lock body scroll, so the layout doesn't jump. */
     scrollbar-gutter: stable;
   }
+
 }
 
 /* Shared page width and side gutters: header, catalog and page sections line up on it. */

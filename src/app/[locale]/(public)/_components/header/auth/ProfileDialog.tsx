@@ -50,12 +50,8 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
   const handleCompleteAccount = async (
     credentials: AccountCompletionCredentials,
   ) => {
-    try {
-      await completeAccount(credentials);
-      toast.success("Ім’я збережено");
-    } catch {
-      toast.error("Не вдалося зберегти ім’я. Спробуйте ще раз.");
-    }
+    await completeAccount(credentials);
+    toast.success("Ім’я збережено");
   };
 
   return (
@@ -186,7 +182,7 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
                     )}
                     {needsName && (
                       <AccountCompletionForm
-                        onSuccess={handleCompleteAccount}
+                        onSubmit={handleCompleteAccount}
                         submitLabel="Зберегти ім’я"
                       />
                     )}

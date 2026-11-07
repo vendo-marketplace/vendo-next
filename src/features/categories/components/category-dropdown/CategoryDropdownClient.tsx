@@ -1,23 +1,9 @@
 "use client";
 
 import {
-  Baby,
-  BookOpen,
-  Building2,
-  CarFront,
   ChevronDown,
   ChevronRight,
-  Dumbbell,
   Grid2X2,
-  House,
-  Laptop,
-  PawPrint,
-  Refrigerator,
-  Shirt,
-  ShoppingBasket,
-  Sparkles,
-  Tv,
-  Wrench,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -27,29 +13,12 @@ import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
 import { useCatalogDialog } from "../../hooks/use-catalog-dialog";
 import type { CategoryOption } from "../../types/category";
+import { getCategoryIcon } from "./category-icons";
 
 interface CategoryDropdownClientProps {
   categories: CategoryOption[];
   unavailable?: boolean;
 }
-
-const categoryIcons = [
-  Grid2X2,
-  Refrigerator,
-  House,
-  Shirt,
-  Wrench,
-  Dumbbell,
-  CarFront,
-  Baby,
-  Sparkles,
-  Building2,
-  PawPrint,
-  ShoppingBasket,
-  BookOpen,
-  Tv,
-  Laptop,
-];
 
 const categoryHref = (parentSlug: string, categorySlug: string) =>
   `/category/${encodeURIComponent(parentSlug)}/${encodeURIComponent(categorySlug)}`;
@@ -262,7 +231,7 @@ export default function CategoryDropdownClient({
                     className="grid grid-cols-[minmax(0,1fr)] gap-1"
                   >
                     {categories.map((category, index) => {
-                      const Icon = categoryIcons[index % categoryIcons.length];
+                      const Icon = getCategoryIcon(index);
                       const isSelected = category.id === selectedCategory?.id;
 
                       return (

@@ -25,6 +25,7 @@ import CreateProductAttributes from "@/features/products/components/create-produ
 import CreateProductCategoryPicker from "@/features/products/components/create-product/CreateProductCategoryPicker";
 import CreateProductCityField from "@/features/products/components/create-product/CreateProductCityField";
 import CreateProductImagesField from "@/features/products/components/create-product/CreateProductImagesField";
+import CreateProductPricingSection from "@/features/products/components/create-product/CreateProductPricingSection";
 import CreateProductPreview from "@/features/products/components/create-product/CreateProductPreview";
 import {
   findOfficialCity,
@@ -36,6 +37,7 @@ import {
 } from "@/features/products/components/create-product/form-utils";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { CreateProductRequest } from "@/types/product";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 type CreateProductFormProps = {
   categories: CategoryOption[];
@@ -179,13 +181,12 @@ export default function CreateProductForm({
       toast.success("Оголошення створено");
       router.push("/");
     } catch (error) {
-      const responseMessage =
-        typeof error === "object" && error && "response" in error
-          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-          : undefined;
-      const message =
-        responseMessage ?? "Не вдалося створити оголошення. Перевірте дані та спробуйте ще раз.";
-      setFormError(message);
+      setFormError(
+        getApiErrorMessage(
+          error,
+          "Не вдалося створити оголошення. Перевірте дані та спробуйте ще раз.",
+        ),
+      );
       toast.error("Не вдалося створити оголошення");
     } finally {
       setIsSubmitting(false);
@@ -202,7 +203,7 @@ export default function CreateProductForm({
 
   if (!user) {
     return (
-      <div className="min-h-[calc(100vh-5rem)] bg-[#f7f8fa] px-4 py-16 sm:px-6">
+      <div className="min-h-[calc(100vh-5rem)] bg-surface-secondary px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-lg rounded-2xl border border-stroke-primary-subtle bg-white p-8 text-center shadow-sm sm:p-10">
           <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[#edf4ff] text-text-brand">
             <Tag aria-hidden="true" className="size-6" />
@@ -223,7 +224,7 @@ export default function CreateProductForm({
   }
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] bg-[#f7f8fa] px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-5rem)] bg-surface-secondary px-4 pb-16 pt-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/"
@@ -282,11 +283,14 @@ export default function CreateProductForm({
                   </span>
                   <Input
                     id="product-title"
+                    size="sm"
+                    containerClassName="w-full min-w-0"
                     value={draft.title}
                     onChange={(event) => updateDraft("title", event.target.value)}
+                    onClear={() => updateDraft("title", "")}
                     maxLength={100}
                     placeholder="Наприклад, iPhone 15 Pro 256 ГБ"
-                    className="h-12 px-3.5"
+                    className="h-5 px-3.5"
                   />
                   <span className="text-right text-xs font-normal text-text-tertiary">{draft.title.length}/100</span>
                 </label>
@@ -325,77 +329,12 @@ export default function CreateProductForm({
               </div>
             </section>
 
-            <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-[0_4px_24px_rgba(20,31,54,0.03)] sm:p-7">
-              <div className="mb-6 flex gap-3.5">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-text-brand">
-                  <span className="text-lg font-semibold">₴</span>
-                </div>
-                <div>
-                  <p className="font-semibold">Ціна та стан</p>
-                  <p className="mt-1 text-sm text-text-secondary">
-                    Вкажіть вартість і стан речі.
-                  </p>
-                </div>
-              </div>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <label htmlFor="product-price" className="flex flex-col gap-2 text-sm font-medium">
-                  <span className="whitespace-nowrap">
-                    Ціна <span className="text-text-brand">*</span>
-                  </span>
-                  <div className="relative">
-                    <Input
-                      id="product-price"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={draft.price}
-                      onChange={(event) => updateDraft("price", event.target.value)}
-                      placeholder="0"
-                      className="h-12 pr-12 text-base font-medium"
-                    />
-                    <span className="absolute right-4 top-3.5 text-sm text-text-tertiary">
-                      ₴
-                    </span>
-                  </div>
-                </label>
-                <div className="flex flex-col gap-2 text-sm font-medium">
-                  <span className="whitespace-nowrap">
-                    Стан товару <span className="text-text-brand">*</span>
-                  </span>
-                  <div className="grid grid-cols-2 rounded-xl bg-surface-primary-subtle p-1">
-                    {([
-                      { value: "used", label: "Вживаний" },
-                      { value: "new", label: "Новий" },
-                    ] as const).map((item) => (
-                      <button
-                        key={item.value}
-                        type="button"
-                        onClick={() => updateDraft("condition", item.value)}
-                        className={`h-10 rounded-lg text-sm transition ${
-                          draft.condition === item.value
-                            ? "bg-white font-medium text-text-primary shadow-sm"
-                            : "text-text-secondary hover:text-text-primary"
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <label htmlFor="product-quantity" className="flex flex-col gap-2 text-sm font-medium">
-                  Кількість
-                  <Input
-                    id="product-quantity"
-                    type="number"
-                    min="1"
-                    step="1"
-                    value={draft.quantity}
-                    onChange={(event) => updateDraft("quantity", event.target.value)}
-                    className="h-12"
-                  />
-                </label>
-              </div>
-            </section>
+            <CreateProductPricingSection
+              price={draft.price}
+              quantity={draft.quantity}
+              condition={draft.condition}
+              onChange={(field, value) => updateDraft(field, value)}
+            />
 
             <CreateProductCityField
               value={draft.city}

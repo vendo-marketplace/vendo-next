@@ -7,12 +7,10 @@ import { AuthContentHeader } from "./auth-content-header";
 import { AccountCompletionForm } from "./forms/account-completion-form";
 
 type AccountCompletionProps = {
-  onSuccess: (
-    credentials: AccountCompletionCredentials,
-  ) => void | Promise<void>;
+  onSubmit: (credentials: AccountCompletionCredentials) => Promise<void>;
 };
 
-export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
+export function AccountCompletion({ onSubmit }: AccountCompletionProps) {
   return (
     <>
       <div className="flex justify-center mx-auto items-center size-14 bg-surface-brand-subtle rounded-full text-text-brand">
@@ -26,7 +24,7 @@ export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
       />
 
       <AccountCompletionForm
-        onSuccess={onSuccess}
+        onSubmit={onSubmit}
         submitLabel="Увійти в акаунт"
       />
     </>
