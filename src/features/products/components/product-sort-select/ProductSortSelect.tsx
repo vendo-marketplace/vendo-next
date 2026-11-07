@@ -12,11 +12,16 @@ import {
 type Props = {
   value: ProductSortOption;
   onChange: (value: ProductSortOption) => void;
+  sortValues?: readonly ProductSortOption[];
 };
 
-const ProductSortSelect = ({ value, onChange }: Props) => {
+const ProductSortSelect = ({
+  value,
+  onChange,
+  sortValues = PRODUCT_SORT_VALUES,
+}: Props) => {
   const t = useTranslations("ProductSort");
-  const options = PRODUCT_SORT_VALUES.map((sortValue) => ({
+  const options = sortValues.map((sortValue) => ({
     value: sortValue,
     label: t(sortValue),
   }));

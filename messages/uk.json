@@ -1,5 +1,6 @@
 {
   "ProductSort": {
+    "RELEVANCE": "За релевантністю",
     "PRICE_ASC": "Спочатку дешевші",
     "PRICE_DESC": "Спочатку дорожчі",
     "CREATED_AT_DESC": "Найновіші"

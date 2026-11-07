@@ -7,7 +7,7 @@ export interface SearchProductsQuery {
   categoryId?: string;
   active?: boolean;
   isNew?: boolean;
-  sort: {
+  sort?: {
     sortBy: "CREATED_AT" | "PRICE";
     direction: "ASC" | "DESC";
   };

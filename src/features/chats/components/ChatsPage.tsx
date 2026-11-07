@@ -190,7 +190,7 @@ export default function ChatsPage() {
 
   if (!user) {
     return (
-      <section className="mx-auto flex min-h-[60vh] w-full max-w-330 flex-1 flex-col items-center justify-center px-4 text-center">
+      <section className="page-container flex min-h-[60vh] flex-1 flex-col items-center justify-center text-center">
         <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-surface-secondary text-text-brand">
           <MessageCircle className="size-7" />
         </div>
@@ -211,7 +211,7 @@ export default function ChatsPage() {
   const isComposerDisabled = isDraftConversation && !activeProduct;
 
   return (
-    <section className="mx-auto flex w-full max-w-330 flex-1 flex-col px-4 py-6 sm:px-6 sm:py-8">
+    <section className="page-container flex flex-1 flex-col py-6 sm:py-8">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="mb-1 text-sm font-medium text-text-brand">Ваші розмови</p>

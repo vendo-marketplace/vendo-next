@@ -19,7 +19,8 @@ import CategoryAttributeFilters, {
   type AttributeFilterValue,
 } from "./CategoryAttributeFilters";
 import {
-  DEFAULT_PRODUCT_SORT,
+  CATEGORY_PRODUCT_SORT_VALUES,
+  DEFAULT_CATEGORY_PRODUCT_SORT,
   getProductSortQuery,
   type ProductSortOption,
 } from "@/features/products/lib/product-sort";
@@ -31,7 +32,7 @@ export default function CategoryProducts({
   categoryId: string;
   attributes: CategoryAttribute[];
 }) {
-  const [sort, setSort] = useState<ProductSortOption>(DEFAULT_PRODUCT_SORT);
+  const [sort, setSort] = useState<ProductSortOption>(DEFAULT_CATEGORY_PRODUCT_SORT);
   const [isNew, setIsNew] = useState(false);
   const [minimumPrice, setMinimumPrice] = useState("");
   const [maximumPrice, setMaximumPrice] = useState("");
@@ -243,7 +244,13 @@ export default function CategoryProducts({
               </p>
             )}
           </div>
-          <ProductSortSelect value={sort} onChange={setSort} />
+          {totalElements !== 0 && (
+            <ProductSortSelect
+              value={sort}
+              onChange={setSort}
+              sortValues={CATEGORY_PRODUCT_SORT_VALUES}
+            />
+          )}
         </div>
         {isError && !data ? (
           <p className="text-sm text-text-secondary">Не вдалося завантажити товари.</p>

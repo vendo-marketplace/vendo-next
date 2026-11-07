@@ -16,11 +16,10 @@ export default function RecommendedProducts() {
     setPage(1);
     updateSort(value);
   };
-  const productsQuery = useMemo(() => ({
-    page,
-    size: 28,
-    sort: getProductSortQuery(sort),
-  }) satisfies SearchProductsQuery, [page, sort]);
+  const productsQuery = useMemo((): SearchProductsQuery => {
+    const sortQuery = getProductSortQuery(sort);
+    return { page, size: 28, ...(sortQuery && { sort: sortQuery }) };
+  }, [page, sort]);
   const {
     data,
     isFetching,
