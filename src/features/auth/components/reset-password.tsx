@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
@@ -18,21 +17,11 @@ type ResetPasswordProps = {
 
 export function ResetPassword({ code }: ResetPasswordProps) {
   const [isSuccess, setIsSuccess] = useState(false);
-  const { mutate: resetPassword, isPending } = useResetPassword();
+  const { mutateAsync: resetPassword } = useResetPassword();
 
-  const submitPassword = ({ password }: ResetPasswordFormValues) => {
-    resetPassword(
-      { code, password },
-      {
-        onSuccess: () => setIsSuccess(true),
-        onError: (error) => {
-          toast.error(
-            error.response?.data.message ??
-              "Не вдалося змінити пароль. Спробуйте ще раз.",
-          );
-        },
-      },
-    );
+  const submitPassword = async ({ password }: ResetPasswordFormValues) => {
+    await resetPassword({ code, password });
+    setIsSuccess(true);
   };
 
   if (isSuccess) {
@@ -62,7 +51,7 @@ export function ResetPassword({ code }: ResetPasswordProps) {
         title="Змініть свій пароль"
         description="Ласкаво просимо назад! Виберіть новий надійний пароль і збережіть його, щоб продовжити."
       />
-      <ResetPasswordForm isPending={isPending} onSubmit={submitPassword} />
+      <ResetPasswordForm onSubmit={submitPassword} />
     </>
   );
 }

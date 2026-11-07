@@ -1,6 +1,5 @@
 "use client";
 
-import type { AxiosError } from "axios";
 import Image from "next/image";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -8,7 +7,7 @@ import { toast } from "sonner";
 import img from "@/assets/gifs/emailSent.gif";
 import { Button } from "@/components/ui/button/button";
 import { OtpCodeInput } from "@/components/ui/input/otp-code-input";
-import type { ApiError } from "@/types/types";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 import { useResendVerification } from "../hooks/use-resend-verification";
 import { useStartVerification } from "../hooks/use-start-verification";
@@ -46,11 +45,13 @@ export function VerifyCode({
         setResendCooldown(RESEND_COOLDOWN_SECONDS);
         toast.success("Код підтвердження надіслано");
       },
-      onError: (error: AxiosError<ApiError>) => {
+      onError: (error) => {
         setResendCooldown(0);
         toast.error(
-          error.response?.data.message ??
+          getApiErrorMessage(
+            error,
             "Не вдалося надіслати код. Спробуйте ще раз.",
+          ),
         );
       },
     });
@@ -72,10 +73,12 @@ export function VerifyCode({
 
     validateVerification(code, {
       onSuccess: () => onSuccess?.(),
-      onError: (error: AxiosError<ApiError>) => {
+      onError: (error) => {
         toast.error(
-          error.response?.data.message ??
+          getApiErrorMessage(
+            error,
             "Не вдалося підтвердити код. Перевірте його та спробуйте ще раз.",
+          ),
         );
       },
     });
@@ -89,10 +92,12 @@ export function VerifyCode({
         setResendCooldown(RESEND_COOLDOWN_SECONDS);
         toast.success("Код підтвердження надіслано повторно");
       },
-      onError: (error: AxiosError<ApiError>) => {
+      onError: (error) => {
         toast.error(
-          error.response?.data.message ??
+          getApiErrorMessage(
+            error,
             "Не вдалося надіслати код. Спробуйте ще раз.",
+          ),
         );
       },
     });
@@ -116,8 +121,8 @@ export function VerifyCode({
         </h1>
         <p className="text-[14px] leading-5 text-text-tertiary">
           Ми відправили код підтвердження на адресу{" "}
-          <span className="underline text-text-brand-dark">{email}</span>. Введіть
-          його нижче.
+          <span className="underline text-text-brand-dark">{email}</span>.
+          Введіть його нижче.
         </p>
       </div>
 

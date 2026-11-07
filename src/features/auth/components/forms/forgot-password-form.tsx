@@ -4,18 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 
 import { Button } from "@/components/ui/button/button";
+import { FormErrorNotice } from "@/components/ui/form/form-error-notice";
 import { FormField } from "@/components/ui/form/form-field";
 import { MailIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
+import { applyApiErrorToForm, SERVER_ERROR_KEY } from "@/utils/api-error";
 
 import { forgotPasswordSchema } from "../../schemas/forgot-password-schema";
 import type { ForgotPasswordCredentials } from "../../types/auth";
 
 type ForgotPasswordFormProps = {
   isPending?: boolean;
-  onSubmit: (
-    credentials: ForgotPasswordCredentials,
-  ) => void | Promise<void>;
+  onSubmit: (values: ForgotPasswordCredentials) => Promise<void>;
 };
 
 export function ForgotPasswordForm({
@@ -24,9 +24,11 @@ export function ForgotPasswordForm({
 }: ForgotPasswordFormProps) {
   const {
     control,
-    formState: { errors },
+    clearErrors,
+    formState: { errors, isSubmitting },
     handleSubmit,
     register,
+    setError,
     setValue,
   } = useForm<ForgotPasswordCredentials>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -35,6 +37,12 @@ export function ForgotPasswordForm({
   });
 
   const email = useWatch({ control, name: "email" });
+  const serverError = errors.root?.server?.message;
+  const isBusy = isPending || isSubmitting;
+
+  const clearServerError = () => {
+    if (serverError) clearErrors(SERVER_ERROR_KEY);
+  };
 
   const clearEmail = () => {
     setValue("email", "", {
@@ -42,10 +50,27 @@ export function ForgotPasswordForm({
       shouldTouch: true,
       shouldValidate: true,
     });
+    clearServerError();
   };
 
+  const submit = handleSubmit(async (values) => {
+    try {
+      await onSubmit(values);
+    } catch (error) {
+      applyApiErrorToForm(error, setError, {
+        fields: ["email"],
+        fallback: "Не вдалося надіслати посилання. Спробуйте ще раз.",
+      });
+    }
+  });
+
   return (
-    <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="space-y-4"
+      noValidate
+      onSubmit={submit}
+      onChange={clearServerError}
+    >
       <FormField
         id="forgot-password-email"
         label="Електронна пошта"
@@ -58,7 +83,7 @@ export function ForgotPasswordForm({
             {...register("email")}
             type="email"
             autoComplete="email"
-            disabled={isPending}
+            disabled={isBusy}
             value={email}
             onClear={clearEmail}
             placeholder="Введіть електронну пошту"
@@ -67,8 +92,10 @@ export function ForgotPasswordForm({
         )}
       </FormField>
 
-      <Button className="w-full" type="submit" disabled={isPending}>
-        {isPending ? "Надсилання..." : "Надіслати посилання"}
+      {serverError && <FormErrorNotice message={serverError} />}
+
+      <Button className="w-full" type="submit" disabled={isBusy}>
+        {isBusy ? "Надсилання..." : "Надіслати посилання"}
       </Button>
     </form>
   );

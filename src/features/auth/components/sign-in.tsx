@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "@/i18n/navigation";
-import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLogin } from "../hooks/use-login";
 import { authKeys } from "../queries/auth.keys";
@@ -11,23 +10,18 @@ import { SignInForm } from "./forms/sign-in-form";
 export function SignIn() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { mutate, isPending } = useLogin();
-  const signIn = (credentials: LoginCredentials) => {
-    mutate(credentials, {
-      onSuccess: () => {
-        const user = queryClient.getQueryData<MeResponse>(authKeys.me());
-        router.push(user && !user.emailVerified ? "/onboarding" : "/");
-      },
-      onError: (e) => {
-        toast.error(e.response?.data.message ?? "Перевірте дані для входу");
-      },
-    });
+  const { mutateAsync: login } = useLogin();
+
+  const signIn = async (credentials: LoginCredentials) => {
+    await login(credentials);
+    const user = queryClient.getQueryData<MeResponse>(authKeys.me());
+    router.push(user && !user.emailVerified ? "/onboarding" : "/");
   };
 
   return (
     <SignInForm
       onSubmit={signIn}
-      isPending={isPending}
+      fallbackErrorMessage="Перевірте дані для входу та спробуйте ще раз."
       showForgotPasswordLink
     />
   );

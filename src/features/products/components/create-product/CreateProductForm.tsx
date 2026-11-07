@@ -19,13 +19,13 @@ import { toast } from "sonner";
 import { productsApi } from "@/api/products";
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
-import NumberInput from "@/components/ui/input/number-input";
 import { useMe } from "@/features/auth/hooks/use-me";
 import type { CategoryOption } from "@/features/categories/types/category";
 import CreateProductAttributes from "@/features/products/components/create-product/CreateProductAttributes";
 import CreateProductCategoryPicker from "@/features/products/components/create-product/CreateProductCategoryPicker";
 import CreateProductCityField from "@/features/products/components/create-product/CreateProductCityField";
 import CreateProductImagesField from "@/features/products/components/create-product/CreateProductImagesField";
+import CreateProductPricingSection from "@/features/products/components/create-product/CreateProductPricingSection";
 import CreateProductPreview from "@/features/products/components/create-product/CreateProductPreview";
 import {
   findOfficialCity,
@@ -37,6 +37,7 @@ import {
 } from "@/features/products/components/create-product/form-utils";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { CreateProductRequest } from "@/types/product";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 type CreateProductFormProps = {
   categories: CategoryOption[];
@@ -180,13 +181,12 @@ export default function CreateProductForm({
       toast.success("Оголошення створено");
       router.push("/");
     } catch (error) {
-      const responseMessage =
-        typeof error === "object" && error && "response" in error
-          ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-          : undefined;
-      const message =
-        responseMessage ?? "Не вдалося створити оголошення. Перевірте дані та спробуйте ще раз.";
-      setFormError(message);
+      setFormError(
+        getApiErrorMessage(
+          error,
+          "Не вдалося створити оголошення. Перевірте дані та спробуйте ще раз.",
+        ),
+      );
       toast.error("Не вдалося створити оголошення");
     } finally {
       setIsSubmitting(false);
@@ -329,79 +329,12 @@ export default function CreateProductForm({
               </div>
             </section>
 
-            <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-[0_4px_24px_rgba(20,31,54,0.03)] sm:p-7">
-              <div className="mb-6 flex gap-3.5">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-text-brand">
-                  <span className="text-lg font-semibold">₴</span>
-                </div>
-                <div>
-                  <p className="font-semibold">Ціна та стан</p>
-                  <p className="mt-1 text-sm text-text-secondary">
-                    Вкажіть вартість і стан речі.
-                  </p>
-                </div>
-              </div>
-              <div className="grid min-w-0 gap-5 md:grid-cols-2">
-                <label htmlFor="product-price" className="flex min-w-0 flex-col gap-2 text-sm font-medium">
-                  <span className="whitespace-nowrap">
-                    Ціна <span className="text-text-brand">*</span>
-                  </span>
-                  <div className="relative">
-                    <Input
-                      id="product-price"
-                      size="sm"
-                      containerClassName="w-full min-w-0"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={draft.price}
-                      onChange={(event) => updateDraft("price", event.target.value)}
-                      clearable={false}
-                      placeholder="0"
-                      end={<span className="text-sm text-text-tertiary">₴</span>}
-                      className="h-5 text-base font-medium [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                    />
-                  </div>
-                </label>
-                <div className="flex min-w-0 flex-col gap-2 text-sm font-medium">
-                  <span className="whitespace-nowrap">
-                    Стан товару <span className="text-text-brand">*</span>
-                  </span>
-                  <div className="grid w-full min-w-0 grid-cols-2 rounded-xl bg-surface-primary-subtle p-1">
-                    {([
-                      { value: "used", label: "Вживаний" },
-                      { value: "new", label: "Новий" },
-                    ] as const).map((item) => (
-                      <button
-                        key={item.value}
-                        type="button"
-                        onClick={() => updateDraft("condition", item.value)}
-                        className={`h-[30px] min-w-0 rounded-lg px-2 text-sm transition ${
-                          draft.condition === item.value
-                            ? "bg-white font-medium text-text-primary shadow-sm"
-                            : "text-text-secondary hover:text-text-primary"
-                        }`}
-                      >
-                        {item.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex min-w-0 flex-col gap-2 text-sm font-medium">
-                  <label htmlFor="product-quantity">Кількість</label>
-                  <NumberInput
-                    id="product-quantity"
-                    size="sm"
-                    containerClassName="w-full min-w-0 px-2.5"
-                    min="1"
-                    step="1"
-                    value={draft.quantity}
-                    onValueChange={(value) => updateDraft("quantity", value)}
-                    className="h-5"
-                  />
-                </div>
-              </div>
-            </section>
+            <CreateProductPricingSection
+              price={draft.price}
+              quantity={draft.quantity}
+              condition={draft.condition}
+              onChange={(field, value) => updateDraft(field, value)}
+            />
 
             <CreateProductCityField
               value={draft.city}

@@ -3,7 +3,6 @@
 import { useMemo, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { CalendarClock, Check, Pause } from "lucide-react";
-import axios from "axios";
 
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
@@ -15,7 +14,7 @@ import type {
   AutoSearchFormValues,
   UpdatableAutoSearchStatus,
 } from "@/features/auto-search/types/auto-search";
-import type { ApiError } from "@/types/types";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 type Props = {
   categories: CategoryOption[];
@@ -154,10 +153,7 @@ export default function AutoSearchForm({
     try {
       await onSave(filters, values.status);
     } catch (saveError) {
-      const apiMessage = axios.isAxiosError<ApiError>(saveError)
-        ? saveError.response?.data?.message
-        : undefined;
-      setError(apiMessage || t("saveError"));
+      setError(getApiErrorMessage(saveError, t("saveError")));
     }
   };
 
@@ -206,43 +202,29 @@ export default function AutoSearchForm({
               />
             </div>
 
-            <fieldset className="sm:col-span-2 lg:col-span-2">
-              <legend className="mb-2 text-sm font-medium">{t("priceRange")}</legend>
+            <fieldset className="min-w-0 sm:col-span-2 lg:col-span-2">
+              <legend className={`mb-2 block ${fieldLabelClassName}`}>
+                {t("priceRange")}
+              </legend>
               <div className="grid grid-cols-2 gap-3">
-                <div className="flex min-w-0 flex-col gap-2">
-                  <label
-                    htmlFor="auto-search-min-price"
-                    className={fieldLabelClassName}
-                  >
-                    {t("fromPrice")}
-                  </label>
-                  <NumberInput
-                    id="auto-search-min-price"
-                    min="0"
-                    step="0.01"
-                    value={values.minPrice}
-                    onValueChange={(value) => update("minPrice", value)}
-                    placeholder="0"
-                    className="h-5"
-                  />
-                </div>
-                <div className="flex min-w-0 flex-col gap-2">
-                  <label
-                    htmlFor="auto-search-max-price"
-                    className={fieldLabelClassName}
-                  >
-                    {t("toPrice")}
-                  </label>
-                  <NumberInput
-                    id="auto-search-max-price"
-                    min="0"
-                    step="0.01"
-                    value={values.maxPrice}
-                    onValueChange={(value) => update("maxPrice", value)}
-                    placeholder="0"
-                    className="h-5"
-                  />
-                </div>
+                <NumberInput
+                  id="auto-search-min-price"
+                  min="0"
+                  step="0.01"
+                  value={values.minPrice}
+                  onValueChange={(value) => update("minPrice", value)}
+                  placeholder={t("fromPrice")}
+                  className="h-5 placeholder:font-medium"
+                />
+                <NumberInput
+                  id="auto-search-max-price"
+                  min="0"
+                  step="0.01"
+                  value={values.maxPrice}
+                  onValueChange={(value) => update("maxPrice", value)}
+                  placeholder={t("toPrice")}
+                  className="h-5 placeholder:font-medium"
+                />
               </div>
             </fieldset>
 

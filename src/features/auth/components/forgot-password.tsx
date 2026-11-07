@@ -1,6 +1,5 @@
 "use client";
 
-import type { AxiosError } from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -8,7 +7,7 @@ import { toast } from "sonner";
 import checkEmailGif from "@/assets/gifs/checkEmail.gif";
 import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
-import type { ApiError } from "@/types/types";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 import { useForgotPassword } from "../hooks/use-forgot-password";
 
@@ -20,8 +19,7 @@ import { ForgotPasswordForm } from "./forms/forgot-password-form";
 const RESEND_COOLDOWN_SECONDS = 60;
 
 export function ForgotPassword() {
-  const { mutate: forgotPassword, isPending: isForgotPasswordPending } =
-    useForgotPassword();
+  const { mutateAsync: forgotPassword } = useForgotPassword();
   const { mutate: resendPassword, isPending: isResendPending } =
     useResendPassword();
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
@@ -37,21 +35,12 @@ export function ForgotPassword() {
     return () => window.clearTimeout(timeout);
   }, [resendCooldown]);
 
-  const showError = (error: AxiosError<ApiError>) => {
-    toast.error(
-      error.response?.data.message ??
-        "Не вдалося надіслати посилання. Спробуйте ще раз.",
-    );
-  };
-
-  const requestPasswordReset = (credentials: ForgotPasswordCredentials) => {
-    forgotPassword(credentials, {
-      onSuccess: () => {
-        setSubmittedEmail(credentials.email);
-        setResendCooldown(RESEND_COOLDOWN_SECONDS);
-      },
-      onError: showError,
-    });
+  const requestPasswordReset = async (
+    credentials: ForgotPasswordCredentials,
+  ) => {
+    await forgotPassword(credentials);
+    setSubmittedEmail(credentials.email);
+    setResendCooldown(RESEND_COOLDOWN_SECONDS);
   };
 
   const resendPasswordReset = () => {
@@ -64,7 +53,14 @@ export function ForgotPassword() {
           setResendCooldown(RESEND_COOLDOWN_SECONDS);
           toast.success("Посилання надіслано повторно");
         },
-        onError: showError,
+        onError: (error) => {
+          toast.error(
+            getApiErrorMessage(
+              error,
+              "Не вдалося надіслати посилання. Спробуйте ще раз.",
+            ),
+          );
+        },
       },
     );
   };
@@ -123,10 +119,7 @@ export function ForgotPassword() {
         title="Забули свій пароль?"
         description="Введіть свою електронну пошту, і ми надішлемо вам посилання для скидання пароля."
       />
-      <ForgotPasswordForm
-        isPending={isForgotPasswordPending}
-        onSubmit={requestPasswordReset}
-      />
+      <ForgotPasswordForm onSubmit={requestPasswordReset} />
     </>
   );
 }

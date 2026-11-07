@@ -4,6 +4,7 @@ import { useGoogleLogin as useGoogleOAuthLogin } from "@react-oauth/google";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "sonner";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 import { useGoogleLogin } from "@/features/auth/hooks/use-google-login";
 import { authKeys } from "@/features/auth/queries/auth.keys";
@@ -31,7 +32,7 @@ export function GoogleLoginButton({ label }: GoogleLoginButtonProps) {
             router.push(user && !user.emailVerified ? "/onboarding" : "/");
           },
           onError: (error) => {
-            toast.error(error.response?.data.message ?? "Google login failed");
+            toast.error(getApiErrorMessage(error, "Google login failed"));
           },
         },
       );
