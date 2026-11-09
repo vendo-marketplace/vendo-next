@@ -1,19 +1,16 @@
 "use client";
 
-import { ArrowRightIcon, TickIcon } from "@/assets/icons";
-import { Link } from "@/i18n/navigation";
+import { TickIcon } from "@/assets/icons";
 
 import type { AccountCompletionCredentials } from "../types/auth";
 import { AuthContentHeader } from "./auth-content-header";
 import { AccountCompletionForm } from "./forms/account-completion-form";
 
 type AccountCompletionProps = {
-  onSuccess: (
-    credentials: AccountCompletionCredentials,
-  ) => void | Promise<void>;
+  onSubmit: (credentials: AccountCompletionCredentials) => Promise<void>;
 };
 
-export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
+export function AccountCompletion({ onSubmit }: AccountCompletionProps) {
   return (
     <>
       <div className="flex justify-center mx-auto items-center size-14 bg-surface-brand-subtle rounded-full text-text-brand">
@@ -26,15 +23,10 @@ export function AccountCompletion({ onSuccess }: AccountCompletionProps) {
           зробити покупки ще зручнішими."
       />
 
-      <AccountCompletionForm onSuccess={onSuccess} />
-
-      <Link
-        className="font-medium cursor-pointer flex items-center justify-center gap-2 text-[14px] leading-5 text-text-secondary"
-        href="/"
-      >
-        <span>Пропустити</span>
-        <ArrowRightIcon className="size-4" />
-      </Link>
+      <AccountCompletionForm
+        onSubmit={onSubmit}
+        submitLabel="Увійти в акаунт"
+      />
     </>
   );
 }

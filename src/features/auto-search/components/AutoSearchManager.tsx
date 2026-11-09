@@ -3,22 +3,13 @@
 import {
   ArrowRight,
   BellRing,
-  CalendarClock,
-  ChevronDown,
-  ChevronRight,
-  ChevronUp,
-  Image as ImageIcon,
-  MapPin,
-  Pencil,
   Plus,
   Search,
-  Trash2,
   X,
 } from "lucide-react";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
-import Image from "next/image";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button/button";
@@ -26,40 +17,21 @@ import LoadingSpinner from "@/components/ui/loading-spinner";
 import { useMe } from "@/features/auth/hooks/use-me";
 import type { CategoryOption } from "@/features/categories/types/category";
 import { useAutoSearchMutations } from "@/features/auto-search/hooks/use-auto-search-mutations";
-import { useAutoSearchProducts } from "@/features/auto-search/hooks/use-auto-search-products";
 import { useAutoSearches } from "@/features/auto-search/hooks/use-auto-searches";
 import type {
   AutoSearch,
   AutoSearchFormValues,
-  AutoSearchStatus,
   UpdatableAutoSearchStatus,
 } from "@/features/auto-search/types/auto-search";
 import type { AutoSearchFilters } from "@/features/auto-search/types/auto-search";
 import { Link } from "@/i18n/navigation";
+import { getCategoryTrails, toLocalDate } from "@/features/auto-search/utils/auto-search-utils";
+import AutoSearchCard from "./AutoSearchCard";
 import AutoSearchForm from "./AutoSearchForm";
 
 type Props = {
   categories: CategoryOption[];
   categoryError?: boolean;
-};
-
-const emptySubscribe = () => () => undefined;
-const getClientSessionSnapshot = () =>
-  Boolean(localStorage.getItem("access-token") || localStorage.getItem("refresh-token"));
-const getServerSessionSnapshot = () => false;
-
-const formatPrice = (price: number) =>
-  new Intl.NumberFormat("uk-UA", {
-    style: "currency",
-    currency: "UAH",
-    maximumFractionDigits: 0,
-  }).format(price);
-
-const toLocalDate = (value: string) => {
-  const date = new Date(value);
-  if (!Number.isFinite(date.getTime())) return "";
-  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-  return date.toISOString().slice(0, 10);
 };
 
 const getFormValues = (autoSearch: AutoSearch): AutoSearchFormValues => ({
@@ -71,259 +43,14 @@ const getFormValues = (autoSearch: AutoSearch): AutoSearchFormValues => ({
   status: autoSearch.status === "EXPIRED" ? "CANCELLED" : autoSearch.status,
 });
 
-const getCategoryTrails = (categories: CategoryOption[]) => {
-  const trails = new Map<string, string[]>();
-  const visit = (items: CategoryOption[], parents: string[]) => {
-    for (const category of items) {
-      const path = [...parents, category.title];
-      trails.set(category.id, path);
-      visit(category.children, path);
-    }
-  };
-  visit(categories, []);
-  return trails;
-};
-
-const AutoSearchProducts = ({ id }: { id: string }) => {
-  const t = useTranslations("AutoSearch");
-  const { data: products = [], isLoading, isError, refetch } =
-    useAutoSearchProducts(id, true);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center rounded-xl bg-surface-secondary px-5 py-8">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="rounded-xl bg-surface-secondary p-5 text-sm text-text-secondary">
-        <p>{t("productsError")}</p>
-        <button
-          type="button"
-          onClick={() => void refetch()}
-          className="mt-2 font-medium text-text-brand hover:underline"
-        >
-          {t("retry")}
-        </button>
-      </div>
-    );
-  }
-
-  if (!products.length) {
-    return (
-      <div className="rounded-xl bg-surface-secondary px-5 py-8 text-center text-sm text-text-secondary">
-        {t("noProducts")}
-      </div>
-    );
-  }
-
-  return (
-    <ul className="divide-y divide-stroke-secondary rounded-xl border border-stroke-primary-subtle bg-surface-primary">
-      {products.map((product) => (
-        <li key={product.id} className="flex flex-col gap-1.5 p-4 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            href={`/product/${product.id}?q=${encodeURIComponent(product.title)}`}
-            className="flex min-w-0 flex-1 flex-col gap-3 rounded-lg outline-none transition-colors hover:bg-surface-secondary focus-visible:ring-2 focus-visible:ring-stroke-brand sm:flex-row sm:items-center sm:justify-between sm:px-2 sm:py-1"
-          >
-            <div className="flex min-w-0 flex-1 items-center gap-3">
-              <div className="relative size-14 shrink-0 overflow-hidden rounded-lg bg-surface-secondary sm:size-16">
-                {(product.images?.[0] ?? product.imageKeys?.[0]) ? (
-                  <Image
-                    src={product.images?.[0] ?? product.imageKeys?.[0] ?? ""}
-                    alt={product.title}
-                    fill
-                    sizes="64px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="grid h-full place-items-center text-text-tertiary">
-                    <ImageIcon aria-hidden="true" className="size-5" />
-                  </span>
-                )}
-              </div>
-              <div className="min-w-0">
-                <p className="truncate font-medium text-text-primary">{product.title}</p>
-                <p className="mt-1 line-clamp-2 text-sm text-text-secondary">
-                  {product.description}
-                </p>
-                <p className="mt-2 flex items-center gap-1 text-xs text-text-tertiary">
-                  <MapPin aria-hidden="true" className="size-3.5" />
-                  {product.address?.city ?? t("unknownCity")}
-                </p>
-              </div>
-            </div>
-            <span className="shrink-0 font-semibold text-text-primary">
-              {formatPrice(product.price)}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-const AutoSearchCard = ({
-  autoSearch,
-  categoryTrail,
-  showProducts,
-  isDeleting,
-  onEdit,
-  onDelete,
-}: {
-  autoSearch: AutoSearch;
-  categoryTrail: string[];
-  showProducts: boolean;
-  isDeleting: boolean;
-  onEdit: () => void;
-  onDelete: () => void;
-}) => {
-  const t = useTranslations("AutoSearch");
-  const status: AutoSearchStatus = autoSearch.status;
-  const priceSummary =
-    autoSearch.minPrice !== undefined || autoSearch.maxPrice !== undefined
-      ? `${autoSearch.minPrice !== undefined ? formatPrice(autoSearch.minPrice) : t("anyPrice")} – ${autoSearch.maxPrice !== undefined ? formatPrice(autoSearch.maxPrice) : t("noLimit")}`
-      : t("anyPrice");
-
-  return (
-    <article className="rounded-2xl border border-stroke-primary-subtle bg-surface-primary p-5 shadow-sm sm:p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-lg font-semibold text-text-primary">
-              {categoryTrail.at(-1) ?? t("unknownCategory")}
-            </h2>
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                status === "ACTIVE"
-                  ? "bg-surface-brand-subtle text-text-brand"
-                  : "bg-surface-secondary text-text-secondary"
-              }`}
-            >
-              <span
-                aria-hidden="true"
-                className={`size-1.5 rounded-full ${
-                  status === "ACTIVE" ? "bg-text-brand" : "bg-text-tertiary"
-                }`}
-              />
-              {t(status === "ACTIVE" ? "active" : status === "CANCELLED" ? "paused" : "expired")}
-            </span>
-          </div>
-
-          {categoryTrail.length > 1 && (
-            <nav
-              aria-label={t("categoryPath")}
-              className="mt-2 flex flex-wrap items-center gap-1"
-            >
-              {categoryTrail.slice(0, -1).map((category, index) => (
-                <span key={`${category}-${index}`} className="inline-flex items-center gap-1">
-                  {index > 0 && (
-                    <ChevronRight
-                      aria-hidden="true"
-                      className="size-3.5 text-text-tertiary"
-                    />
-                  )}
-                  <span className="rounded-md bg-surface-primary-subtle px-2 py-1 text-xs text-text-tertiary">
-                    {category}
-                  </span>
-                </span>
-              ))}
-            </nav>
-          )}
-
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-text-secondary">
-            <span className="rounded-lg bg-surface-secondary px-3 py-1.5 font-medium text-text-primary">
-              {priceSummary}
-            </span>
-            {autoSearch.address?.city && (
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-surface-secondary px-3 py-1.5">
-                <MapPin aria-hidden="true" className="size-4" />
-                {autoSearch.address.city}
-              </span>
-            )}
-            <span className="inline-flex items-center gap-2 rounded-lg border border-stroke-primary-subtle bg-surface-primary px-3 py-1.5">
-              <CalendarClock aria-hidden="true" className="size-4 text-text-brand" />
-              <span className="text-xs text-text-tertiary">{t("expirationShort")}</span>
-              <span className="font-medium text-text-primary">
-                {new Intl.DateTimeFormat("uk-UA", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                }).format(new Date(`${autoSearch.expirationDate.slice(0, 10)}T12:00:00`))}
-              </span>
-            </span>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Button asChild variant="outline" size="sm" className="h-10">
-            <Link
-              href={
-                showProducts
-                  ? "/auto-search"
-                  : `/auto-search/${autoSearch.id}/products`
-              }
-              aria-expanded={showProducts}
-            >
-              <Search aria-hidden="true" className="size-4" />
-              {t("matchedProducts")}
-              {showProducts ? (
-                <ChevronUp aria-hidden="true" className="size-4" />
-              ) : (
-                <ChevronDown aria-hidden="true" className="size-4" />
-              )}
-            </Link>
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onEdit}
-            className="h-10"
-            aria-label={t("edit")}
-          >
-            <Pencil aria-hidden="true" className="size-4" />
-            <span className="hidden sm:inline">{t("edit")}</span>
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            disabled={isDeleting}
-            onClick={onDelete}
-            className="h-10 text-text-error hover:text-text-error"
-            aria-label={t("delete")}
-          >
-            <Trash2 aria-hidden="true" className="size-4" />
-            <span className="hidden sm:inline">{t(isDeleting ? "deleting" : "delete")}</span>
-          </Button>
-        </div>
-      </div>
-
-      {showProducts && (
-        <div className="mt-5 border-t border-stroke-secondary pt-5">
-          <AutoSearchProducts id={autoSearch.id} />
-        </div>
-      )}
-    </article>
-  );
-};
-
 export default function AutoSearchManager({
   categories,
   categoryError = false,
   selectedAutoSearchId,
 }: Props & { selectedAutoSearchId?: string }) {
   const t = useTranslations("AutoSearch");
-  const hasStoredSession = useSyncExternalStore(
-    emptySubscribe,
-    getClientSessionSnapshot,
-    getServerSessionSnapshot,
-  );
-  const { data: user, isPending: isAuthPending } = useMe(hasStoredSession);
-  const isAuthenticated = hasStoredSession && Boolean(user);
+  const { data: user, isPending: isAuthPending } = useMe();
+  const isAuthenticated = Boolean(user);
   const { data: autoSearches = [], isLoading, isError, refetch } =
     useAutoSearches(isAuthenticated, user?.id);
   const { create, update, remove } = useAutoSearchMutations();
@@ -333,7 +60,7 @@ export default function AutoSearchManager({
   const categoryTrails = useMemo(() => getCategoryTrails(categories), [categories]);
   const editingSearch = autoSearches.find(({ id }) => id === editingId);
 
-  if (hasStoredSession && isAuthPending) {
+  if (isAuthPending) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center text-sm text-text-secondary">
         <LoadingSpinner />

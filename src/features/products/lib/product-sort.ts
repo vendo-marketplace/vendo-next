@@ -7,6 +7,10 @@ type ProductSortDefinition = {
 
 const PRODUCT_SORT_DEFINITIONS = [
   {
+    value: "RELEVANCE",
+    query: undefined,
+  },
+  {
     value: "PRICE_ASC",
     query: { sortBy: "PRICE", direction: "ASC" },
   },
@@ -27,17 +31,25 @@ export const PRODUCT_SORT_VALUES = PRODUCT_SORT_DEFINITIONS.map(
   ({ value }) => value,
 );
 
-export const DEFAULT_PRODUCT_SORT =
+// Relevance sends no sort, so the API orders results by how well they match.
+export const DEFAULT_PRODUCT_SORT = "RELEVANCE" satisfies ProductSortOption;
+
+// Category listings have no relevance ordering, so they start with the newest.
+export const CATEGORY_PRODUCT_SORT_VALUES = PRODUCT_SORT_VALUES.filter(
+  (value) => value !== "RELEVANCE",
+);
+
+export const DEFAULT_CATEGORY_PRODUCT_SORT =
   "CREATED_AT_DESC" satisfies ProductSortOption;
 
 export const getProductSortQuery = (
   value: ProductSortOption,
 ): SearchProductsQuery["sort"] =>
-  PRODUCT_SORT_DEFINITIONS.find((definition) => definition.value === value)!
-    .query;
+  PRODUCT_SORT_DEFINITIONS.find((definition) => definition.value === value)
+    ?.query;
 
 export const parseProductSortOption = (
   value: string | null,
 ): ProductSortOption =>
-  PRODUCT_SORT_DEFINITIONS.find((definition) => definition.value === value)
-    ?.value ?? DEFAULT_PRODUCT_SORT;
+  PRODUCT_SORT_VALUES.find((sortValue) => sortValue === value) ??
+  DEFAULT_PRODUCT_SORT;

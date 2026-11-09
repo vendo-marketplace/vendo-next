@@ -18,16 +18,6 @@ export type GoogleLoginCredentials = {
   authCode: string;
 };
 
-export type LoginResponse = {
-  "access-token": string;
-  "refresh-token": string;
-};
-
-export type RefreshResponse = {
-  "access-token": string;
-  "refresh-token": string;
-};
-
 export type MeResponse = {
   id: string;
   email: string;

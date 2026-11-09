@@ -2,6 +2,7 @@ import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Input } from "@/components/ui/input/input";
+import NumberInput from "@/components/ui/input/number-input";
 import type { CategoryAttribute } from "@/features/categories/types/category";
 
 type CreateProductAttributesProps = {
@@ -12,7 +13,7 @@ type CreateProductAttributesProps = {
 };
 
 const controlClass =
-  "h-11 w-full rounded-xl border border-stroke-primary-subtle bg-white px-3.5 text-sm outline-none transition focus:border-stroke-brand";
+  "h-[38px] w-full rounded-xl border border-stroke-primary-subtle bg-white px-3.5 text-sm outline-none transition focus:border-stroke-brand";
 
 function AttributeSelect({
   id,
@@ -90,31 +91,45 @@ function AttributeField({
       />
     );
   } else {
-    control = (
+    control = attribute.type === "NUMBER" ? (
+      <NumberInput
+        id={id}
+        size="sm"
+        containerClassName="w-full min-w-0"
+        value={value}
+        onValueChange={onChange}
+        required={attribute.required}
+        placeholder={`Вкажіть ${attribute.title.toLowerCase()}`}
+        className="h-5 px-3.5"
+      />
+    ) : (
       <Input
         id={id}
-        type={attribute.type === "NUMBER" ? "number" : "text"}
+        size="sm"
+        containerClassName="w-full min-w-0"
+        type="text"
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        onClear={() => onChange("")}
         required={attribute.required}
         placeholder={
           attribute.type === "RANGE"
             ? "Наприклад: 10–20"
             : `Вкажіть ${attribute.title.toLowerCase()}`
         }
-        className="h-11 px-3.5"
+        className="h-5 px-3.5"
       />
     );
   }
 
   return (
-    <label htmlFor={id} className="flex flex-col gap-2 text-sm font-medium">
-      <span className="whitespace-nowrap">
+    <div className="flex flex-col gap-2 text-sm font-medium">
+      <label htmlFor={id} className="whitespace-nowrap">
         {attribute.title}
         {attribute.required && <span className="ml-1 text-text-brand">*</span>}
-      </span>
+      </label>
       {control}
-    </label>
+    </div>
   );
 }
 

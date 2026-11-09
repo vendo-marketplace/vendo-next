@@ -11,6 +11,7 @@ export type ServerActionResult<T> =
 export type ApiError = {
   code: number;
   message: string;
+  errors?: Record<string, string> | null;
   path: string;
   timestamp: string;
 };

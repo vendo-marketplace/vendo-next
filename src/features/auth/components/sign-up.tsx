@@ -8,24 +8,21 @@ import { SignInForm } from "./forms/sign-in-form";
 
 export function SignUp() {
   const router = useRouter();
-  const { mutate, isPending } = useSignUp();
+  const { mutateAsync: createAccount } = useSignUp();
 
-  const signUp = (credentials: LoginCredentials) => {
-    mutate(credentials, {
-      onSuccess: () => {
-        window.sessionStorage.setItem(
-          "pending-verification-email",
-          credentials.email,
-        );
-        router.push("/onboarding");
-      },
-    });
+  const signUp = async (credentials: LoginCredentials) => {
+    await createAccount(credentials);
+    window.sessionStorage.setItem(
+      "pending-verification-email",
+      credentials.email,
+    );
+    router.push("/onboarding");
   };
 
   return (
     <SignInForm
       onSubmit={signUp}
-      isPending={isPending}
+      fallbackErrorMessage="Не вдалося створити акаунт. Перевірте введені дані та спробуйте ще раз."
       submitLabel="Створити акаунт"
       passwordAutoComplete="new-password"
       idPrefix="sign-up"

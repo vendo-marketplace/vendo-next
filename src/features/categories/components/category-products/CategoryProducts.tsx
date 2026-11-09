@@ -3,161 +3,27 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { useInView } from "react-intersection-observer";
-import type {
-  AttributeValueFilter,
-  SearchProductsQuery,
-} from "@/types/product";
+import type { SearchProductsQuery } from "@/types/product";
 import type { CategoryAttribute } from "../../types/category";
 import { useSearchProducts } from "@/features/products/hooks/use-products";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
 import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import NumberInput from "@/components/ui/input/number-input";
 import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
+import CityAutocompleteInput from "@/features/products/components/CityAutocompleteInput";
+import { findOfficialCity } from "@/features/products/components/create-product/form-utils";
+import CategoryAttributeFilters, {
+  FILTER_LABEL_CLASS_NAME,
+  toAttributeFilters,
+  type AttributeFilterValue,
+} from "./CategoryAttributeFilters";
 import {
-  DEFAULT_PRODUCT_SORT,
+  CATEGORY_PRODUCT_SORT_VALUES,
+  DEFAULT_CATEGORY_PRODUCT_SORT,
   getProductSortQuery,
   type ProductSortOption,
 } from "@/features/products/lib/product-sort";
-
-type AttributeValue = {
-  values: string[];
-  min: string;
-  max: string;
-};
-
-const initialAttributeValue: AttributeValue = {
-  values: [],
-  min: "",
-  max: "",
-};
-
-const filterLabelClassName =
-  "text-sm font-medium leading-5 text-text-primary";
-
-function AttributeControl({
-  attribute,
-  value,
-  onChange,
-}: {
-  attribute: CategoryAttribute;
-  value: AttributeValue;
-  onChange: (value: AttributeValue) => void;
-}) {
-  if (attribute.type === "ENUM") {
-    return (
-      <fieldset className="grid gap-2">
-        <legend className={filterLabelClassName}>
-          {attribute.title}
-        </legend>
-        {(attribute.allowedValues ?? []).map((option) => (
-          <label key={option} className="flex items-center gap-2 text-sm leading-5 text-text-secondary">
-            <input
-              type="checkbox"
-              checked={value.values.includes(option)}
-              onChange={(event) =>
-                onChange({
-                  ...value,
-                  values: event.target.checked
-                    ? [...value.values, option]
-                    : value.values.filter((selected) => selected !== option),
-                })
-              }
-              className="size-4 accent-surface-brand"
-            />
-            {option}
-          </label>
-        ))}
-      </fieldset>
-    );
-  }
-
-  if (attribute.type === "BOOLEAN") {
-    return (
-      <label className={`grid gap-2 ${filterLabelClassName}`}>
-        {attribute.title}
-        <select
-          className="h-10 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm font-normal"
-          value={value.values[0] ?? ""}
-          onChange={(event) =>
-            onChange({ ...value, values: event.target.value ? [event.target.value] : [] })
-          }
-        >
-          <option value="">Усі</option>
-          <option value="true">Так</option>
-          <option value="false">Ні</option>
-        </select>
-      </label>
-    );
-  }
-
-  if (attribute.type === "RANGE") {
-    return (
-      <fieldset className="grid gap-2">
-        <legend className={filterLabelClassName}>
-          {attribute.title}
-        </legend>
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-            type="number"
-            value={value.min}
-            onChange={(event) => onChange({ ...value, min: event.target.value })}
-            placeholder="Від"
-            aria-label={`${attribute.title}: від`}
-          />
-          <input
-            className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-            type="number"
-            value={value.max}
-            onChange={(event) => onChange({ ...value, max: event.target.value })}
-            placeholder="До"
-            aria-label={`${attribute.title}: до`}
-          />
-        </div>
-      </fieldset>
-    );
-  }
-
-  if (attribute.type === "NUMBER") {
-    return (
-      <label className={`grid gap-2 ${filterLabelClassName}`}>
-        {attribute.title}
-        <input
-          className="h-10 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-          type="number"
-          value={value.min}
-          onChange={(event) => onChange({ ...value, min: event.target.value })}
-          placeholder="Значення"
-        />
-      </label>
-    );
-  }
-
-  return null;
-}
-
-function toAttributeFilters(
-  attributes: CategoryAttribute[],
-  values: Record<string, AttributeValue>,
-): AttributeValueFilter[] {
-  return attributes.flatMap((attribute) => {
-    const value = values[attribute.id] ?? initialAttributeValue;
-    if (attribute.type === "ENUM" || attribute.type === "BOOLEAN") {
-      return value.values.length
-        ? [{ id: attribute.id, values: value.values }]
-        : [];
-    }
-    if (attribute.type === "RANGE") {
-      return value.min || value.max
-        ? [{ id: attribute.id, values: [value.min, value.max] }]
-        : [];
-    }
-    if (attribute.type === "NUMBER" && value.min !== "") {
-      return [{ id: attribute.id, values: [value.min] }];
-    }
-    return [];
-  });
-}
 
 export default function CategoryProducts({
   categoryId,
@@ -166,22 +32,29 @@ export default function CategoryProducts({
   categoryId: string;
   attributes: CategoryAttribute[];
 }) {
-  const [sort, setSort] = useState<ProductSortOption>(DEFAULT_PRODUCT_SORT);
+  const [sort, setSort] = useState<ProductSortOption>(DEFAULT_CATEGORY_PRODUCT_SORT);
   const [isNew, setIsNew] = useState(false);
   const [minimumPrice, setMinimumPrice] = useState("");
   const [maximumPrice, setMaximumPrice] = useState("");
   const [city, setCity] = useState("");
+  const [cityError, setCityError] = useState("");
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
   const [attributeValues, setAttributeValues] = useState<
-    Record<string, AttributeValue>
+    Record<string, AttributeFilterValue>
   >({});
   const [appliedFilters, setAppliedFilters] = useState<{
     isNew: boolean;
     minimumPrice: string;
     maximumPrice: string;
     city: string;
-    attributes: Record<string, AttributeValue>;
-  }>({ isNew: false, minimumPrice: "", maximumPrice: "", city: "", attributes: {} });
+    attributes: Record<string, AttributeFilterValue>;
+  }>({
+    isNew: false,
+    minimumPrice: "",
+    maximumPrice: "",
+    city: "",
+    attributes: {},
+  });
   const { ref, inView } = useInView({ rootMargin: "300px" });
 
   const query = useMemo<SearchProductsQuery>(() => {
@@ -235,11 +108,17 @@ export default function CategoryProducts({
       <form
         onSubmit={(event) => {
           event.preventDefault();
+          const selectedCity = city.trim() ? findOfficialCity(city) : undefined;
+          if (city.trim() && !selectedCity) {
+            setCityError("Оберіть місто зі списку.");
+            return;
+          }
+          setCityError("");
           setAppliedFilters({
             isNew,
             minimumPrice,
             maximumPrice,
-            city,
+            city: selectedCity ?? "",
             attributes: attributeValues,
           });
         }}
@@ -268,38 +147,39 @@ export default function CategoryProducts({
             className="grid grid-cols-1 items-start gap-5"
           >
             <fieldset className="grid gap-2">
-              <legend className={filterLabelClassName}>Ціна</legend>
+              <legend className={FILTER_LABEL_CLASS_NAME}>Ціна</legend>
               <div className="grid grid-cols-2 gap-2">
-                <input
-                  className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-                  type="number"
+                <NumberInput
+                  containerClassName="min-w-0"
                   min="0"
                   value={minimumPrice}
-                  onChange={(event) => setMinimumPrice(event.target.value)}
+                  onValueChange={setMinimumPrice}
                   placeholder="Від"
                   aria-label="Ціна від"
                 />
-                <input
-                  className="h-10 min-w-0 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm"
-                  type="number"
+                <NumberInput
+                  containerClassName="min-w-0"
                   min="0"
                   value={maximumPrice}
-                  onChange={(event) => setMaximumPrice(event.target.value)}
+                  onValueChange={setMaximumPrice}
                   placeholder="До"
                   aria-label="Ціна до"
                 />
               </div>
             </fieldset>
-            <label className={`grid gap-2 ${filterLabelClassName}`}>
-              Місто
-              <input
-                className="h-10 rounded-lg border border-stroke-primary bg-surface-primary px-3 text-sm font-normal"
-                type="text"
+            <div>
+              <CityAutocompleteInput
+                id="category-filter-city"
+                label="Місто"
                 value={city}
-                onChange={(event) => setCity(event.target.value)}
+                onChange={(value) => {
+                  setCity(value);
+                  setCityError("");
+                }}
                 placeholder="Наприклад, Київ"
               />
-            </label>
+              {cityError && <p role="alert" className="mt-1.5 text-xs text-text-error">{cityError}</p>}
+            </div>
             <label className="flex items-center gap-2 pt-7 text-sm leading-5 text-text-secondary">
               <input
                 type="checkbox"
@@ -309,21 +189,16 @@ export default function CategoryProducts({
               />
               Нові товари
             </label>
-            {attributes
-              .filter((attribute) => attribute.type !== "STRING")
-              .map((attribute) => (
-                <AttributeControl
-                  key={attribute.id}
-                  attribute={attribute}
-                  value={attributeValues[attribute.id] ?? initialAttributeValue}
-                  onChange={(value) =>
-                    setAttributeValues((current) => ({
-                      ...current,
-                      [attribute.id]: value,
-                    }))
-                  }
-                />
-              ))}
+            <CategoryAttributeFilters
+              attributes={attributes}
+              values={attributeValues}
+              onChange={(attributeId, value) =>
+                setAttributeValues((current) => ({
+                  ...current,
+                  [attributeId]: value,
+                }))
+              }
+            />
           </div>
         )}
 
@@ -343,6 +218,7 @@ export default function CategoryProducts({
                 setMinimumPrice("");
                 setMaximumPrice("");
                 setCity("");
+                setCityError("");
                 setAttributeValues({});
                 setAppliedFilters({
                   isNew: false,
@@ -368,7 +244,13 @@ export default function CategoryProducts({
               </p>
             )}
           </div>
-          <ProductSortSelect value={sort} onChange={setSort} />
+          {totalElements !== 0 && (
+            <ProductSortSelect
+              value={sort}
+              onChange={setSort}
+              sortValues={CATEGORY_PRODUCT_SORT_VALUES}
+            />
+          )}
         </div>
         {isError && !data ? (
           <p className="text-sm text-text-secondary">Не вдалося завантажити товари.</p>

@@ -56,4 +56,22 @@ export interface AutoSearchListResponse {
 
 export interface AutoSearchProductsResponse {
   data: AutoSearchProduct[];
+  metadata?: {
+    page?: number;
+    size?: number;
+    totalPages?: number;
+    totalElements?: number;
+    hasPrevious?: boolean;
+    hasNext?: boolean;
+  };
+}
+
+export type AutoSearchProductSortField = "PRICE" | "CREATED_AT";
+export type AutoSearchProductSortDirection = "ASC" | "DESC";
+
+export interface AutoSearchProductsQuery {
+  page: number;
+  size: number;
+  sortBy: AutoSearchProductSortField;
+  direction: AutoSearchProductSortDirection;
 }

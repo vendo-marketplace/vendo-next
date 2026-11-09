@@ -16,11 +16,10 @@ export default function RecommendedProducts() {
     setPage(1);
     updateSort(value);
   };
-  const productsQuery = useMemo(() => ({
-    page,
-    size: 28,
-    sort: getProductSortQuery(sort),
-  }) satisfies SearchProductsQuery, [page, sort]);
+  const productsQuery = useMemo((): SearchProductsQuery => {
+    const sortQuery = getProductSortQuery(sort);
+    return { page, size: 28, ...(sortQuery && { sort: sortQuery }) };
+  }, [page, sort]);
   const {
     data,
     isFetching,
@@ -42,12 +41,14 @@ export default function RecommendedProducts() {
   if (!isLoading && cards.length === 0) return null;
 
   return (
-    <section className="py-4 px-15 space-y-7">
-      <h2 className="text-3xl font-semibold text-text-primary">
-        Товари, що вам можуть сподобатись
-      </h2>
-      <div className="flex justify-end">
-        <ProductSortSelect value={sort} onChange={setSort} />
+    <section className="page-container space-y-5 py-4 lg:space-y-7">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="min-w-0 text-xl font-semibold text-text-primary sm:text-2xl lg:text-3xl">
+          Товари, що вам можуть сподобатись
+        </h2>
+        <div className="flex shrink-0 justify-end sm:ml-4">
+          <ProductSortSelect value={sort} onChange={setSort} />
+        </div>
       </div>
 
       <ProductCardsGrid cards={cards} isLoading={isLoading || isFetching} />

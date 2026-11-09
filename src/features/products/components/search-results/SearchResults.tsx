@@ -19,11 +19,10 @@ const SearchResults = () => {
   const router = useRouter();
   const query = params.get("q") ?? "";
   const page = Math.max(1, Number(params.get("page")) || 1);
-  const productsQuery = useMemo(() => ({
-    page,
-    size: 20,
-    sort: getProductSortQuery(sort),
-  }) satisfies SearchProductsQuery, [page, sort]);
+  const productsQuery = useMemo((): SearchProductsQuery => {
+    const sortQuery = getProductSortQuery(sort);
+    return { page, size: 20, ...(sortQuery && { sort: sortQuery }) };
+  }, [page, sort]);
   const {
     data,
     isError,
@@ -68,9 +67,11 @@ const SearchResults = () => {
         ) : (
           <p className="mb-4">Знайдено товарів: {pagination.totalElements}</p>
         ))}
-      <div className="mb-4 flex justify-end">
-        <ProductSortSelect value={sort} onChange={setSort} />
-      </div>
+      {pagination?.totalElements !== 0 && (
+        <div className="mb-4 flex justify-end">
+          <ProductSortSelect value={sort} onChange={setSort} />
+        </div>
+      )}
       <ProductCardsGrid cards={cards} isLoading={isLoading || isFetching} />
       {pagination && pagination.totalPages > 1 && (
         <nav

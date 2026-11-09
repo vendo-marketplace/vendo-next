@@ -1,8 +1,6 @@
 {
-  "LocaleSwitcher": {
-    "label": "Мова"
-  },
   "ProductSort": {
+    "RELEVANCE": "За релевантністю",
     "PRICE_ASC": "Спочатку дешевші",
     "PRICE_DESC": "Спочатку дорожчі",
     "CREATED_AT_DESC": "Найновіші"
@@ -66,6 +64,15 @@
     "backToAutoSearches": "До моїх автопошуків",
     "productsError": "Не вдалося завантажити товари для цього автопошуку.",
     "noProducts": "Поки немає товарів за цими умовами. Перевірте пізніше.",
+    "noProductsOnPage": "На цій сторінці товарів немає. Поверніться на попередню сторінку.",
+    "sortNewest": "Спочатку новіші",
+    "sortPriceAscending": "Спочатку дешевші",
+    "sortPriceDescending": "Спочатку дорожчі",
+    "productsPerPage": "По {count} на сторінці",
+    "productsPaginationLabel": "Сторінки товарів автопошуку",
+    "previousPage": "Назад",
+    "nextPage": "Далі",
+    "pageNumber": "Сторінка {page}",
     "unknownCity": "Місто не вказано",
     "edit": "Редагувати",
     "delete": "Видалити",

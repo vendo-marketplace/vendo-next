@@ -6,6 +6,7 @@ import { CalendarClock, Check, Pause } from "lucide-react";
 
 import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
+import NumberInput from "@/components/ui/input/number-input";
 import type { CategoryOption } from "@/features/categories/types/category";
 import CreateProductCategoryPicker from "@/features/products/components/create-product/CreateProductCategoryPicker";
 import type {
@@ -13,6 +14,7 @@ import type {
   AutoSearchFormValues,
   UpdatableAutoSearchStatus,
 } from "@/features/auto-search/types/auto-search";
+import { getApiErrorMessage } from "@/utils/api-error";
 
 type Props = {
   categories: CategoryOption[];
@@ -35,6 +37,8 @@ const minimumExpirationDate = () => {
   date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
   return date.toISOString().slice(0, 10);
 };
+
+const fieldLabelClassName = "text-sm font-medium leading-5 text-text-primary";
 
 const findCategoryPath = (
   categories: CategoryOption[],
@@ -117,12 +121,10 @@ export default function AutoSearchForm({
       setError(t("categoryRequired"));
       return;
     }
-    if (
-      !isEditing &&
-      (minPrice !== undefined && (!Number.isFinite(minPrice) || minPrice < 0)) ||
-      !isEditing &&
-      (maxPrice !== undefined && (!Number.isFinite(maxPrice) || maxPrice < 0))
-    ) {
+    const hasInvalidPrice = [minPrice, maxPrice].some(
+      (price) => price !== undefined && (!Number.isFinite(price) || price < 0),
+    );
+    if (!isEditing && hasInvalidPrice) {
       setError(t("priceInvalid"));
       return;
     }
@@ -150,8 +152,8 @@ export default function AutoSearchForm({
 
     try {
       await onSave(filters, values.status);
-    } catch {
-      setError(t("saveError"));
+    } catch (saveError) {
+      setError(getApiErrorMessage(saveError, t("saveError")));
     }
   };
 
@@ -161,7 +163,7 @@ export default function AutoSearchForm({
       className={
         isEditing
           ? "space-y-5"
-          : "rounded-2xl border border-stroke-primary-subtle bg-surface-primary p-5 shadow-sm sm:p-6"
+          : "w-full rounded-2xl border border-stroke-primary-subtle bg-surface-primary p-5 shadow-sm sm:p-6"
       }
     >
       {!isEditing && (
@@ -177,10 +179,16 @@ export default function AutoSearchForm({
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div
+        className={
+          isEditing
+            ? "grid gap-4 sm:grid-cols-2"
+            : "grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+        }
+      >
         {!isEditing && (
           <>
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 lg:col-span-4">
               <CreateProductCategoryPicker
                 categories={categories}
                 selectedCategory={selectedCategory}
@@ -194,40 +202,43 @@ export default function AutoSearchForm({
               />
             </div>
 
-            <fieldset className="sm:col-span-2">
-              <legend className="mb-2 text-sm font-medium">{t("priceRange")}</legend>
+            <fieldset className="min-w-0 sm:col-span-2 lg:col-span-2">
+              <legend className={`mb-2 block ${fieldLabelClassName}`}>
+                {t("priceRange")}
+              </legend>
               <div className="grid grid-cols-2 gap-3">
-                <Input
-                  type="number"
+                <NumberInput
+                  id="auto-search-min-price"
                   min="0"
                   step="0.01"
                   value={values.minPrice}
-                  onChange={(event) => update("minPrice", event.target.value)}
+                  onValueChange={(value) => update("minPrice", value)}
                   placeholder={t("fromPrice")}
-                  aria-label={t("fromPrice")}
-                  className="h-11"
+                  className="h-5 placeholder:font-medium"
                 />
-                <Input
-                  type="number"
+                <NumberInput
+                  id="auto-search-max-price"
                   min="0"
                   step="0.01"
                   value={values.maxPrice}
-                  onChange={(event) => update("maxPrice", event.target.value)}
+                  onValueChange={(value) => update("maxPrice", value)}
                   placeholder={t("toPrice")}
-                  aria-label={t("toPrice")}
-                  className="h-11"
+                  className="h-5 placeholder:font-medium"
                 />
               </div>
             </fieldset>
 
-            <label className="flex flex-col gap-2 text-sm font-medium">
+            <label className={`flex flex-col gap-2 ${fieldLabelClassName}`}>
               {t("cityOptional")}
-              <Input
-                value={values.city}
-                onChange={(event) => update("city", event.target.value)}
-                placeholder={t("cityPlaceholder")}
-                className="h-11"
-              />
+              <div className="w-full">
+                <Input
+                  value={values.city}
+                  onChange={(event) => update("city", event.target.value)}
+                  onClear={() => update("city", "")}
+                  placeholder={t("cityPlaceholder")}
+                  className="h-5"
+                />
+              </div>
             </label>
           </>
         )}
@@ -303,14 +314,17 @@ export default function AutoSearchForm({
         {!isEditing && (
           <label className="flex flex-col gap-2 text-sm font-medium">
             {t("expiration")}
-            <Input
-              type="date"
-              min={minimumExpirationDate()}
-              required
-              value={values.expirationDate}
-              onChange={(event) => update("expirationDate", event.target.value)}
-              className="h-11"
-            />
+            <div className="w-full">
+              <Input
+                type="date"
+                min={minimumExpirationDate()}
+                required
+                value={values.expirationDate}
+                onChange={(event) => update("expirationDate", event.target.value)}
+                onClear={() => update("expirationDate", "")}
+                className="h-5"
+              />
+            </div>
           </label>
         )}
       </div>
