@@ -26,6 +26,7 @@ import type { ProductCardType, SearchProductsQuery } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 import ProductGallery from "./ProductGallery";
 import ProductInfoTabs from "./ProductInfoTabs";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("uk-UA", {
@@ -261,7 +262,7 @@ function ProductPageContent({
 
           <p className="mt-5 flex items-center gap-2 text-sm text-text-secondary">
             <MapPin aria-hidden="true" className="size-4 shrink-0" />
-            {product.address?.city || "Місто не вказано"}
+            {product.address?.city ? toUkrainianCityName(product.address.city) : "Місто не вказано"}
           </p>
 
           {user?.id !== product.ownerId && (

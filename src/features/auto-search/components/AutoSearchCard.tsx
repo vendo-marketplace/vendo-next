@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button/button";
 import type { AutoSearch } from "@/features/auto-search/types/auto-search";
 import { Link } from "@/i18n/navigation";
 import { formatPrice } from "@/features/auto-search/utils/auto-search-utils";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 import AutoSearchProducts from "./AutoSearchProducts";
 
 type Props = {
@@ -83,7 +84,7 @@ export default function AutoSearchCard({
             {autoSearch.address?.city && (
               <span className="inline-flex items-center gap-1.5 rounded-lg bg-surface-secondary px-3 py-1.5">
                 <MapPin aria-hidden="true" className="size-4" />
-                {autoSearch.address.city}
+                {toUkrainianCityName(autoSearch.address.city)}
               </span>
             )}
             <ExpirationDate date={autoSearch.expirationDate} />

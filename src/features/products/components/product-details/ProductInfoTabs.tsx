@@ -4,6 +4,7 @@ import { Tabs } from "radix-ui";
 import type { CategoryAttribute } from "@/features/categories/types/category";
 import type { ProductCardType } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 
 const tabClassName =
   "whitespace-nowrap border-b-2 border-transparent px-3 py-3 text-sm font-medium text-text-secondary transition-colors hover:text-text-primary data-[state=active]:border-surface-brand data-[state=active]:text-text-brand sm:px-5";
@@ -51,7 +52,7 @@ export default function ProductInfoTabs({
           <dl className="mt-4 grid gap-x-8 sm:grid-cols-2">
             <SpecRow label="Стан" value={product.isNew ? "Новий" : "Вживаний"} />
             <SpecRow label="Кількість" value={`${product.quantity} шт.`} />
-            <SpecRow label="Місто" value={product.address?.city || "Не вказано"} />
+            <SpecRow label="Місто" value={product.address?.city ? toUkrainianCityName(product.address.city) : "Не вказано"} />
             <SpecRow label="Оголошення" value={product.active ? "Активне" : "Неактивне"} />
             {product.attributes.map((attribute, index) => (
               <SpecRow
@@ -72,7 +73,7 @@ export default function ProductInfoTabs({
             <MapPin aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-text-brand" />
             <div>
               <p className="font-medium text-text-primary">
-                {product.address?.city || "Місто не вказано"}
+                {product.address?.city ? toUkrainianCityName(product.address.city) : "Місто не вказано"}
               </p>
               <p className="mt-1 text-sm leading-6 text-text-secondary">
                 Уточніть із продавцем доступні варіанти доставки або зустрічі в цьому місті.
@@ -98,7 +99,7 @@ export default function ProductInfoTabs({
         </Tabs.Content>
         </Tabs.Root>
       </div>
-      <p className="flex items-center gap-2 px-5 pb-5 text-xs text-text-tertiary sm:px-8">
+      <p className="mt-4 flex items-center gap-2 px-5 pb-5 text-xs text-text-tertiary sm:mt-5 sm:px-8">
         <Sparkles aria-hidden="true" className="size-4" />
         Кожне оголошення має власну сторінку з повною інформацією про товар.
       </p>

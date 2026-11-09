@@ -8,6 +8,7 @@ import { formatRelativeTime } from "@/utils/format-relative-time";
 import { CircleCheck, Heart, Recycle, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 
 interface Props {
   card: ProductCardType;
@@ -90,7 +91,7 @@ const ProductCard = ({
           <div className="mt-auto flex min-w-0 items-center gap-2 pt-3 text-xs leading-4 text-text-tertiary sm:text-sm">
             <span className="flex min-w-0 flex-1 items-center gap-1.5">
               <PinIcon className="size-4 shrink-0 text-text-secondary" />
-              <span className="truncate">{address.city}</span>
+              <span className="truncate">{toUkrainianCityName(address.city)}</span>
             </span>
             <span className="shrink-0">{formatRelativeTime(createdAt)}</span>
           </div>
