@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
 import { useCatalogDialog } from "../../hooks/use-catalog-dialog";
 import type { CategoryOption } from "../../types/category";
-import { getCategoryIcon } from "./category-icons";
+import { CategoryIcon } from "./category-icons";
 
 interface CategoryDropdownClientProps {
   categories: CategoryOption[];
@@ -231,7 +231,6 @@ export default function CategoryDropdownClient({
                     className="grid grid-cols-[minmax(0,1fr)] gap-1"
                   >
                     {categories.map((category, index) => {
-                      const Icon = getCategoryIcon(index);
                       const isSelected = category.id === selectedCategory?.id;
 
                       return (
@@ -255,7 +254,7 @@ export default function CategoryDropdownClient({
                               className="size-6 shrink-0 object-contain"
                             />
                           ) : (
-                            <Icon aria-hidden="true" className="size-5 shrink-0" />
+                            <CategoryIcon index={index} aria-hidden="true" className="size-5 shrink-0" />
                           )}
                           <span className="min-w-0 flex-1 leading-snug break-words">
                             {category.title}

@@ -9,7 +9,7 @@ import { useMemo, useState } from "react";
 
 import { Input } from "@/components/ui/input/input";
 import type { CategoryOption } from "@/features/categories/types/category";
-import { getCategoryIcon } from "@/features/categories/components/category-dropdown/category-icons";
+import { CategoryIcon } from "@/features/categories/components/category-dropdown/category-icons";
 
 type CreateProductCategoryPickerProps = {
   categories: CategoryOption[];
@@ -28,8 +28,8 @@ function RootCategoryIcon({
   categories: CategoryOption[];
   category: CategoryOption;
 }) {
-  const Icon = getCategoryIcon(Math.max(categories.findIndex(({ id }) => id === category.id), 0));
-  return <Icon aria-hidden="true" className="size-5" />;
+  const index = Math.max(categories.findIndex(({ id }) => id === category.id), 0);
+  return <CategoryIcon index={index} aria-hidden="true" className="size-5" />;
 }
 
 export default function CreateProductCategoryPicker({
