@@ -1,29 +1,49 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
 import { useInView } from "react-intersection-observer";
-import type { SearchProductsQuery } from "@/types/product";
-import type { CategoryAttribute } from "../../types/category";
-import { useSearchProducts } from "@/features/products/hooks/use-products";
+
+import { BellIcon } from "@/assets/icons/BellIcon";
+import { FilterIcon } from "@/assets/icons/FilterIcon";
+import { Button } from "@/components/ui/button/button";
+import LoadingSpinner from "@/components/ui/loading-spinner";
+import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
 import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
-import LoadingSpinner from "@/components/ui/loading-spinner";
-import NumberInput from "@/components/ui/input/number-input";
-import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
-import CityAutocompleteInput from "@/features/products/components/CityAutocompleteInput";
-import { findOfficialCity } from "@/features/products/components/create-product/form-utils";
-import CategoryAttributeFilters, {
-  FILTER_LABEL_CLASS_NAME,
-  toAttributeFilters,
-  type AttributeFilterValue,
-} from "./CategoryAttributeFilters";
+import { useSearchProducts } from "@/features/products/hooks/use-products";
 import {
   CATEGORY_PRODUCT_SORT_VALUES,
   DEFAULT_CATEGORY_PRODUCT_SORT,
   getProductSortQuery,
   type ProductSortOption,
 } from "@/features/products/lib/product-sort";
+import { Link } from "@/i18n/navigation";
+import type { SearchProductsQuery } from "@/types/product";
+
+import type { CategoryAttribute } from "../../types/category";
+import { ActiveFilterChips } from "../category-filters/ActiveFilterChips";
+import {
+  EMPTY_FILTERS,
+  formatListingsFound,
+  getActiveFilterChips,
+  toSearchFilters,
+  type CategoryFilters,
+} from "../category-filters/category-filters";
+import { CategoryFiltersPanel } from "../category-filters/CategoryFiltersPanel";
+
+const FILTERS_DEBOUNCE_MS = 400;
+const FILTERS_PANEL_ID = "category-filters";
+
+const useDebouncedValue = <T,>(value: T, delay: number) => {
+  const [debounced, setDebounced] = useState(value);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timeout);
+  }, [value, delay]);
+
+  return debounced;
+};
 
 export default function CategoryProducts({
   categoryId,
@@ -33,57 +53,23 @@ export default function CategoryProducts({
   attributes: CategoryAttribute[];
 }) {
   const [sort, setSort] = useState<ProductSortOption>(DEFAULT_CATEGORY_PRODUCT_SORT);
-  const [isNew, setIsNew] = useState(false);
-  const [minimumPrice, setMinimumPrice] = useState("");
-  const [maximumPrice, setMaximumPrice] = useState("");
-  const [city, setCity] = useState("");
-  const [cityError, setCityError] = useState("");
-  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
-  const [attributeValues, setAttributeValues] = useState<
-    Record<string, AttributeFilterValue>
-  >({});
-  const [appliedFilters, setAppliedFilters] = useState<{
-    isNew: boolean;
-    minimumPrice: string;
-    maximumPrice: string;
-    city: string;
-    attributes: Record<string, AttributeFilterValue>;
-  }>({
-    isNew: false,
-    minimumPrice: "",
-    maximumPrice: "",
-    city: "",
-    attributes: {},
-  });
+  const [filters, setFilters] = useState<CategoryFilters>(EMPTY_FILTERS);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const appliedFilters = useDebouncedValue(filters, FILTERS_DEBOUNCE_MS);
   const { ref, inView } = useInView({ rootMargin: "300px" });
 
-  const query = useMemo<SearchProductsQuery>(() => {
-    const min = appliedFilters.minimumPrice
-      ? Number(appliedFilters.minimumPrice)
-      : undefined;
-    const max = appliedFilters.maximumPrice
-      ? Number(appliedFilters.maximumPrice)
-      : undefined;
-    const attributeFilters = toAttributeFilters(attributes, appliedFilters.attributes);
-
-    return {
+  const query = useMemo<SearchProductsQuery>(
+    () => ({
       categoryId,
       active: true,
-      ...(appliedFilters.isNew ? { isNew: true } : {}),
       sort: getProductSortQuery(sort),
-      ...(appliedFilters.city ? { addressFilter: { city: appliedFilters.city } } : {}),
-      ...(min !== undefined || max !== undefined
-        ? { priceRangeFilter: { minPrice: min, maxPrice: max } }
-        : {}),
-      ...(attributeFilters.length
-        ? { attributeFilter: { attributes: attributeFilters } }
-        : {}),
+      ...toSearchFilters(appliedFilters, attributes),
       page: 1,
       size: 20,
-    };
-  }, [appliedFilters, attributes, categoryId, sort]);
+    }),
+    [appliedFilters, attributes, categoryId, sort],
+  );
 
-  const productsQuery = useSearchProducts("", query);
   const {
     data,
     fetchNextPage,
@@ -92,7 +78,7 @@ export default function CategoryProducts({
     isFetchNextPageError,
     isFetchingNextPage,
     isLoading,
-  } = productsQuery;
+  } = useSearchProducts("", query);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {
@@ -102,170 +88,74 @@ export default function CategoryProducts({
 
   const cards = data?.pages.flatMap((page) => page.data) ?? [];
   const totalElements = data?.pages[0].metadata.totalElements;
+  const activeChips = getActiveFilterChips(filters, attributes);
 
   return (
-    <div className="mt-8 grid items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          const selectedCity = city.trim() ? findOfficialCity(city) : undefined;
-          if (city.trim() && !selectedCity) {
-            setCityError("Оберіть місто зі списку.");
-            return;
-          }
-          setCityError("");
-          setAppliedFilters({
-            isNew,
-            minimumPrice,
-            maximumPrice,
-            city: selectedCity ?? "",
-            attributes: attributeValues,
-          });
-        }}
-        className="grid gap-5 rounded-xl border border-stroke-secondary bg-surface-primary p-5 lg:sticky lg:top-24"
-      >
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-lg font-semibold text-text-primary">Фільтри</h2>
-          <button
-            type="button"
-            aria-expanded={isFiltersOpen}
-            aria-controls="category-filter-controls"
-            onClick={() => setIsFiltersOpen((open) => !open)}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-secondary"
-          >
-            {isFiltersOpen ? "Згорнути" : "Показати фільтри"}
-            <ChevronDown
-              aria-hidden="true"
-              className={`size-4 transition-transform duration-200 ${isFiltersOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-        </div>
-
-        {isFiltersOpen && (
-          <div
-            id="category-filter-controls"
-            className="grid grid-cols-1 items-start gap-5"
-          >
-            <fieldset className="grid gap-2">
-              <legend className={FILTER_LABEL_CLASS_NAME}>Ціна</legend>
-              <div className="grid grid-cols-2 gap-2">
-                <NumberInput
-                  containerClassName="min-w-0"
-                  min="0"
-                  value={minimumPrice}
-                  onValueChange={setMinimumPrice}
-                  placeholder="Від"
-                  aria-label="Ціна від"
-                />
-                <NumberInput
-                  containerClassName="min-w-0"
-                  min="0"
-                  value={maximumPrice}
-                  onValueChange={setMaximumPrice}
-                  placeholder="До"
-                  aria-label="Ціна до"
-                />
-              </div>
-            </fieldset>
-            <div>
-              <CityAutocompleteInput
-                id="category-filter-city"
-                label="Місто"
-                value={city}
-                onChange={(value) => {
-                  setCity(value);
-                  setCityError("");
-                }}
-                placeholder="Наприклад, Київ"
-              />
-              {cityError && <p role="alert" className="mt-1.5 text-xs text-text-error">{cityError}</p>}
-            </div>
-            <label className="flex items-center gap-2 pt-7 text-sm leading-5 text-text-secondary">
-              <input
-                type="checkbox"
-                checked={isNew}
-                onChange={(event) => setIsNew(event.target.checked)}
-                className="size-4 accent-surface-brand"
-              />
-              Нові товари
-            </label>
-            <CategoryAttributeFilters
-              attributes={attributes}
-              values={attributeValues}
-              onChange={(attributeId, value) =>
-                setAttributeValues((current) => ({
-                  ...current,
-                  [attributeId]: value,
-                }))
-              }
-            />
-          </div>
-        )}
-
-        {isFiltersOpen && (
-          <div className="flex flex-wrap items-center gap-3 border-t border-stroke-secondary pt-4">
-            <button
-              type="submit"
-              className="h-11 rounded-lg bg-surface-brand px-5 text-sm font-semibold text-text-invert hover:bg-surface-brand-hover"
+    <div className="mt-8 flex flex-col gap-4">
+      <div className="flex flex-col gap-4 border-b border-stroke-primary-subtle pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-lg font-medium text-text-secondary" aria-live="polite">
+            {totalElements !== undefined && formatListingsFound(totalElements)}
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              variant="outline"
+              className="lg:hidden"
+              aria-expanded={isMobileFiltersOpen}
+              aria-controls={FILTERS_PANEL_ID}
+              onClick={() => setIsMobileFiltersOpen((open) => !open)}
             >
-              Показати товари
-            </button>
-            <button
-              type="button"
-              className="rounded-lg px-4 py-2 text-sm font-medium text-text-secondary hover:bg-surface-secondary hover:text-text-primary"
-              onClick={() => {
-                setIsNew(false);
-                setMinimumPrice("");
-                setMaximumPrice("");
-                setCity("");
-                setCityError("");
-                setAttributeValues({});
-                setAppliedFilters({
-                  isNew: false,
-                  minimumPrice: "",
-                  maximumPrice: "",
-                  city: "",
-                  attributes: {},
-                });
-              }}
-            >
-              Очистити фільтри
-            </button>
-          </div>
-        )}
-      </form>
-
-      <div className="min-w-0">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            {totalElements !== undefined && (
-              <p className="text-sm text-text-secondary">
-                Знайдено товарів: {totalElements}
-              </p>
-            )}
-          </div>
-          {totalElements !== 0 && (
+              <FilterIcon size={16} />
+              Фільтри{activeChips.length > 0 && ` · ${activeChips.length}`}
+            </Button>
             <ProductSortSelect
               value={sort}
               onChange={setSort}
               sortValues={CATEGORY_PRODUCT_SORT_VALUES}
             />
+            {/* TODO: prefill the auto-search form with the current category and filters. */}
+            <Button asChild variant="outline">
+              <Link href="/auto-search">
+                <BellIcon size={16} />
+                Стежити за пошуком
+              </Link>
+            </Button>
+          </div>
+        </div>
+        <ActiveFilterChips
+          chips={activeChips}
+          filters={filters}
+          onChange={setFilters}
+          onClearAll={() => setFilters(EMPTY_FILTERS)}
+        />
+      </div>
+
+      <div className="grid items-start gap-6 lg:grid-cols-[311px_minmax(0,1fr)]">
+        <div className={isMobileFiltersOpen ? "block" : "hidden lg:block"}>
+          <CategoryFiltersPanel
+            id={FILTERS_PANEL_ID}
+            filters={filters}
+            attributes={attributes}
+            onChange={setFilters}
+          />
+        </div>
+
+        <div className="min-w-0">
+          {isError && !data ? (
+            <p className="text-sm text-text-secondary">Не вдалося завантажити товари.</p>
+          ) : totalElements === 0 ? (
+            <p className="py-12 text-center text-text-secondary">
+              За цими фільтрами товарів не знайдено.
+            </p>
+          ) : (
+            <ProductCardsGrid cards={cards} isLoading={isLoading} />
+          )}
+          <div ref={ref} className="h-px" aria-hidden="true" />
+          {isFetchingNextPage && <LoadingSpinner />}
+          {isFetchNextPageError && (
+            <NextPageFetchError onRetry={() => void fetchNextPage()} />
           )}
         </div>
-        {isError && !data ? (
-          <p className="text-sm text-text-secondary">Не вдалося завантажити товари.</p>
-        ) : totalElements === 0 ? (
-          <p className="py-12 text-center text-text-secondary">
-            За цими фільтрами товарів не знайдено.
-          </p>
-        ) : (
-          <ProductCardsGrid cards={cards} isLoading={isLoading} />
-        )}
-        <div ref={ref} className="h-px" aria-hidden="true" />
-        {isFetchingNextPage && <LoadingSpinner />}
-        {isFetchNextPageError && (
-          <NextPageFetchError onRetry={() => void fetchNextPage()} />
-        )}
       </div>
     </div>
   );
