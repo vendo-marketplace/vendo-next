@@ -30,7 +30,7 @@ export function getInputClassName({
 }: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
     "flex group items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary-subtle shadow-xs transition-colors focus-within:border-stroke-brand focus-within:shadow-focus-input has-disabled:bg-surface-tertiary",
-    invalid && "border-stroke-error focus-within:border-stroke-error",
+    invalid && "border-stroke-error focus-within:border-stroke-error focus-within:shadow-xs",
     inputVariants.size[size],
   );
 }
@@ -58,8 +58,8 @@ export function Input({
         <div
           data-slot="input-start"
           className={cn(
-            "flex justify-center shrink-0 items-center size-4 text-text-tertiary group-focus-within:text-text-brand",
-            invalid && "text-text-error",
+            "flex justify-center shrink-0 items-center size-4 text-text-tertiary",
+            !invalid && "group-focus-within:text-text-brand",
           )}
         >
           {start}
@@ -73,20 +73,17 @@ export function Input({
         aria-invalid={invalid || undefined}
         className={cn(
           "w-full placeholder:font-normal placeholder:text-text-placeholder outline-none font-medium text-text-primary text-sm disabled:font-normal disabled:text-text-tertiary disabled:cursor-not-allowed",
-          invalid && "text-text-error",
           className,
         )}
       />
 
       {clearable && value && (
         <button
-          aria-label="Clear input"
+          aria-label="Очистити поле"
           type="button"
+          tabIndex={-1}
           onClick={onClear}
-          className={cn(
-            "size-4 flex justify-center items-center text-text-secondary group-focus-within:text-text-brand",
-            invalid && "text-text-error",
-          )}
+          className="size-4 flex justify-center items-center text-text-secondary hover:text-text-primary"
         >
           <CrossIcon />
         </button>
@@ -96,8 +93,8 @@ export function Input({
         <div
           data-slot="input-end"
           className={cn(
-            "flex shrink-0 items-center justify-center text-text-secondary group-focus-within:text-text-brand",
-            invalid && "text-text-error",
+            "flex shrink-0 items-center justify-center text-text-secondary",
+            !invalid && "group-focus-within:text-text-brand",
           )}
         >
           {end}

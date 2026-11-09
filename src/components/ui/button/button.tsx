@@ -53,7 +53,7 @@ export function getButtonClassName({
   className,
 }: Pick<ButtonProps, "variant" | "size" | "className"> = {}) {
   return cn(
-    "cursor-pointer w-fit font-medium outline-0 inline-flex rounded-lg items-center justify-center shrink-0 whitespace-nowrap gap-2 transition-colors disabled:bg-surface-tertiary disabled:border-stroke-secondary disabled:text-text-tertiary disabled:shadow-xs disabled:cursor-not-allowed",
+    "cursor-pointer w-fit font-semibold outline-0 focus-visible:outline-2 focus-visible:outline-offset-2 inline-flex rounded-lg items-center justify-center shrink-0 whitespace-nowrap gap-2 transition-colors disabled:bg-surface-tertiary disabled:border-stroke-secondary disabled:text-text-tertiary disabled:shadow-xs disabled:cursor-not-allowed",
     buttonVariants.size[size],
     buttonVariants.variants[variant],
     className,

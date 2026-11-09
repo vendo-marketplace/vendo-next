@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const SignUpPage = () => (
-  <AuthPageWrapper>
+  <AuthPageWrapper showHeaderLogo={false}>
     <AuthPage activeTab="sign-up" />
   </AuthPageWrapper>
 );

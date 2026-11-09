@@ -45,7 +45,7 @@ export function ForgotPasswordForm({
   };
 
   return (
-    <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-4" noValidate onSubmit={handleSubmit(onSubmit)}>
       <FormField
         id="forgot-password-email"
         label="Електронна пошта"
@@ -67,7 +67,7 @@ export function ForgotPasswordForm({
         )}
       </FormField>
 
-      <Button className="w-full" type="submit" disabled={isPending}>
+      <Button className="mt-2 w-full" type="submit" disabled={isPending}>
         {isPending ? "Надсилання..." : "Надіслати посилання"}
       </Button>
     </form>

@@ -10,6 +10,7 @@ type FieldControlProps = {
 type FormFieldProps = {
   id: string;
   label: React.ReactNode;
+  labelAction?: React.ReactNode;
   error?: React.ReactNode;
   required?: boolean;
   children: (props: FieldControlProps) => React.ReactNode;
@@ -18,6 +19,7 @@ type FormFieldProps = {
 export const FormField = ({
   id,
   label,
+  labelAction,
   error,
   required,
   children,
@@ -27,9 +29,12 @@ export const FormField = ({
 
   return (
     <div className="flex flex-col gap-3">
-      <Label htmlFor={id} required={required}>
-        {label}
-      </Label>
+      <div className="flex items-center justify-between gap-4">
+        <Label htmlFor={id} required={required}>
+          {label}
+        </Label>
+        {labelAction}
+      </div>
 
       <div className="flex flex-col w-full gap-1">
         {children({
@@ -40,7 +45,7 @@ export const FormField = ({
         })}
 
         {error && (
-          <p id={errorId} role="alert" className="text-sm text-text-error">
+          <p id={errorId} role="alert" className="text-xs text-text-error">
             {error}
           </p>
         )}

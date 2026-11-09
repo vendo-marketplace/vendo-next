@@ -13,10 +13,10 @@ export function AuthContentHeader({
 }: AuthContentHeaderProps) {
   return (
     <div className={`space-y-1 ${className}`}>
-      <h1 className="text-[24px] leading-7.5 font-semibold text-text-primary">
+      <h1 className="text-display-xs font-semibold text-text-primary sm:text-display-sm">
         {title}
       </h1>
-      <p className="text-[16px] leading-6 font-normal text-text-tertiary">
+      <p className="text-md text-text-secondary">
         {description}
       </p>
     </div>

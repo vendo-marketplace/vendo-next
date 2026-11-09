@@ -45,7 +45,7 @@ export function ResetPasswordForm({
   };
 
   return (
-    <form className="space-y-4" noValidate onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-4" noValidate onSubmit={handleSubmit(onSubmit)}>
       <FormField
         id="reset-password"
         label="Пароль"
@@ -66,7 +66,7 @@ export function ResetPasswordForm({
         )}
       </FormField>
 
-      <Button className="w-full" type="submit" disabled={isPending}>
+      <Button className="mt-2 w-full" type="submit" disabled={isPending}>
         {isPending ? "Збереження..." : "Підтвердити"}
       </Button>
     </form>

@@ -43,7 +43,7 @@ export function AccountCompletionForm({
   };
 
   return (
-    <form className="space-y-4" noValidate onSubmit={handleSubmit(onSuccess)}>
+    <form className="flex flex-col gap-4" noValidate onSubmit={handleSubmit(onSuccess)}>
       <FormField
         id="account-completion-full-name"
         label="Ім’я"
@@ -64,7 +64,7 @@ export function AccountCompletionForm({
         )}
       </FormField>
 
-      <Button className="w-full" type="submit" disabled={isSubmitting}>
+      <Button className="mt-2 w-full" type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Збереження..." : "Увійти в акаунт"}
       </Button>
     </form>
