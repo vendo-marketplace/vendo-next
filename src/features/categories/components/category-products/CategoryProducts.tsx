@@ -331,7 +331,7 @@ export default function CategoryProducts({
           <div className="flex flex-wrap items-center gap-3 border-t border-stroke-secondary pt-4">
             <button
               type="submit"
-              className="h-11 rounded-lg bg-surface-brand px-5 text-sm font-semibold text-text-invert hover:bg-surface-hover"
+              className="h-11 rounded-lg bg-surface-brand px-5 text-sm font-semibold text-text-invert hover:bg-surface-brand-hover"
             >
               Показати товари
             </button>

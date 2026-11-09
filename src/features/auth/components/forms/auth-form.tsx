@@ -50,7 +50,7 @@ export function AuthForm({ activeTab }: AuthFormProps) {
             className={cn(
               getButtonClassName({
                 className: "flex-1 border-0",
-                variant: activeTab === "sign-in" ? "brand" : "secondary",
+                variant: activeTab === "sign-in" ? "brand" : "outline",
               }),
               activeTab === "sign-up" && "bg-transparent",
             )}
@@ -64,7 +64,7 @@ export function AuthForm({ activeTab }: AuthFormProps) {
             className={cn(
               getButtonClassName({
                 className: "flex-1 border-0",
-                variant: activeTab === "sign-up" ? "brand" : "secondary",
+                variant: activeTab === "sign-up" ? "brand" : "outline",
               }),
               activeTab === "sign-in" && "bg-transparent",
             )}

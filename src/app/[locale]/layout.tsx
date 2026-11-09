@@ -6,14 +6,13 @@ import Providers from "@/providers/Providers";
 import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
-import { Montserrat, Montserrat_Alternates } from "next/font/google";
+import { Manrope, Montserrat_Alternates } from "next/font/google";
 import type { ReactNode } from "react";
 import "../globals.css";
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -65,7 +64,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${montserrat.variable} ${montserratAlternates.variable}`} suppressHydrationWarning>
+    <html lang={locale} className={`${manrope.variable} ${montserratAlternates.variable}`} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-surface-secondary text-text-primary antialiased">
         <NextIntlClientProvider messages={messages}>
           <Providers>

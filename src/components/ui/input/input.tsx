@@ -5,8 +5,8 @@ const inputVariants = {
   size: {
     sm: "p-2",
     base: "",
-    lg: "py-3 px-3.5 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
-    xl: "py-3.5 px-4 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
+    lg: "py-3 px-3.5 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-md",
+    xl: "py-3.5 px-4 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-md",
   },
 } as const;
 
@@ -29,8 +29,8 @@ export function getInputClassName({
   invalid,
 }: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
-    "flex group focus-within:border-stroke-brand items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
-    invalid && "border-stroke-error",
+    "flex group items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary-subtle shadow-xs transition-colors focus-within:border-stroke-brand focus-within:shadow-focus-input has-disabled:bg-surface-tertiary",
+    invalid && "border-stroke-error focus-within:border-stroke-error",
     inputVariants.size[size],
   );
 }
@@ -72,8 +72,8 @@ export function Input({
         disabled={disabled}
         aria-invalid={invalid || undefined}
         className={cn(
-          "w-full placeholder:text-text-placeholder outline-none text-text-primary text-[14px] leading-5",
-          invalid && "border-stroke-error focus-within:border-stroke-error",
+          "w-full placeholder:font-normal placeholder:text-text-placeholder outline-none font-medium text-text-primary text-sm disabled:font-normal disabled:text-text-tertiary disabled:cursor-not-allowed",
+          invalid && "text-text-error",
           className,
         )}
       />

@@ -125,7 +125,7 @@ export default function CreateProductAttributes({
   onChange,
 }: CreateProductAttributesProps) {
   return (
-    <div className="rounded-xl bg-[#fafbfc] p-4 sm:p-5">
+    <div className="rounded-xl bg-surface-secondary p-4 sm:p-5">
       <p className="mb-4 text-sm font-medium">
         Характеристики <span className="text-xs font-normal text-text-tertiary">для {categoryTitle}</span>
       </p>

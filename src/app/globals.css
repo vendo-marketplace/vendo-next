@@ -5,16 +5,101 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  /* Primitive palette — Figma "Colors & Typography" */
+  --color-brand-50: #edf6ff;
+  --color-brand-100: #d7eaff;
+  --color-brand-200: #b9dbff;
+  --color-brand-300: #88c6ff;
+  --color-brand-400: #50a6ff;
+  --color-brand-500: #2881ff;
+  --color-brand-600: #105fff;
+  --color-brand-700: #0a49eb;
+  --color-brand-800: #0f3bbe;
+  --color-brand-900: #133795;
+  --color-brand-950: #11235a;
+
+  --color-sky-50: #f0f9ff;
+  --color-sky-100: #e0f2fe;
+  --color-sky-200: #bae6fd;
+  --color-sky-300: #7dd3fc;
+  --color-sky-400: #38bdf8;
+  --color-sky-500: #0ea5e9;
+  --color-sky-600: #0284c7;
+  --color-sky-700: #0369a1;
+  --color-sky-800: #075985;
+  --color-sky-900: #0c4a6e;
+  --color-sky-950: #082f49;
+
+  --color-purple-50: #f9f5ff;
+  --color-purple-100: #f1e7ff;
+  --color-purple-200: #e6d4ff;
+  --color-purple-300: #d3b2ff;
+  --color-purple-400: #bb87ff;
+  --color-purple-500: #9d51fb;
+  --color-purple-600: #862eef;
+  --color-purple-700: #721ed2;
+  --color-purple-800: #621eab;
+  --color-purple-900: #50198a;
+  --color-purple-950: #350566;
+
+  --color-neutral-50: #ffffff;
+  --color-neutral-100: #f9f9f9;
+  --color-neutral-200: #efefef;
+  --color-neutral-300: #bdbdbd;
+  --color-neutral-400: #989898;
+  --color-neutral-500: #7c7c7c;
+  --color-neutral-600: #656565;
+  --color-neutral-700: #525252;
+  --color-neutral-800: #464646;
+  --color-neutral-900: #3d3d3d;
+  --color-neutral-950: #292929;
+
+  --color-red-50: #fff1f1;
+  --color-red-100: #ffdfe0;
+  --color-red-200: #ffc4c5;
+  --color-red-300: #ff9a9c;
+  --color-red-400: #ff6164;
+  --color-red-500: #ff2f34;
+  --color-red-600: #ef0d12;
+  --color-red-700: #cc090d;
+  --color-red-800: #a80c0f;
+  --color-red-900: #8b1114;
+  --color-red-950: #4c0305;
+
+  --color-orange-50: #fffaec;
+  --color-orange-100: #fff4d3;
+  --color-orange-200: #ffe5a5;
+  --color-orange-300: #ffd16d;
+  --color-orange-400: #ffb132;
+  --color-orange-500: #ff980a;
+  --color-orange-600: #fa7d00;
+  --color-orange-700: #cc5d02;
+  --color-orange-800: #a1480b;
+  --color-orange-900: #823d0c;
+  --color-orange-950: #461c04;
+
+  --color-green-50: #f4ffe4;
+  --color-green-100: #e5ffc4;
+  --color-green-200: #ccff90;
+  --color-green-300: #a8ff50;
+  --color-green-400: #86fe1d;
+  --color-green-500: #65e500;
+  --color-green-600: #4cb800;
+  --color-green-700: #44a202;
+  --color-green-800: #306d07;
+  --color-green-900: #2a5c0b;
+  --color-green-950: #123400;
+
   /* Semantic color tokens */
   --color-surface-brand: #105fff;
+  --color-surface-brand-hover: #0a49eb;
   --color-surface-brand-subtle: #edf6ff;
   --color-surface-primary: #ffffff;
-  --color-surface-primary-subtle: #f3f4f6;
-  --color-surface-tertiary: #efefef;
-  --color-surface-secondary: #fcfcfc;
+  --color-surface-primary-subtle: #f3f3f3;
+  --color-surface-secondary: #f9f9f9;
   --color-surface-secondary-brand: #edf6ff;
+  --color-surface-tertiary: #efefef;
   --color-surface-invert: #3d3d3d;
-  --color-surface-hover: #0a49eb;
   --color-surface-success: #008236;
   --color-surface-success-hover: #016630;
   --color-surface-success-subtle: #f0fdf4;
@@ -22,8 +107,8 @@
   --color-surface-error-hover: #cc090d;
   --color-surface-error-subtle: #fff1f1;
   --color-surface-warning: #ff980a;
-  --color-surface-warning-subtle: #fffaec;
   --color-surface-warning-hover: #fa7d00;
+  --color-surface-warning-subtle: #fffaec;
 
   --color-text-primary: #292929;
   --color-text-secondary: #656565;
@@ -39,7 +124,7 @@
   --color-text-success: #008236;
 
   --color-stroke-primary: #bdbdbd;
-  --color-stroke-primary-subtle: #e5e7eb;
+  --color-stroke-primary-subtle: #e3e3e3;
   --color-stroke-secondary: #efefef;
   --color-stroke-tertiary: #989898;
   --color-stroke-brand: #105fff;
@@ -52,6 +137,37 @@
   --color-stroke-warning: #ff980a;
   --color-stroke-warning-subtle: #ffe5a5;
 
+  /* Shadows — Figma effect styles */
+  --shadow-xs: 0 1px 0.5px 0.05px #1d293d05;
+  --shadow-sm: 0 1px 2px 0 #1d293d0d;
+  --shadow-md: 0 4px 6px -1px #1d293d1a, 0 2px 4px -2px #1d293d1a;
+  --shadow-lg: 0 10px 15px -3px #1d293d1a, 0 4px 6px -4px #1d293d1a;
+  --shadow-focus-secondary: 0 0 0 2px var(--color-surface-brand-subtle);
+  --shadow-focus-brand: 0 0 0 2px var(--color-stroke-brand-subtle);
+  --shadow-focus-input: 0 4px 1px rgb(224 242 254 / 0.6);
+
+  /* Typography — Figma "Typography — Vendo" */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.125rem;
+  --text-md: 1rem;
+  --text-md--line-height: 1.5rem;
+
+  --text-display-xs: 1.5rem;
+  --text-display-xs--line-height: 2rem;
+  --text-display-sm: 1.875rem;
+  --text-display-sm--line-height: 2.375rem;
+  --text-display-md: 2.25rem;
+  --text-display-md--line-height: 2.75rem;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-display-lg: 3rem;
+  --text-display-lg--line-height: 3.75rem;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-xl: 3.75rem;
+  --text-display-xl--line-height: 4.5rem;
+  --text-display-xl--letter-spacing: -0.02em;
+  --text-display-2xl: 4.5rem;
+  --text-display-2xl--line-height: 5.625rem;
+  --text-display-2xl--letter-spacing: -0.02em;
 }
 
 @layer base {
@@ -76,7 +192,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-montserrat), sans-serif;
+  --font-sans: var(--font-manrope), sans-serif;
   --font-heading: var(--font-montserrat-alternates), sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -109,13 +225,6 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
@@ -142,7 +251,7 @@
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);

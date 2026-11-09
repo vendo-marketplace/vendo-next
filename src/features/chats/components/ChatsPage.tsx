@@ -92,7 +92,7 @@ const getSessionSnapshot = (): boolean | null =>
 
 function ParticipantAvatar({
   label,
-  color = "bg-blue-100 text-blue-700",
+  color = "bg-surface-brand-subtle text-text-brand",
   size = "size-11",
 }: {
   label: string;
@@ -266,7 +266,7 @@ function ConversationList({
               >
                 <ParticipantAvatar
                   label={role}
-                  color={isSeller ? "bg-violet-100 text-violet-700" : "bg-blue-100 text-blue-700"}
+                  color={isSeller ? "bg-purple-100 text-purple-700" : "bg-surface-brand-subtle text-text-brand"}
                 />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center justify-between gap-2">
@@ -392,7 +392,7 @@ function MessageHistory({
 
         if (container.scrollTop <= 80) void loadMoreMessages();
       }}
-      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-[#f8fafc] px-4 py-5 sm:px-8"
+      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-surface-secondary px-4 py-5 sm:px-8"
     >
       {isLoading ? (
         <LoadingSpinner />
@@ -435,7 +435,7 @@ function MessageHistory({
                   (showAvatar ? (
                     <ParticipantAvatar
                       label={peerRole}
-                      color="bg-blue-100 text-blue-700"
+                      color="bg-surface-brand-subtle text-text-brand"
                       size="size-7"
                     />
                   ) : (
@@ -792,7 +792,7 @@ export default function ChatsPage() {
                 </button>
                 <ParticipantAvatar
                   label={peerRole}
-                  color={peerIsSeller ? "bg-blue-100 text-blue-700" : "bg-violet-100 text-violet-700"}
+                  color={peerIsSeller ? "bg-surface-brand-subtle text-text-brand" : "bg-purple-100 text-purple-700"}
                   size="size-10"
                 />
                 <div className="min-w-0">
@@ -811,7 +811,7 @@ export default function ChatsPage() {
                     onClick={deleteConversation}
                     disabled={removeMutation.isPending}
                     aria-label="Видалити розмову"
-                    className="flex size-9 items-center justify-center rounded-full text-text-secondary hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                    className="flex size-9 items-center justify-center rounded-full text-text-secondary hover:bg-surface-error-subtle hover:text-text-error disabled:opacity-50"
                   >
                     <Trash2 className="size-[18px]" />
                   </button>

@@ -22,7 +22,7 @@ const Header = () => {
           <HeaderFavoritesLink />
           <Button
             asChild
-            variant="secondary"
+            variant="outline"
             aria-label="Повідомлення"
             className="hidden size-8 border-0 p-0 sm:inline-flex"
           >

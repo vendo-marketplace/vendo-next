@@ -190,7 +190,7 @@ export default function CategoryDropdownClient({
     <>
       <div ref={triggerRef} className="w-fit">
         <Button
-          variant="secondary"
+          variant="outline"
           title="Каталог товарів"
           aria-haspopup="dialog"
           aria-expanded={isOpen}

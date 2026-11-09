@@ -46,7 +46,7 @@ export function GoogleLoginButton({ label }: GoogleLoginButtonProps) {
 
   return (
     <Button
-      variant="secondary"
+      variant="outline"
       className="w-full text-[14px] leading-5"
       disabled={isPending}
       onClick={() => requestGoogleAuthCode()}

@@ -99,7 +99,7 @@ export default function HomeHero() {
         </div>
 
         <Button
-          variant="secondary"
+          variant="outline"
           size="none"
           aria-label="Попередній слайд"
           className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full size-10 p-0 "
@@ -108,7 +108,7 @@ export default function HomeHero() {
           <ChevronLeftIcon className="size-4" />
         </Button>
         <Button
-          variant="secondary"
+          variant="outline"
           size="none"
           aria-label="Наступний слайд"
           className="absolute top-1/2 right-3 -translate-y-1/2 size-10 p-0 rounded-full "

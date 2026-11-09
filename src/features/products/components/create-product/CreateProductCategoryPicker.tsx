@@ -79,7 +79,7 @@ export default function CreateProductCategoryPicker({
       </p>
 
       {selectedCategory && !isOpen ? (
-        <div className="flex flex-col gap-3 rounded-xl border border-stroke-primary-subtle bg-[#fbfcff] p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-xl border border-stroke-primary-subtle bg-surface-secondary p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-text-primary">
               {selectedCategory.title}
@@ -172,9 +172,9 @@ export default function CreateProductCategoryPicker({
                   key={category.id}
                   type="button"
                   onClick={() => selectCategory(category)}
-                  className="flex h-16 w-full shrink-0 items-center gap-3 rounded-lg px-3 text-left transition hover:bg-[#f4f7fc] focus-visible:bg-[#f4f7fc]"
+                  className="flex h-16 w-full shrink-0 items-center gap-3 rounded-lg px-3 text-left transition hover:bg-surface-secondary focus-visible:bg-surface-secondary"
                 >
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#f1f5fb] text-text-brand">
+                  <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface-brand-subtle text-text-brand">
                     <Tag aria-hidden="true" className="size-4" />
                   </span>
                   <span className="min-w-0 flex-1">

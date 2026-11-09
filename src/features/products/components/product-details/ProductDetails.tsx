@@ -110,7 +110,7 @@ export default function ProductDetails({
             Спробувати ще раз
           </button>
         )}
-        <Button asChild variant="secondary" className="mx-auto mt-6">
+        <Button asChild variant="outline" className="mx-auto mt-6">
           <Link href="/">
             <ArrowLeft aria-hidden="true" className="size-4" />
             До каталогу
@@ -217,7 +217,7 @@ function ProductPageContent({
     <section className="mx-auto w-full max-w-330 px-4 py-6 sm:py-9">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(340px,0.8fr)] lg:gap-8">
         <div className="min-w-0">
-          <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)] sm:aspect-[16/11]">
+          <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-sm sm:aspect-[16/11]">
             {image ? (
               <Image
                 src={image}
@@ -285,7 +285,7 @@ function ProductPageContent({
           )}
         </div>
 
-        <aside className="h-fit rounded-2xl border border-stroke-secondary bg-surface-primary p-5 shadow-[0_2px_12px_rgba(20,31,54,0.04)] sm:p-7 lg:sticky lg:top-24">
+        <aside className="h-fit rounded-2xl border border-stroke-secondary bg-surface-primary p-5 shadow-sm sm:p-7 lg:sticky lg:top-24">
           <p className="text-xs text-text-tertiary">
             Опубліковано {formatPublishedDate(product.createdAt) || formatRelativeTime(product.createdAt)}
           </p>
@@ -296,7 +296,7 @@ function ProductPageContent({
             </h1>
             <div className="flex shrink-0 items-center gap-2">
               <Button
-                variant="secondary"
+                variant="outline"
                 aria-label="Поділитися товаром"
                 onClick={shareProduct}
                 className="size-10 rounded-full border-0 bg-surface-brand-subtle p-0 text-text-brand shadow-none hover:bg-surface-brand-subtle"
@@ -304,7 +304,7 @@ function ProductPageContent({
                 <Share2 aria-hidden="true" className="size-4" />
               </Button>
               <Button
-                variant="secondary"
+                variant="outline"
                 aria-label={favorite ? "Прибрати з обраного" : "Додати в обране"}
                 aria-pressed={favorite}
                 disabled={favoriteDisabled}
@@ -350,7 +350,7 @@ function ProductPageContent({
                 Купити
               </Button>
               <Button
-                variant="secondary"
+                variant="outline"
                 onClick={() => openChat()}
                 disabled={!product.active}
                 className="h-12 w-full min-w-0 px-2 text-sm sm:px-4"
@@ -363,7 +363,7 @@ function ProductPageContent({
         </aside>
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)]">
+      <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-sm">
         <Tabs.Root defaultValue="description">
           <Tabs.List
             aria-label="Інформація про товар"

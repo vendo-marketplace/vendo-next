@@ -216,9 +216,9 @@ export default function CreateProductForm({
 
   if (!user) {
     return (
-      <div className="min-h-[calc(100vh-5rem)] bg-[#f7f8fa] px-4 py-16 sm:px-6">
+      <div className="min-h-[calc(100vh-5rem)] bg-surface-secondary px-4 py-16 sm:px-6">
         <div className="mx-auto max-w-lg rounded-2xl border border-stroke-primary-subtle bg-white p-8 text-center shadow-sm sm:p-10">
-          <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[#edf4ff] text-text-brand">
+          <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-surface-brand-subtle text-text-brand">
             <Tag aria-hidden="true" className="size-6" />
           </div>
           <h1 className="text-2xl font-semibold">Увійдіть, щоб створити оголошення</h1>
@@ -237,7 +237,7 @@ export default function CreateProductForm({
   }
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] bg-[#f7f8fa] px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-5rem)] bg-surface-secondary px-4 pb-16 pt-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <Link
           href="/"
@@ -277,9 +277,9 @@ export default function CreateProductForm({
               onRemove={removeImage}
             />
 
-            <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-[0_4px_24px_rgba(20,31,54,0.03)] sm:p-7">
+            <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-sm sm:p-7">
               <div className="mb-6 flex gap-3.5">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-text-brand">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-brand-subtle text-text-brand">
                   <Tag aria-hidden="true" className="size-5" />
                 </div>
                 <div>
@@ -339,9 +339,9 @@ export default function CreateProductForm({
               </div>
             </section>
 
-            <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-[0_4px_24px_rgba(20,31,54,0.03)] sm:p-7">
+            <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-sm sm:p-7">
               <div className="mb-6 flex gap-3.5">
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-text-brand">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-brand-subtle text-text-brand">
                   <span className="text-lg font-semibold">₴</span>
                 </div>
                 <div>
@@ -426,7 +426,7 @@ export default function CreateProductForm({
             )}
 
             <div className="flex flex-col-reverse gap-3 border-t border-stroke-primary-subtle pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <Button asChild variant="secondary" className="w-full sm:w-auto">
+              <Button asChild variant="outline" className="w-full sm:w-auto">
                 <Link href="/">
                   <ArrowLeft aria-hidden="true" className="size-4" />
                   Повернутися
