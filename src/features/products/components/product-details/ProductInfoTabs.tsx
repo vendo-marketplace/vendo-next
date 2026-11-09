@@ -1,4 +1,4 @@
-import { MapPin, Sparkles, UserRound } from "lucide-react";
+import { MapPin, UserRound } from "lucide-react";
 import { Tabs } from "radix-ui";
 
 import type { CategoryAttribute } from "@/features/categories/types/category";
@@ -19,9 +19,8 @@ export default function ProductInfoTabs({
   categoryAttributes,
 }: Props) {
   return (
-    <>
-      <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)]">
-        <Tabs.Root defaultValue="description">
+    <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)]">
+      <Tabs.Root defaultValue="description">
         <Tabs.List
           aria-label="Інформація про товар"
           className="flex gap-1 overflow-x-auto border-b border-stroke-secondary px-2 sm:px-4"
@@ -97,13 +96,8 @@ export default function ProductInfoTabs({
             </div>
           </div>
         </Tabs.Content>
-        </Tabs.Root>
-      </div>
-      <p className="mt-4 flex items-center gap-2 px-5 pb-5 text-xs text-text-tertiary sm:mt-5 sm:px-8">
-        <Sparkles aria-hidden="true" className="size-4" />
-        Кожне оголошення має власну сторінку з повною інформацією про товар.
-      </p>
-    </>
+      </Tabs.Root>
+    </div>
   );
 }
 

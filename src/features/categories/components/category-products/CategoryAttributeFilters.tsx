@@ -16,6 +16,9 @@ export const EMPTY_ATTRIBUTE_FILTER: AttributeFilterValue = {
 export const FILTER_LABEL_CLASS_NAME =
   "text-sm font-medium leading-5 text-text-primary";
 
+// A <legend> sits outside its fieldset's grid, so the grid gap doesn't space it from the fields.
+export const FILTER_LEGEND_CLASS_NAME = `mb-2 ${FILTER_LABEL_CLASS_NAME}`;
+
 type Props = {
   attributes: CategoryAttribute[];
   values: Record<string, AttributeFilterValue>;
@@ -34,7 +37,7 @@ function AttributeControl({
   if (attribute.type === "ENUM") {
     return (
       <fieldset className="grid gap-2">
-        <legend className={FILTER_LABEL_CLASS_NAME}>{attribute.title}</legend>
+        <legend className={FILTER_LEGEND_CLASS_NAME}>{attribute.title}</legend>
         {(attribute.allowedValues ?? []).map((option) => (
           <label
             key={option}
@@ -85,7 +88,7 @@ function AttributeControl({
   if (attribute.type === "RANGE") {
     return (
       <fieldset className="grid gap-2">
-        <legend className={FILTER_LABEL_CLASS_NAME}>{attribute.title}</legend>
+        <legend className={FILTER_LEGEND_CLASS_NAME}>{attribute.title}</legend>
         <div className="grid grid-cols-2 gap-2">
           <NumberInput
             containerClassName="min-w-0"

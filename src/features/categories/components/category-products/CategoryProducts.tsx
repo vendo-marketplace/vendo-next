@@ -14,7 +14,7 @@ import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
 import CityAutocompleteInput from "@/features/products/components/CityAutocompleteInput";
 import { findOfficialCity } from "@/features/products/components/create-product/form-utils";
 import CategoryAttributeFilters, {
-  FILTER_LABEL_CLASS_NAME,
+  FILTER_LEGEND_CLASS_NAME,
   toAttributeFilters,
   type AttributeFilterValue,
 } from "./CategoryAttributeFilters";
@@ -104,7 +104,7 @@ export default function CategoryProducts({
   const totalElements = data?.pages[0].metadata.totalElements;
 
   return (
-    <div className="mt-8 grid items-start gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
+    <div className="mt-8 grid items-start gap-8 lg:grid-cols-[300px_minmax(0,1fr)]">
       <form
         onSubmit={(event) => {
           event.preventDefault();
@@ -147,7 +147,7 @@ export default function CategoryProducts({
             className="grid grid-cols-1 items-start gap-5"
           >
             <fieldset className="grid gap-2">
-              <legend className={FILTER_LABEL_CLASS_NAME}>Ціна</legend>
+              <legend className={FILTER_LEGEND_CLASS_NAME}>Ціна</legend>
               <div className="grid grid-cols-2 gap-2">
                 <NumberInput
                   containerClassName="min-w-0"
@@ -177,10 +177,11 @@ export default function CategoryProducts({
                   setCityError("");
                 }}
                 placeholder="Наприклад, Київ"
+                anyCityLabel="Уся Україна"
               />
               {cityError && <p role="alert" className="mt-1.5 text-xs text-text-error">{cityError}</p>}
             </div>
-            <label className="flex items-center gap-2 pt-7 text-sm leading-5 text-text-secondary">
+            <label className="flex items-center gap-2 text-sm leading-5 text-text-secondary">
               <input
                 type="checkbox"
                 checked={isNew}
