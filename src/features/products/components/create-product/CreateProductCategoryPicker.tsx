@@ -9,7 +9,7 @@ import { useMemo, useState } from "react";
 
 import { Input } from "@/components/ui/input/input";
 import type { CategoryOption } from "@/features/categories/types/category";
-import { getCategoryIcon } from "@/features/categories/components/category-dropdown/category-icons";
+import { CategoryIcon } from "@/features/categories/components/category-dropdown/category-icons";
 
 type CreateProductCategoryPickerProps = {
   categories: CategoryOption[];
@@ -28,8 +28,8 @@ function RootCategoryIcon({
   categories: CategoryOption[];
   category: CategoryOption;
 }) {
-  const Icon = getCategoryIcon(Math.max(categories.findIndex(({ id }) => id === category.id), 0));
-  return <Icon aria-hidden="true" className="size-5" />;
+  const index = Math.max(categories.findIndex(({ id }) => id === category.id), 0);
+  return <CategoryIcon index={index} aria-hidden="true" className="size-5" />;
 }
 
 export default function CreateProductCategoryPicker({
@@ -91,9 +91,9 @@ export default function CreateProductCategoryPicker({
       </p>
 
       {selectedCategory && !isOpen ? (
-        <div className="flex flex-col gap-3 rounded-xl border border-stroke-primary-subtle bg-[#fbfcff] p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-xl border border-stroke-primary-subtle bg-surface-secondary p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#f1f5fb] text-text-brand">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-surface-brand-subtle text-text-brand">
               {selectedRootCategory?.image ? (
                 <Image
                   src={selectedRootCategory.image.url}
@@ -205,10 +205,10 @@ export default function CreateProductCategoryPicker({
                   key={category.id}
                   type="button"
                   onClick={() => selectCategory(category)}
-                  className="flex h-16 w-full shrink-0 items-center gap-3 rounded-lg px-3 text-left transition hover:bg-[#f4f7fc] focus-visible:bg-[#f4f7fc]"
+                  className="flex h-16 w-full shrink-0 items-center gap-3 rounded-lg px-3 text-left transition hover:bg-surface-secondary focus-visible:bg-surface-secondary"
                 >
                   {browsePath.length === 0 && (
-                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#f1f5fb] text-text-brand">
+                    <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-surface-brand-subtle text-text-brand">
                       {category.image ? (
                         <Image
                           src={category.image.url}

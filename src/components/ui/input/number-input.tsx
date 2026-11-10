@@ -70,7 +70,7 @@ export default function NumberInput({
             aria-label="Збільшити значення"
             disabled={disabled || (max !== undefined && Number(value) >= Number(max))}
             onClick={() => changeByStep(1)}
-            className="grid w-full flex-1 place-items-center rounded-tr-lg text-text-tertiary transition-colors hover:bg-[#dceaff] hover:text-text-brand focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stroke-brand active:bg-[#c9ddff] disabled:opacity-40"
+            className="grid w-full flex-1 place-items-center rounded-tr-lg text-text-tertiary transition-colors hover:bg-brand-100 hover:text-text-brand focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stroke-brand active:bg-brand-200 disabled:opacity-40"
           >
             <ChevronUp aria-hidden="true" className="size-4" />
           </button>
@@ -79,7 +79,7 @@ export default function NumberInput({
             aria-label="Зменшити значення"
             disabled={disabled || (min !== undefined && Number(value) <= Number(min))}
             onClick={() => changeByStep(-1)}
-            className="grid w-full flex-1 place-items-center rounded-br-lg text-text-tertiary transition-colors hover:bg-[#dceaff] hover:text-text-brand focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stroke-brand active:bg-[#c9ddff] disabled:opacity-40"
+            className="grid w-full flex-1 place-items-center rounded-br-lg text-text-tertiary transition-colors hover:bg-brand-100 hover:text-text-brand focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stroke-brand active:bg-brand-200 disabled:opacity-40"
           >
             <ChevronDown aria-hidden="true" className="size-4" />
           </button>

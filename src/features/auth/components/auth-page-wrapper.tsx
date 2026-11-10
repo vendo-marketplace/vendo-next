@@ -6,14 +6,20 @@ import { AuthContentFooter } from "./auth-content-footer";
 
 type AuthPageWrapperProps = {
   children: ReactNode;
+  showHeaderLogo?: boolean;
 };
 
-export function AuthPageWrapper({ children }: AuthPageWrapperProps) {
+export function AuthPageWrapper({
+  children,
+  showHeaderLogo = true,
+}: AuthPageWrapperProps) {
   return (
     <>
-      <div className="flex px-15 py-6">
-        <Logo size="sm" />
-      </div>
+      {showHeaderLogo && (
+        <div className="flex border-b border-stroke-secondary px-4 py-6 sm:px-15">
+          <Logo size="sm" />
+        </div>
+      )}
       {children}
       <AuthContentFooter />
     </>

@@ -5,8 +5,42 @@ import { useEffect } from "react";
 // Icons above this size are illustrations, not UI icons, and don't need snapping.
 const MAX_ICON_SIZE = 48;
 
+type Snap = { x: number; y: number; animation: Animation };
+
+// The offset is applied with a Web Animation instead of inline styles or data
+// attributes: React hydrates some icons later (inside Suspense boundaries), and
+// any attribute changed on them before that would be a hydration mismatch.
+const snaps = new WeakMap<SVGSVGElement, Snap>();
+
 const toDevicePixel = (value: number, ratio: number) =>
   (Math.round(value * ratio) - value * ratio) / ratio;
+
+const isOwnAnimation = (icon: SVGSVGElement, animation: Animation) =>
+  snaps.get(icon)?.animation === animation;
+
+// Icons that are spinning or mid-transition change their box every frame, so
+// they are skipped; a transitionend triggers another pass once they settle.
+const isMoving = (icon: SVGSVGElement) =>
+  icon
+    .getAnimations()
+    .some((animation) => !isOwnAnimation(icon, animation) && animation.playState === "running");
+
+const applySnap = (icon: SVGSVGElement, x: number, y: number) => {
+  const current = snaps.get(icon);
+
+  if (!x && !y) {
+    current?.animation.cancel();
+    snaps.delete(icon);
+    return;
+  }
+
+  if (current?.x === x && current.y === y) return;
+
+  const keyframe = { transform: `translate(${x}px, ${y}px)` };
+  current?.animation.cancel();
+  const animation = icon.animate([keyframe, keyframe], { fill: "forwards" });
+  snaps.set(icon, { x, y, animation });
+};
 
 // Fluid layouts (fr columns, centring, text widths) often put icons at
 // fractional pixels, and on 100%-scale monitors the browser then smears their
@@ -14,42 +48,26 @@ const toDevicePixel = (value: number, ratio: number) =>
 // on the device pixel grid.
 const snapIcons = () => {
   const ratio = window.devicePixelRatio || 1;
-  // Spinning icons change their box every frame, so they are left alone.
   const icons = [...document.querySelectorAll<SVGSVGElement>("svg")].filter(
-    (icon) =>
-      !icon.ownerSVGElement &&
-      !icon.getAnimations().some((animation) => animation instanceof CSSAnimation),
+    (icon) => !icon.ownerSVGElement && !isMoving(icon),
   );
 
-  // Without this, icons with transition-transform are measured (and moved)
-  // mid-animation. Reads and writes are batched to avoid layout thrashing.
-  const transitions = icons.map((icon) => icon.style.transition);
-  icons.forEach((icon) => (icon.style.transition = "none"));
-
+  // All reads happen before any write to avoid layout thrashing.
   const offsets = icons.map((icon) => {
     const rect = icon.getBoundingClientRect();
     if (!rect.width || rect.width > MAX_ICON_SIZE || rect.height > MAX_ICON_SIZE) return null;
 
-    const appliedX = Number(icon.dataset.snapX ?? 0);
-    const appliedY = Number(icon.dataset.snapY ?? 0);
+    const applied = snaps.get(icon);
     return {
-      x: toDevicePixel(rect.left - appliedX, ratio),
-      y: toDevicePixel(rect.top - appliedY, ratio),
+      x: toDevicePixel(rect.left - (applied?.x ?? 0), ratio),
+      y: toDevicePixel(rect.top - (applied?.y ?? 0), ratio),
     };
   });
 
   icons.forEach((icon, index) => {
     const offset = offsets[index];
-    if (!offset) return;
-
-    icon.dataset.snapX = String(offset.x);
-    icon.dataset.snapY = String(offset.y);
-    icon.style.transform =
-      offset.x || offset.y ? `translate(${offset.x}px, ${offset.y}px)` : "";
+    if (offset) applySnap(icon, offset.x, offset.y);
   });
-
-  void document.body.offsetWidth; // apply the new transforms before transitions come back
-  icons.forEach((icon, index) => (icon.style.transition = transitions[index]));
 };
 
 export default function IconPixelSnap() {
@@ -65,6 +83,7 @@ export default function IconPixelSnap() {
     const mutationObserver = new MutationObserver(schedule);
     mutationObserver.observe(document.body, { childList: true, subtree: true });
     window.addEventListener("resize", schedule);
+    document.addEventListener("transitionend", schedule);
     document.fonts.addEventListener("loadingdone", schedule);
     schedule();
 
@@ -73,6 +92,7 @@ export default function IconPixelSnap() {
       resizeObserver.disconnect();
       mutationObserver.disconnect();
       window.removeEventListener("resize", schedule);
+      document.removeEventListener("transitionend", schedule);
       document.fonts.removeEventListener("loadingdone", schedule);
     };
   }, []);

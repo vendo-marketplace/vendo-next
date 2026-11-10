@@ -29,7 +29,7 @@ export default function HeaderAuth() {
       <div className="flex items-center gap-1 sm:gap-2">
         <Button
           asChild
-          variant="secondary"
+          variant="outline"
           className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
         >
           <Link href="/sign-in">Вхід</Link>
@@ -40,14 +40,14 @@ export default function HeaderAuth() {
         />
         <Button
           asChild
-          variant="secondary"
+          variant="outline"
           className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
         >
           <Link href="/sign-up">Реєстрація</Link>
         </Button>
         <Button
           asChild
-          variant="secondary"
+          variant="outline"
           className="size-8 border-0 p-0 sm:hidden"
         >
           <Link href="/sign-in" aria-label="Увійти або зареєструватися">
@@ -67,7 +67,7 @@ export default function HeaderAuth() {
       <Dropdown>
         <DropdownTrigger asChild>
           <Button
-            variant="secondary"
+            variant="outline"
             className="size-8 border-0 p-0"
             aria-label={
               needsProfileAttention

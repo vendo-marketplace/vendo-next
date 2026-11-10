@@ -9,7 +9,7 @@ type AuthPageProps = {
 
 const AuthPage = ({ activeTab }: AuthPageProps) => {
   return (
-    <section className="flex flex-1 p-4">
+    <section className="flex flex-1 sm:p-4">
       <AuthContent activeTab={activeTab} />
       <AuthPoster />
     </section>

@@ -67,7 +67,7 @@ export function AccountCompletionForm({
 
   return (
     <form
-      className="space-y-4"
+      className="flex flex-col gap-4"
       noValidate
       onSubmit={submit}
       onChange={clearServerError}
@@ -94,7 +94,7 @@ export function AccountCompletionForm({
 
       {serverError && <FormErrorNotice message={serverError} />}
 
-      <Button className="w-full" type="submit" disabled={isSubmitting}>
+      <Button className="mt-2 w-full" type="submit" disabled={isSubmitting}>
         {isSubmitting ? submittingLabel : submitLabel}
       </Button>
     </form>

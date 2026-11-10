@@ -20,7 +20,7 @@ export default function ProductGallery({
 
   return (
     <div className="min-w-0">
-      <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)] sm:aspect-[16/11]">
+      <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-sm sm:aspect-[16/11]">
         {image ? (
           <Image
             src={image}

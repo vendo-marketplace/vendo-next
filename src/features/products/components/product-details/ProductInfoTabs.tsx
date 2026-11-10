@@ -19,7 +19,7 @@ export default function ProductInfoTabs({
   categoryAttributes,
 }: Props) {
   return (
-    <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-[0_2px_12px_rgba(20,31,54,0.04)]">
+    <div className="mt-8 overflow-hidden rounded-2xl border border-stroke-secondary bg-surface-primary shadow-sm">
       <Tabs.Root defaultValue="description">
         <Tabs.List
           aria-label="Інформація про товар"
