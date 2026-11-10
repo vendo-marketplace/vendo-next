@@ -17,33 +17,20 @@ import {
   getProductSortQuery,
   type ProductSortOption,
 } from "@/features/products/lib/product-sort";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { Link } from "@/i18n/navigation";
 import type { SearchProductsQuery } from "@/types/product";
 
 import type { CategoryAttribute } from "../../types/category";
 import { ActiveFilterChips } from "../category-filters/ActiveFilterChips";
-import {
-  EMPTY_FILTERS,
-  formatListingsFound,
-  getActiveFilterChips,
-  toSearchFilters,
-  type CategoryFilters,
-} from "../category-filters/category-filters";
 import { CategoryFiltersPanel } from "../category-filters/CategoryFiltersPanel";
+import { getActiveFilterChips } from "../category-filters/lib/active-filter-chips";
+import { formatListingsFound } from "../category-filters/lib/filter-display";
+import { toSearchFilters } from "../category-filters/lib/filter-query";
+import { EMPTY_FILTERS, type CategoryFilters } from "../category-filters/lib/filter-state";
 
 const FILTERS_DEBOUNCE_MS = 400;
 const FILTERS_PANEL_ID = "category-filters";
-
-const useDebouncedValue = <T,>(value: T, delay: number) => {
-  const [debounced, setDebounced] = useState(value);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(timeout);
-  }, [value, delay]);
-
-  return debounced;
-};
 
 export default function CategoryProducts({
   categoryId,
@@ -124,8 +111,7 @@ export default function CategoryProducts({
         </div>
         <ActiveFilterChips
           chips={activeChips}
-          filters={filters}
-          onChange={setFilters}
+          onRemove={(chip) => setFilters(chip.remove)}
           onClearAll={() => setFilters(EMPTY_FILTERS)}
         />
       </div>

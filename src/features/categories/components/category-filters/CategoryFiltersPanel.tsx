@@ -4,13 +4,14 @@ import { FilterIcon } from "@/assets/icons/FilterIcon";
 
 import type { CategoryAttribute } from "../../types/category";
 import { AttributeFilter } from "./AttributeFilter";
+import { CityFilter } from "./CityFilter";
+import { FilterChip, FilterChips, FilterSection } from "./FilterControls";
 import {
   CONDITION_OPTIONS,
   EMPTY_ATTRIBUTE_VALUE,
+  toggleValue,
   type CategoryFilters,
-} from "./category-filters";
-import { CityFilter } from "./CityFilter";
-import { FilterChip, FilterChips, FilterSection } from "./FilterControls";
+} from "./lib/filter-state";
 import { PriceRangeFilter } from "./PriceRangeFilter";
 
 export function CategoryFiltersPanel({
@@ -22,16 +23,9 @@ export function CategoryFiltersPanel({
   id?: string;
   filters: CategoryFilters;
   attributes: CategoryAttribute[];
-  onChange: (filters: CategoryFilters) => void;
+  // Receives an updater so quick successive edits build on the latest filters.
+  onChange: (update: (current: CategoryFilters) => CategoryFilters) => void;
 }) {
-  const toggleCondition = (condition: CategoryFilters["conditions"][number]) =>
-    onChange({
-      ...filters,
-      conditions: filters.conditions.includes(condition)
-        ? filters.conditions.filter((selected) => selected !== condition)
-        : [...filters.conditions, condition],
-    });
-
   return (
     <aside
       id={id}
@@ -47,14 +41,14 @@ export function CategoryFiltersPanel({
         <FilterSection title="Місто">
           <CityFilter
             value={filters.cities}
-            onChange={(cities) => onChange({ ...filters, cities })}
+            onChange={(cities) => onChange((current) => ({ ...current, cities }))}
           />
         </FilterSection>
 
         <FilterSection title="Ціна, грн">
           <PriceRangeFilter
             value={filters.price}
-            onChange={(price) => onChange({ ...filters, price })}
+            onChange={(price) => onChange((current) => ({ ...current, price }))}
           />
         </FilterSection>
 
@@ -64,7 +58,12 @@ export function CategoryFiltersPanel({
               <FilterChip
                 key={option.value}
                 selected={filters.conditions.includes(option.value)}
-                onToggle={() => toggleCondition(option.value)}
+                onToggle={() =>
+                  onChange((current) => ({
+                    ...current,
+                    conditions: toggleValue(current.conditions, option.value),
+                  }))
+                }
               >
                 {option.label}
               </FilterChip>
@@ -79,10 +78,10 @@ export function CategoryFiltersPanel({
             last={index === attributes.length - 1}
             value={filters.attributes[attribute.id] ?? EMPTY_ATTRIBUTE_VALUE}
             onChange={(value) =>
-              onChange({
-                ...filters,
-                attributes: { ...filters.attributes, [attribute.id]: value },
-              })
+              onChange((current) => ({
+                ...current,
+                attributes: { ...current.attributes, [attribute.id]: value },
+              }))
             }
           />
         ))}

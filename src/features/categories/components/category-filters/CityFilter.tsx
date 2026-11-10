@@ -4,23 +4,12 @@ import { useState } from "react";
 
 import { SearchIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
-import { UKRAINIAN_CITIES } from "@/features/products/constants/ukrainian-cities";
+import { searchUkrainianCities } from "@/features/products/components/create-product/form-utils";
 
-import { POPULAR_CITIES } from "./category-filters";
 import { FilterChip, FilterChips } from "./FilterControls";
+import { POPULAR_CITIES, toggleValue } from "./lib/filter-state";
 
 const MAX_CITY_SUGGESTIONS = 8;
-
-const normalize = (city: string) => city.trim().toLocaleLowerCase("uk");
-
-const searchCities = (query: string) =>
-  UKRAINIAN_CITIES.filter((city) => normalize(city).includes(query))
-    .sort(
-      (left, right) =>
-        Number(normalize(right).startsWith(query)) - Number(normalize(left).startsWith(query)) ||
-        left.localeCompare(right, "uk"),
-    )
-    .slice(0, MAX_CITY_SUGGESTIONS);
 
 export function CityFilter({
   value,
@@ -30,17 +19,11 @@ export function CityFilter({
   onChange: (cities: string[]) => void;
 }) {
   const [search, setSearch] = useState("");
-  const query = normalize(search);
 
-  // Without a query: popular cities plus any other selected ones; with a query: official city matches.
-  const options = query
-    ? searchCities(query)
+  // Without a query: popular cities plus any other selected ones; with a query: official matches.
+  const options = search.trim()
+    ? searchUkrainianCities(search, MAX_CITY_SUGGESTIONS)
     : [...POPULAR_CITIES, ...value.filter((city) => !POPULAR_CITIES.includes(city))];
-
-  const toggle = (city: string) =>
-    onChange(
-      value.includes(city) ? value.filter((selected) => selected !== city) : [...value, city],
-    );
 
   return (
     <>
@@ -55,7 +38,11 @@ export function CityFilter({
       {options.length > 0 ? (
         <FilterChips>
           {options.map((city) => (
-            <FilterChip key={city} selected={value.includes(city)} onToggle={() => toggle(city)}>
+            <FilterChip
+              key={city}
+              selected={value.includes(city)}
+              onToggle={() => onChange(toggleValue(value, city))}
+            >
               {city}
             </FilterChip>
           ))}

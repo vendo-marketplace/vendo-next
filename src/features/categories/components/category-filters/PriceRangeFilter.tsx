@@ -2,16 +2,16 @@
 
 import { Input } from "@/components/ui/input/input";
 
-import { PRICE_SLIDER_MAX, PRICE_SLIDER_STEP } from "./category-filters";
-
-type PriceRange = { min: string; max: string };
-
-const thumbClassName =
-  "pointer-events-none absolute inset-0 h-5 w-full appearance-none bg-transparent [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:size-5 [&::-moz-range-thumb]:cursor-grab [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border [&::-moz-range-thumb]:border-stroke-secondary [&::-moz-range-thumb]:bg-surface-primary [&::-moz-range-thumb]:shadow-md [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:size-5 [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border [&::-webkit-slider-thumb]:border-stroke-secondary [&::-webkit-slider-thumb]:bg-surface-primary [&::-webkit-slider-thumb]:shadow-md focus-visible:outline-none focus-visible:[&::-webkit-slider-thumb]:outline-2 focus-visible:[&::-webkit-slider-thumb]:outline-stroke-brand";
-
-const toDigits = (value: string) => value.replace(/\D/g, "");
+import {
+  keepDigits,
+  PRICE_SLIDER_MAX,
+  PRICE_SLIDER_STEP,
+  type PriceRange,
+} from "./lib/filter-state";
 
 const clamp = (value: number) => Math.min(Math.max(value, 0), PRICE_SLIDER_MAX);
+
+const toPercent = (value: number) => (value / PRICE_SLIDER_MAX) * 100;
 
 export function PriceRangeFilter({
   value,
@@ -22,8 +22,15 @@ export function PriceRangeFilter({
 }) {
   const sliderMin = value.min === "" ? 0 : clamp(Number(value.min));
   const sliderMax = value.max === "" ? PRICE_SLIDER_MAX : clamp(Number(value.max));
-  const startPercent = (sliderMin / PRICE_SLIDER_MAX) * 100;
-  const endPercent = (sliderMax / PRICE_SLIDER_MAX) * 100;
+
+  // Thumbs sitting on the slider ends mean "no bound", so they clear the field.
+  const changeMin = (next: number) =>
+    onChange({ ...value, min: next === 0 ? "" : String(Math.min(next, sliderMax)) });
+  const changeMax = (next: number) =>
+    onChange({
+      ...value,
+      max: next === PRICE_SLIDER_MAX ? "" : String(Math.max(next, sliderMin)),
+    });
 
   return (
     <>
@@ -31,7 +38,7 @@ export function PriceRangeFilter({
         <div className="absolute inset-x-0 top-1/2 h-2 -translate-y-1/2 rounded-xl bg-surface-tertiary" />
         <div
           className="absolute top-1/2 h-2 -translate-y-1/2 rounded-xl bg-surface-brand"
-          style={{ left: `${startPercent}%`, right: `${100 - endPercent}%` }}
+          style={{ left: `${toPercent(sliderMin)}%`, right: `${100 - toPercent(sliderMax)}%` }}
         />
         <input
           type="range"
@@ -40,11 +47,8 @@ export function PriceRangeFilter({
           max={PRICE_SLIDER_MAX}
           step={PRICE_SLIDER_STEP}
           value={sliderMin}
-          onChange={(event) => {
-            const next = Math.min(Number(event.target.value), sliderMax);
-            onChange({ ...value, min: next === 0 ? "" : String(next) });
-          }}
-          className={thumbClassName}
+          onChange={(event) => changeMin(Number(event.target.value))}
+          className="range-thumb"
         />
         <input
           type="range"
@@ -53,11 +57,8 @@ export function PriceRangeFilter({
           max={PRICE_SLIDER_MAX}
           step={PRICE_SLIDER_STEP}
           value={sliderMax}
-          onChange={(event) => {
-            const next = Math.max(Number(event.target.value), sliderMin);
-            onChange({ ...value, max: next === PRICE_SLIDER_MAX ? "" : String(next) });
-          }}
-          className={thumbClassName}
+          onChange={(event) => changeMax(Number(event.target.value))}
+          className="range-thumb"
         />
       </div>
       <div className="flex gap-4">
@@ -67,7 +68,7 @@ export function PriceRangeFilter({
           placeholder="Від 0"
           clearable={false}
           value={value.min}
-          onChange={(event) => onChange({ ...value, min: toDigits(event.target.value) })}
+          onChange={(event) => onChange({ ...value, min: keepDigits(event.target.value) })}
         />
         <Input
           inputMode="numeric"
@@ -75,7 +76,7 @@ export function PriceRangeFilter({
           placeholder="До"
           clearable={false}
           value={value.max}
-          onChange={(event) => onChange({ ...value, max: toDigits(event.target.value) })}
+          onChange={(event) => onChange({ ...value, max: keepDigits(event.target.value) })}
         />
       </div>
     </>

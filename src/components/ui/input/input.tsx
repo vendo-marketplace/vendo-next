@@ -4,7 +4,7 @@ import { cn } from "@/utils/utils";
 const inputVariants = {
   size: {
     sm: "h-9 p-2",
-    base: "",
+    base: "h-10 p-2.5",
     lg: "h-12 py-3 px-3.5 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-md",
     xl: "h-13 py-3.5 px-4 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-md",
   },
@@ -30,7 +30,7 @@ export function getInputClassName({
   invalid,
 }: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
-    "h-10 flex group items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary-subtle shadow-xs transition-colors focus-within:border-stroke-brand focus-within:shadow-focus-input has-disabled:bg-surface-tertiary",
+    "flex group items-center gap-2 border rounded-lg bg-surface-primary border-stroke-primary-subtle shadow-xs transition-colors focus-within:border-stroke-brand focus-within:shadow-focus-input has-disabled:bg-surface-tertiary",
     invalid && "border-stroke-error focus-within:border-stroke-error focus-within:shadow-xs",
     inputVariants.size[size],
   );

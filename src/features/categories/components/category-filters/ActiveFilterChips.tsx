@@ -2,17 +2,15 @@
 
 import { CrossIcon } from "@/assets/icons/CrossIcon";
 
-import type { ActiveFilterChip, CategoryFilters } from "./category-filters";
+import type { ActiveFilterChip } from "./lib/active-filter-chips";
 
 export function ActiveFilterChips({
   chips,
-  filters,
-  onChange,
+  onRemove,
   onClearAll,
 }: {
   chips: ActiveFilterChip[];
-  filters: CategoryFilters;
-  onChange: (filters: CategoryFilters) => void;
+  onRemove: (chip: ActiveFilterChip) => void;
   onClearAll: () => void;
 }) {
   if (chips.length === 0) return null;
@@ -23,7 +21,7 @@ export function ActiveFilterChips({
         <li key={chip.key}>
           <button
             type="button"
-            onClick={() => onChange(chip.remove(filters))}
+            onClick={() => onRemove(chip)}
             aria-label={`Прибрати фільтр «${chip.label}»`}
             className="flex items-center gap-2 rounded-lg border border-stroke-brand-subtle bg-surface-brand-subtle px-3 py-1.5 text-sm font-semibold text-text-brand transition-colors hover:border-stroke-brand"
           >

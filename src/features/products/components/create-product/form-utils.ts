@@ -26,6 +26,22 @@ export function normalizeCityName(city: string): string {
   return city.trim().replace(/\s+/g, " ").toLocaleLowerCase("uk");
 }
 
+// Official cities matching the query; names that start with it come first.
+export function searchUkrainianCities(query: string, limit: number): string[] {
+  const normalizedQuery = normalizeCityName(query);
+  if (!normalizedQuery) return UKRAINIAN_CITIES.slice(0, limit);
+
+  const startsWithQuery = (city: string) => normalizeCityName(city).startsWith(normalizedQuery);
+
+  return UKRAINIAN_CITIES.filter((city) => normalizeCityName(city).includes(normalizedQuery))
+    .sort(
+      (left, right) =>
+        Number(startsWithQuery(right)) - Number(startsWithQuery(left)) ||
+        left.localeCompare(right, "uk"),
+    )
+    .slice(0, limit);
+}
+
 export function findOfficialCity(value: string): string | undefined {
   const normalizedValue = normalizeCityName(value);
   return UKRAINIAN_CITIES.find((city) => normalizeCityName(city) === normalizedValue);

@@ -4,14 +4,9 @@ import { useState } from "react";
 
 import { SearchIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
+import NumberInput from "@/components/ui/input/number-input";
 
 import type { CategoryAttribute } from "../../types/category";
-import {
-  getColorSwatch,
-  isColorAttribute,
-  shouldRenderAsChips,
-  type AttributeValue,
-} from "./category-filters";
 import {
   FilterCheckbox,
   FilterChip,
@@ -20,11 +15,11 @@ import {
   FilterSwitch,
   ShowMoreButton,
 } from "./FilterControls";
+import { getColorSwatch, isColorAttribute, shouldRenderAsChips } from "./lib/filter-display";
+import { toggleValue, type AttributeValue } from "./lib/filter-state";
 
 const VISIBLE_OPTIONS = 8;
 const SEARCHABLE_FROM = 9;
-
-const toDigits = (value: string) => value.replace(/[^\d.,]/g, "");
 
 // "Гарантія" -> "Є гарантія"; keeps acronyms like "NFC" intact.
 const toPresenceLabel = (title: string) => {
@@ -46,12 +41,7 @@ function EnumOptions({
   const options = attribute.allowedValues ?? [];
 
   const toggle = (option: string) =>
-    onChange({
-      ...value,
-      values: value.values.includes(option)
-        ? value.values.filter((selected) => selected !== option)
-        : [...value.values, option],
-    });
+    onChange({ ...value, values: toggleValue(value.values, option) });
 
   if (shouldRenderAsChips(options) && !isColorAttribute(attribute)) {
     return (
@@ -147,21 +137,19 @@ export function AttributeFilter({
     return (
       <FilterSection title={attribute.title} last={last}>
         <div className="flex gap-4">
-          <Input
-            inputMode="decimal"
+          <NumberInput
+            size="base"
             aria-label={`${attribute.title}: від`}
             placeholder="Від"
-            clearable={false}
             value={value.min}
-            onChange={(event) => onChange({ ...value, min: toDigits(event.target.value) })}
+            onValueChange={(min) => onChange({ ...value, min })}
           />
-          <Input
-            inputMode="decimal"
+          <NumberInput
+            size="base"
             aria-label={`${attribute.title}: до`}
             placeholder="До"
-            clearable={false}
             value={value.max}
-            onChange={(event) => onChange({ ...value, max: toDigits(event.target.value) })}
+            onValueChange={(max) => onChange({ ...value, max })}
           />
         </div>
       </FilterSection>
@@ -171,13 +159,12 @@ export function AttributeFilter({
   if (attribute.type === "NUMBER") {
     return (
       <FilterSection title={attribute.title} last={last}>
-        <Input
-          inputMode="decimal"
+        <NumberInput
+          size="base"
           aria-label={attribute.title}
           placeholder="Значення"
-          clearable={false}
           value={value.min}
-          onChange={(event) => onChange({ ...value, min: toDigits(event.target.value) })}
+          onValueChange={(min) => onChange({ ...value, min })}
         />
       </FilterSection>
     );
