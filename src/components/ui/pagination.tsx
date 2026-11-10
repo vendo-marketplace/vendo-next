@@ -29,6 +29,11 @@ export const getPageItems = (currentPage: number, totalPages: number): PageItem[
 const itemClassName =
   "flex h-9 min-w-9 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors";
 
+const navButtonClassName = cn(
+  itemClassName,
+  "min-w-8 border-stroke-primary-subtle bg-surface-primary text-text-primary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:border-stroke-secondary disabled:text-text-placeholder disabled:hover:bg-surface-primary",
+);
+
 export function Pagination({
   currentPage,
   totalPages,
@@ -49,10 +54,7 @@ export function Pagination({
             aria-label="Попередня сторінка"
             disabled={currentPage === 1}
             onClick={() => onPageChange(currentPage - 1)}
-            className={cn(
-              itemClassName,
-              "min-w-8 border-stroke-primary-subtle bg-surface-primary text-text-primary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:border-stroke-secondary disabled:text-text-placeholder disabled:hover:bg-surface-primary",
-            )}
+            className={navButtonClassName}
           >
             <AngleLeftIcon size={16} />
           </button>
@@ -91,10 +93,7 @@ export function Pagination({
             aria-label="Наступна сторінка"
             disabled={currentPage === totalPages}
             onClick={() => onPageChange(currentPage + 1)}
-            className={cn(
-              itemClassName,
-              "min-w-8 border-stroke-primary-subtle bg-surface-primary text-text-primary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:border-stroke-secondary disabled:text-text-placeholder disabled:hover:bg-surface-primary",
-            )}
+            className={navButtonClassName}
           >
             <AngleRightIcon size={16} />
           </button>

@@ -22,6 +22,9 @@ const MAX_ATTRIBUTE_BADGES = 2;
 
 const formatPrice = (price: number) => `${price.toLocaleString("uk-UA")} грн`;
 
+const badgeClassName =
+  "flex min-w-0 flex-1 items-center gap-1.5 border-r border-stroke-primary-subtle py-2 pr-3 pl-2 last:border-r-0";
+
 const ProductCard = ({
   card,
   eager = false,
@@ -70,7 +73,7 @@ const ProductCard = ({
         <ul className="mt-5 mb-1 flex border-y border-stroke-primary-subtle text-xs">
           <li
             className={cn(
-              "flex min-w-0 flex-1 items-center gap-1.5 border-r border-stroke-primary-subtle py-2 pr-3 pl-2 last:border-r-0",
+              badgeClassName,
               isNew ? "font-medium text-text-success" : "text-text-secondary",
             )}
           >
@@ -84,7 +87,7 @@ const ProductCard = ({
           {attributeValues.map((value, index) => (
             <li
               key={`${value}-${index}`}
-              className="flex min-w-0 flex-1 items-center gap-1.5 border-r border-stroke-primary-subtle py-2 pr-3 pl-2 text-text-secondary last:border-r-0"
+              className={cn(badgeClassName, "text-text-secondary")}
             >
               <Tag aria-hidden="true" className="size-4 shrink-0" />
               <span className="truncate">{value}</span>

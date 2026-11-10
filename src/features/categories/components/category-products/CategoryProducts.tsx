@@ -2,32 +2,28 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { BellIcon } from "@/assets/icons/BellIcon";
-import { FilterIcon } from "@/assets/icons/FilterIcon";
 import { Button } from "@/components/ui/button/button";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
 import { Pagination } from "@/components/ui/pagination";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
-import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
 import { useSearchProducts } from "@/features/products/hooks/use-products";
 import {
-  CATEGORY_PRODUCT_SORT_VALUES,
   DEFAULT_CATEGORY_PRODUCT_SORT,
   getProductSortQuery,
   type ProductSortOption,
 } from "@/features/products/lib/product-sort";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { Link } from "@/i18n/navigation";
 import type { SearchProductsQuery } from "@/types/product";
 
 import type { CategoryAttribute } from "../../types/category";
 import { ActiveFilterChips } from "../category-filters/ActiveFilterChips";
 import { CategoryFiltersPanel } from "../category-filters/CategoryFiltersPanel";
 import { getActiveFilterChips } from "../category-filters/lib/active-filter-chips";
-import { formatListingsFound } from "../category-filters/lib/filter-display";
 import { toSearchFilters } from "../category-filters/lib/filter-query";
 import { EMPTY_FILTERS, type CategoryFilters } from "../category-filters/lib/filter-state";
+import { CategoryEmptyResults } from "./CategoryEmptyResults";
+import { CategoryToolbar } from "./CategoryToolbar";
 
 const FILTERS_DEBOUNCE_MS = 400;
 const FILTERS_PANEL_ID = "category-filters";
@@ -94,35 +90,15 @@ export default function CategoryProducts({
   return (
     <div className="mt-8 flex flex-col gap-4">
       <div className="flex flex-col gap-4 border-b border-stroke-primary-subtle pb-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-lg font-medium text-text-secondary" aria-live="polite">
-            {totalElements !== undefined && formatListingsFound(totalElements)}
-          </p>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button
-              variant="outline"
-              className="lg:hidden"
-              aria-expanded={isMobileFiltersOpen}
-              aria-controls={FILTERS_PANEL_ID}
-              onClick={() => setIsMobileFiltersOpen((open) => !open)}
-            >
-              <FilterIcon size={16} />
-              Фільтри{activeChips.length > 0 && ` · ${activeChips.length}`}
-            </Button>
-            <ProductSortSelect
-              value={sort}
-              onChange={changeSort}
-              sortValues={CATEGORY_PRODUCT_SORT_VALUES}
-            />
-            {/* TODO: prefill the auto-search form with the current category and filters. */}
-            <Button asChild variant="outline">
-              <Link href="/auto-search">
-                <BellIcon size={16} />
-                Стежити за пошуком
-              </Link>
-            </Button>
-          </div>
-        </div>
+        <CategoryToolbar
+          totalElements={totalElements}
+          sort={sort}
+          onSortChange={changeSort}
+          activeFiltersCount={activeChips.length}
+          filtersPanelId={FILTERS_PANEL_ID}
+          isFiltersOpen={isMobileFiltersOpen}
+          onToggleFilters={() => setIsMobileFiltersOpen((open) => !open)}
+        />
         <ActiveFilterChips
           chips={activeChips}
           onRemove={(chip) => changeFilters(chip.remove)}
@@ -144,7 +120,7 @@ export default function CategoryProducts({
           {isError && !data ? (
             <p className="text-sm text-text-secondary">Не вдалося завантажити товари.</p>
           ) : totalElements === 0 ? (
-            <EmptyResults
+            <CategoryEmptyResults
               hasFilters={activeChips.length > 0}
               onReset={() => changeFilters(() => EMPTY_FILTERS)}
             />
@@ -174,30 +150,6 @@ export default function CategoryProducts({
           )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function EmptyResults({
-  hasFilters,
-  onReset,
-}: {
-  hasFilters: boolean;
-  onReset: () => void;
-}) {
-  return (
-    <div className="flex flex-col items-center gap-2 rounded-lg border border-stroke-secondary bg-surface-primary px-6 py-16 text-center">
-      <h2 className="text-xl font-semibold text-text-primary">Нічого не знайдено</h2>
-      <p className="max-w-sm text-sm text-text-secondary">
-        {hasFilters
-          ? "Спробуйте змінити або скинути фільтри."
-          : "У цій категорії поки немає оголошень."}
-      </p>
-      {hasFilters && (
-        <Button variant="outline" className="mt-4" onClick={onReset}>
-          Скинути фільтри
-        </Button>
-      )}
     </div>
   );
 }
