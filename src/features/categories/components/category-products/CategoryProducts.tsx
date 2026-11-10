@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useInView } from "react-intersection-observer";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { BellIcon } from "@/assets/icons/BellIcon";
 import { FilterIcon } from "@/assets/icons/FilterIcon";
 import { Button } from "@/components/ui/button/button";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { NextPageFetchError } from "@/components/ui/next-page-fetch-error";
+import { Pagination } from "@/components/ui/pagination";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
 import ProductSortSelect from "@/features/products/components/product-sort-select/ProductSortSelect";
 import { useSearchProducts } from "@/features/products/hooks/use-products";
@@ -33,6 +33,7 @@ import { CategoryFiltersPanel } from "../category-filters/CategoryFiltersPanel";
 
 const FILTERS_DEBOUNCE_MS = 400;
 const FILTERS_PANEL_ID = "category-filters";
+const PAGE_SIZE = 18;
 
 const useDebouncedValue = <T,>(value: T, delay: number) => {
   const [debounced, setDebounced] = useState(value);
@@ -55,8 +56,25 @@ export default function CategoryProducts({
   const [sort, setSort] = useState<ProductSortOption>(DEFAULT_CATEGORY_PRODUCT_SORT);
   const [filters, setFilters] = useState<CategoryFilters>(EMPTY_FILTERS);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  // First page of the loaded run; "Показати ще" appends pages after it.
+  const [startPage, setStartPage] = useState(1);
   const appliedFilters = useDebouncedValue(filters, FILTERS_DEBOUNCE_MS);
-  const { ref, inView } = useInView({ rootMargin: "300px" });
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const changeFilters = (next: CategoryFilters) => {
+    setFilters(next);
+    setStartPage(1);
+  };
+
+  const changeSort = (next: ProductSortOption) => {
+    setSort(next);
+    setStartPage(1);
+  };
+
+  const goToPage = (page: number) => {
+    setStartPage(page);
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const query = useMemo<SearchProductsQuery>(
     () => ({
@@ -64,10 +82,10 @@ export default function CategoryProducts({
       active: true,
       sort: getProductSortQuery(sort),
       ...toSearchFilters(appliedFilters, attributes),
-      page: 1,
-      size: 20,
+      page: startPage,
+      size: PAGE_SIZE,
     }),
-    [appliedFilters, attributes, categoryId, sort],
+    [appliedFilters, attributes, categoryId, sort, startPage],
   );
 
   const {
@@ -80,13 +98,8 @@ export default function CategoryProducts({
     isLoading,
   } = useSearchProducts("", query);
 
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {
-      void fetchNextPage();
-    }
-  }, [fetchNextPage, hasNextPage, inView, isFetchNextPageError, isFetchingNextPage]);
-
   const cards = data?.pages.flatMap((page) => page.data) ?? [];
+  const lastLoadedPage = data?.pages.at(-1)?.metadata;
   const totalElements = data?.pages[0].metadata.totalElements;
   const activeChips = getActiveFilterChips(filters, attributes);
 
@@ -110,7 +123,7 @@ export default function CategoryProducts({
             </Button>
             <ProductSortSelect
               value={sort}
-              onChange={setSort}
+              onChange={changeSort}
               sortValues={CATEGORY_PRODUCT_SORT_VALUES}
             />
             {/* TODO: prefill the auto-search form with the current category and filters. */}
@@ -125,38 +138,79 @@ export default function CategoryProducts({
         <ActiveFilterChips
           chips={activeChips}
           filters={filters}
-          onChange={setFilters}
-          onClearAll={() => setFilters(EMPTY_FILTERS)}
+          onChange={changeFilters}
+          onClearAll={() => changeFilters(EMPTY_FILTERS)}
         />
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[311px_minmax(0,1fr)]">
+      <div className="grid items-start gap-3 lg:grid-cols-[311px_minmax(0,1fr)]">
         <div className={isMobileFiltersOpen ? "block" : "hidden lg:block"}>
           <CategoryFiltersPanel
             id={FILTERS_PANEL_ID}
             filters={filters}
             attributes={attributes}
-            onChange={setFilters}
+            onChange={changeFilters}
           />
         </div>
 
-        <div className="min-w-0">
+        <div ref={resultsRef} className="flex min-w-0 scroll-mt-28 flex-col gap-7">
           {isError && !data ? (
             <p className="text-sm text-text-secondary">Не вдалося завантажити товари.</p>
           ) : totalElements === 0 ? (
-            <p className="py-12 text-center text-text-secondary">
-              За цими фільтрами товарів не знайдено.
-            </p>
+            <EmptyResults
+              hasFilters={activeChips.length > 0}
+              onReset={() => changeFilters(EMPTY_FILTERS)}
+            />
           ) : (
-            <ProductCardsGrid cards={cards} isLoading={isLoading} />
+            <ProductCardsGrid cards={cards} isLoading={isLoading} withSidebar />
           )}
-          <div ref={ref} className="h-px" aria-hidden="true" />
           {isFetchingNextPage && <LoadingSpinner />}
           {isFetchNextPageError && (
             <NextPageFetchError onRetry={() => void fetchNextPage()} />
           )}
+          {hasNextPage && !isFetchingNextPage && !isFetchNextPageError && (
+            <Button
+              variant="secondary"
+              size="lg"
+              className="mx-auto px-8"
+              onClick={() => void fetchNextPage()}
+            >
+              Показати ще
+            </Button>
+          )}
+          {lastLoadedPage && (
+            <Pagination
+              currentPage={lastLoadedPage.page}
+              totalPages={lastLoadedPage.totalPages}
+              onPageChange={goToPage}
+            />
+          )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function EmptyResults({
+  hasFilters,
+  onReset,
+}: {
+  hasFilters: boolean;
+  onReset: () => void;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-2 rounded-lg border border-stroke-secondary bg-surface-primary px-6 py-16 text-center">
+      <h2 className="text-xl font-semibold text-text-primary">Нічого не знайдено</h2>
+      <p className="max-w-sm text-sm text-text-secondary">
+        {hasFilters
+          ? "Спробуйте змінити або скинути фільтри."
+          : "У цій категорії поки немає оголошень."}
+      </p>
+      {hasFilters && (
+        <Button variant="outline" className="mt-4" onClick={onReset}>
+          Скинути фільтри
+        </Button>
+      )}
     </div>
   );
 }
