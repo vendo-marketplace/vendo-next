@@ -109,7 +109,7 @@ export default function MessageHistory({
 
         if (container.scrollTop <= 80) void loadMoreMessages();
       }}
-      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-[#f8fafc] px-4 py-5 sm:px-8"
+      className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-surface-secondary px-4 py-5 sm:px-8"
     >
       {isLoading ? (
         <LoadingSpinner />

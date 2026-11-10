@@ -3,10 +3,10 @@ import { cn } from "@/utils/utils";
 
 const inputVariants = {
   size: {
-    sm: "h-[38px] p-2",
-    base: "",
-    lg: "h-[52px] py-3 px-3.5 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
-    xl: "h-14 py-3.5 px-4 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-[16px] [&_[data-slot=input-control]]:leading-6",
+    sm: "h-9 p-2",
+    base: "h-10 p-2.5",
+    lg: "h-12 py-3 px-3.5 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-md",
+    xl: "h-13 py-3.5 px-4 [&_[data-slot=input-start]]:size-5 [&_[data-slot=input-start]>svg]:size-5 [&_[data-slot=input-control]]:text-md",
   },
 } as const;
 
@@ -30,8 +30,8 @@ export function getInputClassName({
   invalid,
 }: Pick<InputProps, "size" | "invalid"> = {}) {
   return cn(
-    "h-[38px] flex group focus-within:border-stroke-brand items-center gap-2 border rounded-lg p-2.5 bg-surface-primary border-stroke-primary shadow-[0px_1px_0.5px_0.05px_#1D293D05]",
-    invalid && "border-stroke-error",
+    "flex group items-center gap-2 border rounded-lg bg-surface-primary border-stroke-primary-subtle shadow-xs transition-colors focus-within:border-stroke-brand focus-within:shadow-focus-input has-disabled:bg-surface-tertiary",
+    invalid && "border-stroke-error focus-within:border-stroke-error focus-within:shadow-xs",
     inputVariants.size[size],
   );
 }
@@ -60,8 +60,8 @@ export function Input({
         <div
           data-slot="input-start"
           className={cn(
-            "flex justify-center shrink-0 items-center size-4 text-text-tertiary group-focus-within:text-text-brand",
-            invalid && "text-text-error",
+            "flex justify-center shrink-0 items-center size-4 text-text-tertiary",
+            !invalid && "group-focus-within:text-text-brand",
           )}
         >
           {start}
@@ -74,21 +74,18 @@ export function Input({
         disabled={disabled}
         aria-invalid={invalid || undefined}
         className={cn(
-          "w-full placeholder:text-text-placeholder outline-none text-text-primary text-[14px] leading-5",
-          invalid && "border-stroke-error focus-within:border-stroke-error",
+          "w-full placeholder:font-normal placeholder:text-text-placeholder outline-none font-medium text-text-primary text-sm disabled:font-normal disabled:text-text-tertiary disabled:cursor-not-allowed",
           className,
         )}
       />
 
       {clearable && value && (
         <button
-          aria-label="Clear input"
+          aria-label="Очистити поле"
           type="button"
+          tabIndex={-1}
           onClick={onClear}
-          className={cn(
-            "size-4 flex justify-center items-center text-text-secondary group-focus-within:text-text-brand",
-            invalid && "text-text-error",
-          )}
+          className="size-4 flex justify-center items-center text-text-secondary hover:text-text-primary"
         >
           <CrossIcon />
         </button>
@@ -98,8 +95,8 @@ export function Input({
         <div
           data-slot="input-end"
           className={cn(
-            "flex shrink-0 items-center justify-center text-text-secondary group-focus-within:text-text-brand",
-            invalid && "text-text-error",
+            "flex shrink-0 items-center justify-center text-text-secondary",
+            !invalid && "group-focus-within:text-text-brand",
           )}
         >
           {end}

@@ -213,7 +213,7 @@ export default function AutoSearchManager({
         <div className="rounded-2xl border border-stroke-primary-subtle bg-surface-primary px-6 py-12 text-center">
           <h2 className="text-lg font-semibold">{t("loadErrorTitle")}</h2>
           <p className="mt-2 text-sm text-text-secondary">{t("loadError")}</p>
-          <Button type="button" variant="secondary" onClick={() => void refetch()} className="mt-5">
+          <Button type="button" variant="outline" onClick={() => void refetch()} className="mt-5">
             {t("retry")}
           </Button>
         </div>
@@ -223,7 +223,7 @@ export default function AutoSearchManager({
           <h2 className="text-lg font-semibold text-text-primary">
             {t("searchNotFound")}
           </h2>
-          <Button asChild variant="secondary" className="mt-5">
+          <Button asChild variant="outline" className="mt-5">
             <Link href="/auto-search">{t("backToAutoSearches")}</Link>
           </Button>
         </div>

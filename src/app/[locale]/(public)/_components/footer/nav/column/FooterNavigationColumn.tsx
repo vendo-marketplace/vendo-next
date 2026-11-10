@@ -16,7 +16,7 @@ const FooterNavigationColumn = ({ column }: Props) => {
           <li key={link.label}>
             <Link
               href="/"
-              className={`text-text-secondary ${link.highlighted && "bg-linear-to-r from-[#721ED2] to-[#C042ED] bg-clip-text text-transparent"}`}
+              className={`text-text-secondary ${link.highlighted && "bg-linear-to-r from-purple-700 to-[#C042ED] bg-clip-text text-transparent"}`}
             >
               {link.label}
             </Link>

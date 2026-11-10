@@ -14,7 +14,7 @@ type CreateProductPreviewProps = {
 export default function CreateProductPreview({ draft, previews }: CreateProductPreviewProps) {
   return (
     <aside className="space-y-4 lg:sticky lg:top-24">
-      <section className="overflow-hidden rounded-2xl border border-stroke-primary-subtle bg-white shadow-[0_4px_24px_rgba(20,31,54,0.04)]">
+      <section className="overflow-hidden rounded-2xl border border-stroke-primary-subtle bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-stroke-secondary px-5 py-4">
           <div>
             <p className="text-sm font-semibold">Попередній перегляд</p>
@@ -27,7 +27,7 @@ export default function CreateProductPreview({ draft, previews }: CreateProductP
           </span>
         </div>
 
-        <div className="relative aspect-[4/3] bg-[#f1f3f6]">
+        <div className="relative aspect-[4/3] bg-surface-primary-subtle">
           {previews[0] ? (
             <Image
               src={previews[0]}
@@ -75,8 +75,8 @@ export default function CreateProductPreview({ draft, previews }: CreateProductP
         </div>
       </section>
 
-      <section className="relative overflow-hidden rounded-2xl border border-[#dce8ff] bg-gradient-to-br from-[#f2f7ff] via-white to-[#f7f4ff] p-5">
-        <div className="absolute -right-7 -top-7 size-24 rounded-full bg-[#e8efff] blur-2xl" />
+      <section className="relative overflow-hidden rounded-2xl border border-stroke-brand-subtle bg-gradient-to-br from-brand-50 via-white to-purple-50 p-5">
+        <div className="absolute -right-7 -top-7 size-24 rounded-full bg-brand-100 blur-2xl" />
         <div className="relative flex items-start gap-3">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-white text-text-brand shadow-sm">
             <WandSparkles aria-hidden="true" className="size-4" />
@@ -84,14 +84,14 @@ export default function CreateProductPreview({ draft, previews }: CreateProductP
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-sm font-semibold">Створити ще простіше</p>
-              <span className="rounded-full border border-[#d9def9] bg-white/80 px-2 py-0.5 text-[10px] font-medium text-[#7562c7]">
+              <span className="rounded-full border border-purple-200 bg-white/80 px-2 py-0.5 text-[10px] font-medium text-purple-700">
                 Незабаром
               </span>
             </div>
             <p className="mt-1.5 text-xs leading-5 text-text-secondary">
               Додамо ШІ-помічника, який запропонує назву, опис і характеристики за фото.
             </p>
-            <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-[#7562c7]">
+            <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-purple-700">
               <Sparkles aria-hidden="true" className="size-3.5" />
               Зараз усе під вашим контролем
             </div>

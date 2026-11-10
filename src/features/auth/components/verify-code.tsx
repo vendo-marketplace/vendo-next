@@ -116,17 +116,17 @@ export function VerifyCode({
       </div>
 
       <div className="space-y-1">
-        <h1 className="text-[24px] leading-7.5 font-semibold text-text-primary">
+        <h1 className="text-display-xs font-semibold text-text-primary sm:text-display-sm">
           Підтвердіть Ваш e-mail
         </h1>
-        <p className="text-[14px] leading-5 text-text-tertiary">
+        <p className="text-sm text-text-secondary">
           Ми відправили код підтвердження на адресу{" "}
           <span className="underline text-text-brand-dark">{email}</span>.
           Введіть його нижче.
         </p>
       </div>
 
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex items-center justify-center">
           <OtpCodeInput
             aria-label="Код підтвердження"
@@ -136,7 +136,7 @@ export function VerifyCode({
         </div>
 
         <Button
-          className="w-full"
+          className="mt-2 w-full"
           type="submit"
           disabled={code.length !== CODE_LENGTH || isValidationPending}
         >
@@ -144,7 +144,7 @@ export function VerifyCode({
         </Button>
       </form>
 
-      <p className="text-center text-[14px] text-text-tertiary">
+      <p className="text-center text-sm text-text-secondary">
         Не отримали лист?{" "}
         <button
           className="font-medium text-text-brand hover:text-text-hover disabled:cursor-not-allowed disabled:opacity-50"

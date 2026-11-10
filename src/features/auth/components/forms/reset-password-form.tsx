@@ -68,7 +68,7 @@ export function ResetPasswordForm({
 
   return (
     <form
-      className="space-y-4"
+      className="flex flex-col gap-4"
       noValidate
       onSubmit={submit}
       onChange={clearServerError}
@@ -95,7 +95,7 @@ export function ResetPasswordForm({
 
       {serverError && <FormErrorNotice message={serverError} />}
 
-      <Button className="w-full" type="submit" disabled={isBusy}>
+      <Button className="mt-2 w-full" type="submit" disabled={isBusy}>
         {isBusy ? "Збереження..." : "Підтвердити"}
       </Button>
     </form>

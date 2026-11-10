@@ -17,7 +17,7 @@ const HeaderFavoritesLink = () => {
   return (
     <Button
       asChild
-      variant="secondary"
+      variant="outline"
       className="relative size-8 border-0 p-0 "
     >
       <Link

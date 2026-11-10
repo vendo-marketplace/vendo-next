@@ -165,7 +165,7 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
                       </p>
                     </div>
                     {needsEmailVerification && (
-                      <Button asChild variant="secondary">
+                      <Button asChild variant="outline">
                         <Link
                           href="/onboarding"
                           onClick={() =>

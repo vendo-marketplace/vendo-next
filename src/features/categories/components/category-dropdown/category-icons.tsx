@@ -1,3 +1,4 @@
+import type { LucideProps } from "lucide-react";
 import {
   Baby,
   BookOpen,
@@ -34,5 +35,8 @@ const categoryIcons = [
   Laptop,
 ];
 
-export const getCategoryIcon = (index: number) =>
-  categoryIcons[index % categoryIcons.length];
+// Picks the icon by the category's position so root categories keep a stable icon.
+export function CategoryIcon({ index, ...props }: LucideProps & { index: number }) {
+  const Icon = categoryIcons[index % categoryIcons.length];
+  return <Icon {...props} />;
+}

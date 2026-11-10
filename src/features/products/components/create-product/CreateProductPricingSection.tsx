@@ -15,7 +15,7 @@ export default function CreateProductPricingSection({
   return (
     <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-[0_4px_24px_rgba(20,31,54,0.03)] sm:p-7">
       <div className="mb-6 flex gap-3.5">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-text-brand">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-brand-subtle text-text-brand">
           <span className="text-lg font-semibold">₴</span>
         </div>
         <div>

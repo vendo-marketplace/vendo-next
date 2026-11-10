@@ -2,10 +2,8 @@
 
 import { Tabs } from "radix-ui";
 
-import { getButtonClassName } from "@/components/ui/button/button";
 import { GoogleLoginButton } from "@/components/ui/google-login-button";
 import { Link } from "@/i18n/navigation";
-import { cn } from "@/utils/utils";
 
 import { AuthContentHeader } from "../auth-content-header";
 import { SignIn } from "../sign-in";
@@ -30,6 +28,9 @@ const authContent = {
   },
 } as const;
 
+const tabClassName =
+  "-mb-px flex flex-1 items-center justify-center gap-1.5 border-b-2 border-transparent pb-2.5 text-md font-semibold rounded-t-sm text-text-secondary outline-0 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 hover:text-text-primary focus-visible:text-text-brand data-[state=active]:border-stroke-brand data-[state=active]:text-text-brand";
+
 export function AuthForm({ activeTab }: AuthFormProps) {
   const content = authContent[activeTab];
 
@@ -41,34 +42,16 @@ export function AuthForm({ activeTab }: AuthFormProps) {
       />
 
       <Tabs.List
-        className="flex items-center justify-center gap-1 p-1 bg-surface-brand-subtle rounded-lg"
+        className="flex items-center border-b border-stroke-secondary"
         aria-label="Авторизація"
       >
         <Tabs.Trigger value="sign-in" asChild>
-          <Link
-            href="/sign-in"
-            className={cn(
-              getButtonClassName({
-                className: "flex-1 border-0",
-                variant: activeTab === "sign-in" ? "brand" : "secondary",
-              }),
-              activeTab === "sign-up" && "bg-transparent",
-            )}
-          >
+          <Link href="/sign-in" className={tabClassName}>
             Вхід
           </Link>
         </Tabs.Trigger>
         <Tabs.Trigger value="sign-up" asChild>
-          <Link
-            href="/sign-up"
-            className={cn(
-              getButtonClassName({
-                className: "flex-1 border-0",
-                variant: activeTab === "sign-up" ? "brand" : "secondary",
-              }),
-              activeTab === "sign-in" && "bg-transparent",
-            )}
-          >
+          <Link href="/sign-up" className={tabClassName}>
             Реєстрація
           </Link>
         </Tabs.Trigger>
@@ -83,7 +66,7 @@ export function AuthForm({ activeTab }: AuthFormProps) {
 
       <div className="flex items-center justify-between gap-4">
         <div className="h-px w-full bg-stroke-secondary" />
-        <span className="font-medium text-text-secondary">або</span>
+        <span className="text-sm font-medium text-text-secondary">або</span>
         <div className="h-px w-full bg-stroke-secondary" />
       </div>
       <GoogleLoginButton label={content.googleLabel} />

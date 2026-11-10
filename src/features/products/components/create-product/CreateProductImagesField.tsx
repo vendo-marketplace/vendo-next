@@ -20,10 +20,10 @@ export default function CreateProductImagesField({
   onRemove,
 }: CreateProductImagesFieldProps) {
   return (
-    <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-[0_4px_24px_rgba(20,31,54,0.03)] sm:p-7">
+    <section className="rounded-2xl border border-stroke-primary-subtle bg-white p-5 shadow-sm sm:p-7">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="flex gap-3.5">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#edf4ff] text-text-brand">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface-brand-subtle text-text-brand">
             <Camera aria-hidden="true" className="size-5" />
           </div>
           <div>
@@ -76,7 +76,7 @@ export default function CreateProductImagesField({
             className={`flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed ${
               error
                 ? "border-stroke-error bg-surface-error-subtle"
-                : "border-[#c9d5e8] bg-[#fbfcff] hover:border-stroke-brand hover:bg-[#f4f8ff]"
+                : "border-stroke-primary bg-surface-secondary hover:border-stroke-brand hover:bg-surface-brand-subtle"
             } transition ${images.length === 0 ? "sm:col-span-2 sm:row-span-2" : ""}`}
           >
             <span className="flex size-11 items-center justify-center rounded-xl bg-white text-text-brand shadow-sm">

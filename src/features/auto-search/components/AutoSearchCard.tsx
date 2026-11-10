@@ -172,7 +172,7 @@ function AutoSearchCardActions({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Button asChild variant="secondary" size="sm" className="h-10">
+      <Button asChild variant="outline" size="sm" className="h-10">
         <Link
           href={
             showProducts ? "/auto-search" : `/auto-search/${autoSearchId}/products`
@@ -190,7 +190,7 @@ function AutoSearchCardActions({
       </Button>
       <Button
         type="button"
-        variant="secondary"
+        variant="outline"
         size="sm"
         onClick={onEdit}
         className="h-10"
@@ -201,7 +201,7 @@ function AutoSearchCardActions({
       </Button>
       <Button
         type="button"
-        variant="secondary"
+        variant="outline"
         size="sm"
         disabled={isDeleting}
         onClick={onDelete}

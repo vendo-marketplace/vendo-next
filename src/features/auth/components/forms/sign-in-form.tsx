@@ -79,7 +79,7 @@ export function SignInForm({
 
   return (
     <form
-      className="space-y-4"
+      className="flex flex-col gap-4"
       noValidate
       onSubmit={submit}
       onChange={clearServerError}
@@ -104,38 +104,38 @@ export function SignInForm({
         )}
       </FormField>
 
-      <div className="space-y-3">
-        <FormField
-          id={`${idPrefix}-password`}
-          label="Пароль"
-          error={errors.password?.message}
-          required
-        >
-          {(fieldProps) => (
-            <PasswordInput
-              {...fieldProps}
-              {...register("password")}
-              autoComplete={passwordAutoComplete}
-              value={password}
-              onClear={() => clearField("password")}
-              placeholder="Введіть пароль"
-              start={<LockIcon className="size-full" />}
-            />
-          )}
-        </FormField>
-        {showForgotPasswordLink && (
-          <Link
-            href="/forgot-password"
-            className="text-text-brand font-medium text-[14px] leading-5"
-          >
-            Забули пароль?
-          </Link>
+      <FormField
+        id={`${idPrefix}-password`}
+        label="Пароль"
+        labelAction={
+          showForgotPasswordLink && (
+            <Link
+              href="/forgot-password"
+              className="text-sm font-medium text-text-brand hover:text-text-brand-dark"
+            >
+              Забули пароль?
+            </Link>
+          )
+        }
+        error={errors.password?.message}
+        required
+      >
+        {(fieldProps) => (
+          <PasswordInput
+            {...fieldProps}
+            {...register("password")}
+            autoComplete={passwordAutoComplete}
+            value={password}
+            onClear={() => clearField("password")}
+            placeholder="Введіть пароль"
+            start={<LockIcon className="size-full" />}
+          />
         )}
-      </div>
+      </FormField>
 
       {serverError && <FormErrorNotice message={serverError} />}
 
-      <Button className="w-full" type="submit" disabled={isSubmitting}>
+      <Button className="mt-2 w-full" type="submit" disabled={isSubmitting}>
         {submitLabel}
       </Button>
     </form>

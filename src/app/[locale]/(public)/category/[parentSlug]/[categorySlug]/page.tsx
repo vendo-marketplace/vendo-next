@@ -1,5 +1,7 @@
-import { getCategoryAttributes } from "@/features/categories/server/get-category-attributes";
+import { CategoryHeader } from "@/features/categories/components/category-header/CategoryHeader";
 import CategoryProducts from "@/features/categories/components/category-products/CategoryProducts";
+import { withMockFilters } from "@/features/categories/components/category-filters/lib/mock-filter-attributes";
+import { getCategoryAttributes } from "@/features/categories/server/get-category-attributes";
 
 interface CategoryPageProps {
   params: Promise<{
@@ -11,26 +13,27 @@ interface CategoryPageProps {
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { parentSlug, categorySlug } = await params;
   const result = await getCategoryAttributes(parentSlug, categorySlug);
-  const category = result.success ? result.data.category : undefined;
-  const attributes = result.success ? result.data.attributes : [];
-  const visibleAttributes = attributes.filter(
-    (attribute) => attribute.type !== "STRING",
+
+  if (!result.success) {
+    return (
+      <section className="page-container py-8">
+        <h1 className="text-display-xs font-semibold text-text-primary">
+          Категорію не знайдено
+        </h1>
+      </section>
+    );
+  }
+
+  const { category, trail, attributes } = result.data;
+  const filterAttributes = withMockFilters(
+    category.slug,
+    attributes.filter((attribute) => attribute.type !== "STRING"),
   );
 
   return (
-    <section className="mx-auto w-full max-w-330 px-4 py-8">
-      <p className="text-sm text-text-tertiary">
-        {category?.title ?? parentSlug}
-      </p>
-      <h1 className="mt-2 text-3xl font-semibold text-text-primary">
-        {category?.title ?? categorySlug}
-      </h1>
-      {category && (
-        <CategoryProducts
-          categoryId={category.id}
-          attributes={visibleAttributes}
-        />
-      )}
+    <section className="page-container py-8">
+      <CategoryHeader category={category} trail={trail} />
+      <CategoryProducts categoryId={category.id} attributes={filterAttributes} />
     </section>
   );
 }

@@ -30,10 +30,30 @@ const findCategoryInPath = (
   return findCategory(parent.children, categorySlug);
 };
 
+// Root-to-category path, used for breadcrumbs.
+const findCategoryTrail = (
+  categories: Category[],
+  categoryId: string,
+): Category[] => {
+  for (const category of categories) {
+    if (category.id === categoryId) return [category];
+
+    const childTrail = findCategoryTrail(category.children, categoryId);
+    if (childTrail.length) return [category, ...childTrail];
+  }
+  return [];
+};
+
 export const getCategoryAttributes = async (
   parentSlug: string,
   categorySlug: string,
-): Promise<ServerActionResult<{ category: Category; attributes: CategoryAttribute[] }>> => {
+): Promise<
+  ServerActionResult<{
+    category: Category;
+    trail: Category[];
+    attributes: CategoryAttribute[];
+  }>
+> => {
   try {
     const categoriesResponse = await fetch(
       getApiUrl(apiEndpoints.categories.tree),
@@ -63,7 +83,10 @@ export const getCategoryAttributes = async (
     }
 
     const attributes = (await attributesResponse.json()) as CategoryAttribute[];
-    return { success: true, data: { category, attributes } };
+    return {
+      success: true,
+      data: { category, trail: findCategoryTrail(data, category.id), attributes },
+    };
   } catch {
     return { success: false, errorMessage: "Failed to get category attributes" };
   }

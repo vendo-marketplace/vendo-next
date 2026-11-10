@@ -339,7 +339,7 @@ export default function AutoSearchForm({
         <Button type="submit" disabled={isSaving} className="min-h-11 px-5">
           {isSaving ? t("saving") : isEditing ? t("saveChanges") : t("create")}
         </Button>
-        <Button type="button" variant="secondary" onClick={onCancel} className="min-h-11">
+        <Button type="button" variant="outline" onClick={onCancel} className="min-h-11">
           {t("cancel")}
         </Button>
       </div>

@@ -12,7 +12,7 @@ import { Link } from "@/i18n/navigation";
 
 const Header = () => {
   return (
-    <header className="font-mazzard sticky top-0 left-0 z-50 flex h-28 w-full items-center justify-center border-b border-stroke-primary-subtle bg-surface-primary lg:h-[88px]">
+    <header className="sticky top-0 left-0 z-50 flex h-28 w-full items-center justify-center border-b border-stroke-primary-subtle bg-surface-primary lg:h-[88px]">
       <div className="page-container grid h-full grid-cols-[auto_minmax(0,1fr)] grid-rows-[48px_64px] items-center gap-x-3 lg:flex lg:gap-3 xl:gap-4">
         <div className="col-start-1 row-start-1 lg:shrink-0">
           <Logo className="h-7 sm:h-8 lg:h-9" />
@@ -22,7 +22,7 @@ const Header = () => {
           <HeaderFavoritesLink />
           <Button
             asChild
-            variant="secondary"
+            variant="outline"
             aria-label="Повідомлення"
             className="hidden size-8 border-0 p-0 sm:inline-flex"
           >

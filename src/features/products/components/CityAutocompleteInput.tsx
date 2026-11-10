@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { MapPin } from "lucide-react";
 
 import { Input } from "@/components/ui/input/input";
-import { UKRAINIAN_CITIES } from "@/features/products/constants/ukrainian-cities";
+import { searchUkrainianCities } from "@/features/products/components/create-product/form-utils";
 
 const MAX_CITY_SUGGESTIONS = 12;
 
@@ -24,23 +24,10 @@ export default function CityAutocompleteInput({
   onChange,
 }: CityAutocompleteInputProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const suggestions = useMemo(() => {
-    const query = value.trim().toLocaleLowerCase("uk");
-    if (!query) return UKRAINIAN_CITIES.slice(0, MAX_CITY_SUGGESTIONS);
-
-    return UKRAINIAN_CITIES
-      .filter((city) => city.toLocaleLowerCase("uk").includes(query))
-      .sort((left, right) => {
-        const leftStartsWithQuery = left.toLocaleLowerCase("uk").startsWith(query);
-        const rightStartsWithQuery = right.toLocaleLowerCase("uk").startsWith(query);
-
-        return (
-          Number(rightStartsWithQuery) - Number(leftStartsWithQuery) ||
-          left.localeCompare(right, "uk")
-        );
-      })
-      .slice(0, MAX_CITY_SUGGESTIONS);
-  }, [value]);
+  const suggestions = useMemo(
+    () => searchUkrainianCities(value, MAX_CITY_SUGGESTIONS),
+    [value],
+  );
 
   return (
     <div className="relative min-w-0">

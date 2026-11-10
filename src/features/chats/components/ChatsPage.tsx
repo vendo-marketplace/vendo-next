@@ -255,7 +255,7 @@ export default function ChatsPage() {
                 </button>
                 <ParticipantAvatar
                   label={peerRole}
-                  color={peerIsSeller ? "bg-blue-100 text-blue-700" : "bg-violet-100 text-violet-700"}
+                  color={peerIsSeller ? "bg-surface-brand-subtle text-text-brand" : "bg-purple-100 text-purple-700"}
                   size="size-10"
                 />
                 <div className="min-w-0">
@@ -273,7 +273,7 @@ export default function ChatsPage() {
                   onClick={deleteConversation}
                   disabled={removeMutation.isPending}
                   aria-label="Видалити розмову"
-                  className="flex size-9 shrink-0 items-center justify-center rounded-full text-text-secondary hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                  className="flex size-9 shrink-0 items-center justify-center rounded-full text-text-secondary hover:bg-surface-error-subtle hover:text-text-error disabled:opacity-50"
                 >
                   <Trash2 className="size-[18px]" />
                 </button>

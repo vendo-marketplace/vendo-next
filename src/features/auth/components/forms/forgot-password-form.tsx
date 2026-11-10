@@ -66,7 +66,7 @@ export function ForgotPasswordForm({
 
   return (
     <form
-      className="space-y-4"
+      className="flex flex-col gap-4"
       noValidate
       onSubmit={submit}
       onChange={clearServerError}
@@ -94,7 +94,7 @@ export function ForgotPasswordForm({
 
       {serverError && <FormErrorNotice message={serverError} />}
 
-      <Button className="w-full" type="submit" disabled={isBusy}>
+      <Button className="mt-2 w-full" type="submit" disabled={isBusy}>
         {isBusy ? "Надсилання..." : "Надіслати посилання"}
       </Button>
     </form>
