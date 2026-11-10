@@ -45,11 +45,13 @@ export function CategoryToolbar({
           <FilterIcon size={16} />
           Фільтри{activeFiltersCount > 0 && ` · ${activeFiltersCount}`}
         </Button>
-        <ProductSortSelect
-          value={sort}
-          onChange={onSortChange}
-          sortValues={CATEGORY_PRODUCT_SORT_VALUES}
-        />
+        {totalElements !== 0 && (
+          <ProductSortSelect
+            value={sort}
+            onChange={onSortChange}
+            sortValues={CATEGORY_PRODUCT_SORT_VALUES}
+          />
+        )}
         {/* TODO: prefill the auto-search form with the current category and filters. */}
         <Button asChild variant="outline">
           <Link href="/auto-search">

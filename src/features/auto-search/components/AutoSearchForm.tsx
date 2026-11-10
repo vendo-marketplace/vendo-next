@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button/button";
 import { Input } from "@/components/ui/input/input";
 import NumberInput from "@/components/ui/input/number-input";
 import type { CategoryOption } from "@/features/categories/types/category";
+import CityAutocompleteInput from "@/features/products/components/CityAutocompleteInput";
 import CreateProductCategoryPicker from "@/features/products/components/create-product/CreateProductCategoryPicker";
 import type {
   AutoSearchFilters,
@@ -228,18 +229,14 @@ export default function AutoSearchForm({
               </div>
             </fieldset>
 
-            <label className={`flex flex-col gap-2 ${fieldLabelClassName}`}>
-              {t("cityOptional")}
-              <div className="w-full">
-                <Input
-                  value={values.city}
-                  onChange={(event) => update("city", event.target.value)}
-                  onClear={() => update("city", "")}
-                  placeholder={t("cityPlaceholder")}
-                  className="h-5"
-                />
-              </div>
-            </label>
+            <CityAutocompleteInput
+              id="auto-search-city"
+              label={t("cityOptional")}
+              value={values.city}
+              onChange={(city) => update("city", city)}
+              placeholder={t("cityPlaceholder")}
+              anyCityLabel={t("anyCity")}
+            />
           </>
         )}
 

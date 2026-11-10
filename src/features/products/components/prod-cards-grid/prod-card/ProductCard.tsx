@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 import type { ProductCardType } from "@/types/product";
 import { formatRelativeTime } from "@/utils/format-relative-time";
 import { cn } from "@/utils/utils";
@@ -98,7 +99,7 @@ const ProductCard = ({
         <div className="mt-auto flex h-7 items-center gap-2 px-2 text-xs text-text-secondary">
           <span className="flex min-w-0 flex-1 items-center gap-1">
             <MapPin aria-hidden="true" className="size-4.5 shrink-0" />
-            <span className="truncate">{address.city}</span>
+            <span className="truncate">{toUkrainianCityName(address.city)}</span>
           </span>
           <span className="shrink-0">{formatRelativeTime(createdAt)}</span>
         </div>
