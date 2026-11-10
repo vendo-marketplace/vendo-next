@@ -8,9 +8,11 @@ import { useFavorites } from "@/features/favorites/hooks/use-favorites";
 interface Props {
   cards: ProductCardType[];
   isLoading?: boolean;
+  // Next to a filters sidebar there is room for three columns, not four.
+  withSidebar?: boolean;
 }
 
-const ProductCardsGrid = ({ cards, isLoading = false }: Props) => {
+const ProductCardsGrid = ({ cards, isLoading = false, withSidebar = false }: Props) => {
   const {
     favoriteIds,
     isLoading: areFavoritesLoading,
@@ -21,7 +23,13 @@ const ProductCardsGrid = ({ cards, isLoading = false }: Props) => {
   if (isLoading) return <LoadingSpinner />;
 
   return (
-    <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 xl:grid-cols-4">
+    <div
+      className={
+        withSidebar
+          ? "grid w-full grid-cols-2 gap-3 md:grid-cols-3"
+          : "grid w-full grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 xl:grid-cols-4"
+      }
+    >
       {cards.map((card, index) => (
         <ProductCard
           key={card.id}
