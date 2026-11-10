@@ -1,5 +1,6 @@
 import { CategoryHeader } from "@/features/categories/components/category-header/CategoryHeader";
 import CategoryProducts from "@/features/categories/components/category-products/CategoryProducts";
+import { withMockFilters } from "@/features/categories/components/category-filters/lib/mock-filter-attributes";
 import { getCategoryAttributes } from "@/features/categories/server/get-category-attributes";
 
 interface CategoryPageProps {
@@ -24,14 +25,15 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   }
 
   const { category, trail, attributes } = result.data;
-  const visibleAttributes = attributes.filter(
-    (attribute) => attribute.type !== "STRING",
+  const filterAttributes = withMockFilters(
+    category.slug,
+    attributes.filter((attribute) => attribute.type !== "STRING"),
   );
 
   return (
     <section className="page-container py-8">
       <CategoryHeader category={category} trail={trail} />
-      <CategoryProducts categoryId={category.id} attributes={visibleAttributes} />
+      <CategoryProducts categoryId={category.id} attributes={filterAttributes} />
     </section>
   );
 }

@@ -6,7 +6,6 @@ import { SearchIcon } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input/input";
 import NumberInput from "@/components/ui/input/number-input";
 
-import type { CategoryAttribute } from "../../types/category";
 import {
   FilterCheckbox,
   FilterChip,
@@ -17,6 +16,7 @@ import {
 } from "./FilterControls";
 import { getColorSwatch, isColorAttribute, shouldRenderAsChips } from "./lib/filter-display";
 import { toggleValue, type AttributeValue } from "./lib/filter-state";
+import type { FilterAttribute } from "./lib/mock-filter-attributes";
 
 const VISIBLE_OPTIONS = 8;
 const SEARCHABLE_FROM = 9;
@@ -32,7 +32,7 @@ function EnumOptions({
   value,
   onChange,
 }: {
-  attribute: CategoryAttribute;
+  attribute: FilterAttribute;
   value: AttributeValue;
   onChange: (value: AttributeValue) => void;
 }) {
@@ -43,7 +43,13 @@ function EnumOptions({
   const toggle = (option: string) =>
     onChange({ ...value, values: toggleValue(value.values, option) });
 
-  if (shouldRenderAsChips(options) && !isColorAttribute(attribute)) {
+  const renderAsChips =
+    attribute.display === "chips" ||
+    (attribute.display !== "checkboxes" &&
+      shouldRenderAsChips(options) &&
+      !isColorAttribute(attribute));
+
+  if (renderAsChips) {
     return (
       <FilterChips>
         {options.map((option) => (
@@ -108,7 +114,7 @@ export function AttributeFilter({
   onChange,
   last,
 }: {
-  attribute: CategoryAttribute;
+  attribute: FilterAttribute;
   value: AttributeValue;
   onChange: (value: AttributeValue) => void;
   last?: boolean;
@@ -118,6 +124,7 @@ export function AttributeFilter({
       <FilterSection title={attribute.title} collapsible={false} last={last}>
         <FilterSwitch
           label={toPresenceLabel(attribute.title)}
+          description={attribute.description}
           checked={value.values[0] === "true"}
           onChange={(checked) => onChange({ ...value, values: checked ? ["true"] : [] })}
         />

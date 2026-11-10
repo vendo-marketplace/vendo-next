@@ -16,12 +16,12 @@ import {
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import type { SearchProductsQuery } from "@/types/product";
 
-import type { CategoryAttribute } from "../../types/category";
 import { ActiveFilterChips } from "../category-filters/ActiveFilterChips";
 import { CategoryFiltersPanel } from "../category-filters/CategoryFiltersPanel";
 import { getActiveFilterChips } from "../category-filters/lib/active-filter-chips";
 import { toSearchFilters } from "../category-filters/lib/filter-query";
 import { EMPTY_FILTERS, type CategoryFilters } from "../category-filters/lib/filter-state";
+import type { FilterAttribute } from "../category-filters/lib/mock-filter-attributes";
 import { CategoryEmptyResults } from "./CategoryEmptyResults";
 import { CategoryToolbar } from "./CategoryToolbar";
 
@@ -34,7 +34,7 @@ export default function CategoryProducts({
   attributes,
 }: {
   categoryId: string;
-  attributes: CategoryAttribute[];
+  attributes: FilterAttribute[];
 }) {
   const [sort, setSort] = useState<ProductSortOption>(DEFAULT_CATEGORY_PRODUCT_SORT);
   const [filters, setFilters] = useState<CategoryFilters>(EMPTY_FILTERS);

@@ -2,7 +2,6 @@
 
 import { FilterIcon } from "@/assets/icons/FilterIcon";
 
-import type { CategoryAttribute } from "../../types/category";
 import { AttributeFilter } from "./AttributeFilter";
 import { CityFilter } from "./CityFilter";
 import { FilterChip, FilterChips, FilterSection } from "./FilterControls";
@@ -12,6 +11,7 @@ import {
   toggleValue,
   type CategoryFilters,
 } from "./lib/filter-state";
+import type { FilterAttribute } from "./lib/mock-filter-attributes";
 import { PriceRangeFilter } from "./PriceRangeFilter";
 
 export function CategoryFiltersPanel({
@@ -22,7 +22,7 @@ export function CategoryFiltersPanel({
 }: {
   id?: string;
   filters: CategoryFilters;
-  attributes: CategoryAttribute[];
+  attributes: FilterAttribute[];
   // Receives an updater so quick successive edits build on the latest filters.
   onChange: (update: (current: CategoryFilters) => CategoryFilters) => void;
 }) {

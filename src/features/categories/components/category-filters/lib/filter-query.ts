@@ -1,12 +1,12 @@
 import type { AttributeValueFilter, SearchProductsQuery } from "@/types/product";
 
-import type { CategoryAttribute } from "../../../types/category";
 import {
   EMPTY_ATTRIBUTE_VALUE,
   type AttributeValue,
   type CategoryFilters,
   type Condition,
 } from "./filter-state";
+import type { FilterAttribute } from "./mock-filter-attributes";
 
 const toConditionQuery = (conditions: Condition[]) => {
   // TODO(api): "like-new" has no backend field yet; only isNew true/false exists.
@@ -16,7 +16,7 @@ const toConditionQuery = (conditions: Condition[]) => {
 };
 
 const toAttributeFilter = (
-  attribute: CategoryAttribute,
+  attribute: FilterAttribute,
   value: AttributeValue,
 ): AttributeValueFilter | undefined => {
   switch (attribute.type) {
@@ -36,11 +36,12 @@ const toAttributeFilter = (
 
 export const toSearchFilters = (
   filters: CategoryFilters,
-  attributes: CategoryAttribute[],
+  attributes: FilterAttribute[],
 ): Partial<SearchProductsQuery> => {
   const minPrice = filters.price.min ? Number(filters.price.min) : undefined;
   const maxPrice = filters.price.max ? Number(filters.price.max) : undefined;
-  const attributeFilters = attributes.flatMap(
+  // Mock sections have no backend attribute behind them, so they stay out of the query.
+  const attributeFilters = attributes.filter((attribute) => !attribute.isMock).flatMap(
     (attribute) =>
       toAttributeFilter(attribute, filters.attributes[attribute.id] ?? EMPTY_ATTRIBUTE_VALUE) ??
       [],
