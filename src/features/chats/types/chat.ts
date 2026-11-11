@@ -1,8 +1,13 @@
+export interface ConversationParticipant {
+  id: string;
+  fullName: string;
+}
+
 export interface Conversation {
   id: string;
   productId: string;
-  sellerId: string;
-  buyerId: string;
+  seller: ConversationParticipant;
+  buyer: ConversationParticipant;
   lastMessage: string;
   createdAt: string;
 }

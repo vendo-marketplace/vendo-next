@@ -10,7 +10,7 @@ import { ParticipantAvatar } from "./ConversationSidebar";
 type Props = {
   messages: Message[];
   userId: string;
-  peerRole: string;
+  peerName: string;
   isLoading: boolean;
   isError: boolean;
   onRetry: () => void;
@@ -33,7 +33,7 @@ const formatTime = (value?: string) => {
 export default function MessageHistory({
   messages,
   userId,
-  peerRole,
+  peerName,
   isLoading,
   isError,
   onRetry,
@@ -156,7 +156,7 @@ export default function MessageHistory({
                 {!fromMe &&
                   (showAvatar ? (
                     <ParticipantAvatar
-                      label={peerRole}
+                      label={peerName}
                       color="bg-blue-100 text-blue-700"
                       size="size-7"
                     />

@@ -57,8 +57,9 @@ export function useConversations(enabled = true) {
   return useQuery({ ...chatQueries.list(), enabled });
 }
 
-export function useConversation(id: string) {
-  return useQuery(chatQueries.conversation(id));
+export function useConversation(id: string, enabled = true) {
+  const query = chatQueries.conversation(id);
+  return useQuery({ ...query, enabled: Boolean(id) && enabled });
 }
 
 export function useConversationMessages(id: string) {
