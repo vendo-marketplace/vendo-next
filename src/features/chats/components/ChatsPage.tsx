@@ -6,7 +6,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import { toast } from "sonner";
@@ -22,10 +22,12 @@ import {
   useConversations,
 } from "@/features/chats/hooks/use-chats";
 import { useConversationSocket } from "@/features/chats/hooks/use-conversation-socket";
+import { getReadUpTo, useMarkConversationRead } from "@/features/chats/hooks/use-read-receipts";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { SearchProductsQuery } from "@/types/product";
 import ConversationSidebar, {
   ConversationProduct,
+  getConversationPeer,
   ParticipantAvatar,
   type ConversationFilter,
 } from "./ConversationSidebar";
@@ -55,13 +57,15 @@ export default function ChatsPage() {
     create: createMutation,
     send: sendMutation,
     remove: removeMutation,
+    markRead: markReadMutation,
   } = useChatMutations();
 
   const productIds = useMemo(
     () =>
-      [...new Set([...conversations.map((item) => item.productId), requestedProductId])].filter(
-        Boolean,
-      ),
+      // Sorted so the query key stays the same when the list is reordered by a new message.
+      [...new Set([...conversations.map((item) => item.productId), requestedProductId])]
+        .filter(Boolean)
+        .sort(),
     [conversations, requestedProductId],
   );
   const productQuery = useMemo(
@@ -77,6 +81,8 @@ export default function ChatsPage() {
   const { data: products = [] } = useQuery({
     queryKey: ["chat-products", productIds],
     enabled: Boolean(user && productIds.length),
+    // Keep the current products on screen while a new set of ids loads.
+    placeholderData: keepPreviousData,
     queryFn: async () => (await productsApi.search(undefined, productQuery)).data.data,
   });
   const productById = useMemo(
@@ -88,12 +94,14 @@ export default function ChatsPage() {
   const isDraftConversation = Boolean(requestedProductId && !activeId);
   const isChatOpen = Boolean(activeId || isDraftConversation);
   const activeListItem = conversations.find((conversation) => conversation.id === activeId);
+  // The list already carries the conversation; fetch it on its own only when
+  // it is missing there (just created, or opened from a link).
   const {
     data: conversationDetails,
     isLoading: isConversationLoading,
     isError: conversationError,
     refetch: refetchConversation,
-  } = useConversation(activeId);
+  } = useConversation(activeId, !isLoading && !activeListItem);
   const activeConversation = conversationDetails ?? activeListItem;
   useConversationSocket(activeId, Boolean(user && activeConversation));
 
@@ -119,10 +127,15 @@ export default function ChatsPage() {
     : isDraftConversation
       ? productById.get(requestedProductId)
       : undefined;
-  const peerIsSeller =
-    isDraftConversation ||
-    Boolean(activeConversation && activeConversation.sellerId !== user?.id);
-  const peerRole = peerIsSeller ? "Продавець" : "Покупець";
+  // A draft has no conversation yet; its peer is the seller of the product.
+  const peer =
+    activeConversation && user
+      ? getConversationPeer(activeConversation, user.id)
+      : { isUserSeller: false, id: "", name: "Продавець", role: "Продавець" };
+  const peerIsSeller = !peer.isUserSeller;
+  const peerReadUpTo = getReadUpTo(activeConversation?.readStates[peer.id], messages);
+
+  useMarkConversationRead(activeConversation, messages, user?.id, markReadMutation.mutate);
 
   const selectConversation = (conversationId: string) => {
     setSelectedId(conversationId);
@@ -137,20 +150,23 @@ export default function ChatsPage() {
   const sendMessage = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const message = draft.trim();
-    if (!message || sendMutation.isPending || createMutation.isPending) return;
+    if (!message || createMutation.isPending) return;
 
     if (activeConversation) {
-      sendMutation.mutate(
-        { id: activeConversation.id, request: { message }, senderId: user?.id ?? "" },
-        {
-          onSuccess: () => {
-            setDraft("");
-            setScrollToBottomKey((key) => key + 1);
-          },
-          onError: () =>
-            toast.error("Не вдалося надіслати повідомлення. Спробуйте ще раз."),
-        },
-      );
+      // The message is already shown optimistically, so the composer is freed at
+      // once; on failure the text comes back so it can be resent.
+      setDraft("");
+      setScrollToBottomKey((key) => key + 1);
+      sendMutation
+        .mutateAsync({
+          id: activeConversation.id,
+          request: { message },
+          senderId: user?.id ?? "",
+        })
+        .catch(() => {
+          setDraft((current) => current || message);
+          toast.error("Не вдалося надіслати повідомлення. Спробуйте ще раз.");
+        });
       return;
     }
 
@@ -207,7 +223,8 @@ export default function ChatsPage() {
     );
   }
 
-  const isSending = sendMutation.isPending || createMutation.isPending;
+  // Only creating a chat blocks the composer; messages in an existing chat are sent optimistically.
+  const isSending = createMutation.isPending;
   const isComposerDisabled = isDraftConversation && !activeProduct;
 
   return (
@@ -254,16 +271,16 @@ export default function ChatsPage() {
                   <ArrowLeft className="size-5" />
                 </button>
                 <ParticipantAvatar
-                  label={peerRole}
+                  label={peer.name}
                   color={peerIsSeller ? "bg-surface-brand-subtle text-text-brand" : "bg-purple-100 text-purple-700"}
                   size="size-10"
                 />
                 <div className="min-w-0">
                   <h2 className="truncate text-sm font-semibold text-text-primary sm:text-base">
-                    {peerRole}
+                    {peer.name}
                   </h2>
                   <p className="mt-0.5 truncate text-xs text-text-tertiary">
-                    Учасник розмови про товар
+                    {peer.role}
                   </p>
                 </div>
               </div>
@@ -287,7 +304,8 @@ export default function ChatsPage() {
                 key={activeId || requestedProductId}
                 messages={messages}
                 userId={user.id}
-                peerRole={peerRole}
+                peerName={peer.name}
+                peerReadUpTo={peerReadUpTo}
                 isLoading={
                   areMessagesLoading ||
                   (isDraftConversation && !activeProduct) ||

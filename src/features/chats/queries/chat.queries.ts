@@ -1,5 +1,7 @@
 import { conversationsApi } from "@/api/conversations";
-import { queryOptions } from "@tanstack/react-query";
+import { type QueryClient, queryOptions } from "@tanstack/react-query";
+
+import type { Conversation, ReadState } from "@/features/chats/types/chat";
 
 export const chatKeys = {
   all: ["conversations"] as const,
@@ -26,4 +28,27 @@ export const chatQueries = {
       },
       enabled: Boolean(id),
     }),
+};
+
+export const setConversationReadState = (
+  queryClient: QueryClient,
+  conversationId: string,
+  readerId: string,
+  readState: ReadState,
+) => {
+  const withReadState = (conversation: Conversation): Conversation =>
+    conversation.id === conversationId
+      ? {
+          ...conversation,
+          readStates: { ...conversation.readStates, [readerId]: readState },
+        }
+      : conversation;
+
+  queryClient.setQueryData<Conversation[]>(chatKeys.list(), (conversations) =>
+    conversations?.map(withReadState),
+  );
+  queryClient.setQueryData<Conversation>(
+    chatKeys.conversation(conversationId),
+    (conversation) => conversation && withReadState(conversation),
+  );
 };

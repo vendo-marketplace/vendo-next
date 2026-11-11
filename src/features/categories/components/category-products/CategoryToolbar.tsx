@@ -48,12 +48,15 @@ export function CategoryToolbar({
           <FilterIcon size={16} />
           Фільтри{activeFiltersCount > 0 && ` · ${activeFiltersCount}`}
         </Button>
-        <ProductSortSelect
-          value={sort}
-          onChange={onSortChange}
-          sortValues={CATEGORY_PRODUCT_SORT_VALUES}
-          className="h-10 w-full min-w-0 sm:w-fit"
-        />
+        {/* Nothing to sort when the filters found nothing. */}
+        {totalElements !== 0 && (
+          <ProductSortSelect
+            value={sort}
+            onChange={onSortChange}
+            sortValues={CATEGORY_PRODUCT_SORT_VALUES}
+            className="h-10 w-full min-w-0 sm:w-fit"
+          />
+        )}
         <Button
           asChild
           variant="outline"

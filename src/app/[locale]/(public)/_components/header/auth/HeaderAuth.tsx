@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button/button";
@@ -12,14 +13,17 @@ import {
   DropdownTrigger,
 } from "@/components/ui/dropdown/dropdown";
 import { SearchIcon } from "@/assets/icons/SearchIcon";
+import { ShieldIcon } from "@/assets/icons/ShieldIcon";
 import { UserCircleIcon } from "@/assets/icons/UserCircleIcon";
 import { UserIcon } from "@/assets/icons/UserIcon";
+import { hasAdminRole } from "@/features/admin/utils/has-admin-role";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { Link, useRouter } from "@/i18n/navigation";
 import ProfileDialog from "./ProfileDialog";
 
 export default function HeaderAuth() {
+  const t = useTranslations("Admin");
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { data: user } = useMe();
@@ -121,6 +125,14 @@ export default function HeaderAuth() {
               Мої автопошуки
             </Link>
           </DropdownItem>
+          {hasAdminRole(user) && (
+            <DropdownItem asChild>
+              <Link href="/admin">
+                <ShieldIcon size={16} />
+                {t("headerLink")}
+              </Link>
+            </DropdownItem>
+          )}
           <DropdownSeparator />
           <DropdownItem
             disabled={isLoggingOut}

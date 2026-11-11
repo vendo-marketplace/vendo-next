@@ -28,6 +28,7 @@ import { Link } from "@/i18n/navigation";
 import { getCategoryTrails, toLocalDate } from "@/features/auto-search/utils/auto-search-utils";
 import AutoSearchCard from "./AutoSearchCard";
 import AutoSearchForm from "./AutoSearchForm";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 
 type Props = {
   categories: CategoryOption[];
@@ -38,7 +39,7 @@ const getFormValues = (autoSearch: AutoSearch): AutoSearchFormValues => ({
   categoryId: autoSearch.categoryId,
   minPrice: autoSearch.minPrice?.toString() ?? "",
   maxPrice: autoSearch.maxPrice?.toString() ?? "",
-  city: autoSearch.address?.city ?? "",
+  city: autoSearch.address?.city ? toUkrainianCityName(autoSearch.address.city) : "",
   expirationDate: toLocalDate(autoSearch.expirationDate),
   status: autoSearch.status === "EXPIRED" ? "CANCELLED" : autoSearch.status,
 });

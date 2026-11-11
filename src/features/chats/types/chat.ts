@@ -1,8 +1,19 @@
+export interface ConversationParticipant {
+  id: string;
+  fullName: string;
+}
+
+export interface ReadState {
+  lastReadMessageId: string;
+  lastReadAt: string;
+}
+
 export interface Conversation {
   id: string;
   productId: string;
-  sellerId: string;
-  buyerId: string;
+  seller: ConversationParticipant;
+  buyer: ConversationParticipant;
+  readStates: Record<string, ReadState>;
   lastMessage: string;
   createdAt: string;
 }
@@ -38,6 +49,18 @@ export interface MessagePage {
   first: boolean;
   last: boolean;
   empty: boolean;
+}
+
+export interface MarkReadRequest {
+  lastReadMessageId: string;
+}
+
+export interface MessagesReadEvent {
+  type: "MESSAGES_READ";
+  conversationId: string;
+  readerId: string;
+  lastReadMessageId: string;
+  readAt: string;
 }
 
 export interface SendMessageRequest {

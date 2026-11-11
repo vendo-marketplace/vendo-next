@@ -24,6 +24,27 @@ const formatDate = (value?: string) => {
   }).format(date);
 };
 
+const getInitials = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toLocaleUpperCase("uk");
+
+// The other side of the conversation, as seen by the current user.
+export const getConversationPeer = (conversation: Conversation, userId: string) => {
+  const isUserSeller = conversation.seller.id === userId;
+  const participant = isUserSeller ? conversation.buyer : conversation.seller;
+  return {
+    isUserSeller,
+    id: participant.id,
+    name: participant.fullName,
+    role: isUserSeller ? "Покупець" : "Продавець",
+  };
+};
+
 const formatPrice = (price: number) =>
   new Intl.NumberFormat("uk-UA", {
     style: "currency",
@@ -44,7 +65,7 @@ export function ParticipantAvatar({
     <div
       className={`flex ${size} shrink-0 items-center justify-center rounded-full text-xs font-semibold ${color}`}
     >
-      {label.slice(0, 2).toLocaleUpperCase("uk")}
+      {getInitials(label)}
     </div>
   );
 }
@@ -130,12 +151,12 @@ export default function ConversationSidebar({
     () =>
       conversations
         .filter((conversation) => {
-          const isSeller = conversation.sellerId === userId;
-          if (filter === "buying" && isSeller) return false;
-          if (filter === "selling" && !isSeller) return false;
+          const peer = getConversationPeer(conversation, userId);
+          if (filter === "buying" && peer.isUserSeller) return false;
+          if (filter === "selling" && !peer.isUserSeller) return false;
 
           const product = products.get(conversation.productId);
-          const searchableText = `${conversation.lastMessage} ${product?.title ?? ""}`;
+          const searchableText = `${peer.name} ${conversation.lastMessage} ${product?.title ?? ""}`;
           return searchableText
             .toLocaleLowerCase("uk")
             .includes(query.toLocaleLowerCase("uk"));
@@ -200,8 +221,7 @@ export default function ConversationSidebar({
           </div>
         ) : visibleConversations.length ? (
           visibleConversations.map((conversation) => {
-            const isSeller = conversation.sellerId === userId;
-            const role = isSeller ? "Покупець" : "Продавець";
+            const peer = getConversationPeer(conversation, userId);
             const product = products.get(conversation.productId);
 
             return (
@@ -214,9 +234,9 @@ export default function ConversationSidebar({
                 }`}
               >
                 <ParticipantAvatar
-                  label={role}
+                  label={peer.name}
                   color={
-                    isSeller
+                    peer.isUserSeller
                       ? "bg-violet-100 text-violet-700"
                       : "bg-blue-100 text-blue-700"
                   }
@@ -224,14 +244,14 @@ export default function ConversationSidebar({
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center justify-between gap-2">
                     <span className="truncate text-sm font-semibold text-text-primary">
-                      {role}
+                      {peer.name}
                     </span>
                     <span className="shrink-0 text-xs text-text-tertiary">
                       {formatDate(conversation.createdAt)}
                     </span>
                   </span>
                   <span className="mt-1 block truncate text-xs text-text-tertiary">
-                    {product?.title ?? "Оголошення"}
+                    {peer.role} · {product?.title ?? "Оголошення"}
                   </span>
                   <span className="mt-1.5 block truncate text-sm text-text-secondary">
                     {conversation.lastMessage}

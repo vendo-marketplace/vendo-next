@@ -36,6 +36,11 @@ const formatDate = (value: string) => {
 const tabClassName =
   "flex-1 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary outline-none transition-colors hover:bg-surface-secondary data-[state=active]:bg-surface-brand data-[state=active]:text-text-invert";
 
+// All panels share one grid cell and inactive ones stay mounted but invisible,
+// so the dialog keeps the height of the tallest tab when switching.
+const tabContentClassName =
+  "col-start-1 row-start-1 outline-none data-[state=inactive]:invisible";
+
 export default function ProfileDialog({ user, open, onOpenChange }: Props) {
   const displayName = user.fullName?.trim();
   const needsName = !displayName;
@@ -127,8 +132,12 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
               </Tabs.Trigger>
             </Tabs.List>
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-8">
-              <Tabs.Content value="profile" className="outline-none">
+            <div className="grid min-h-0 flex-1 overflow-y-auto px-5 py-6 sm:px-8">
+              <Tabs.Content
+                value="profile"
+                forceMount
+                className={tabContentClassName}
+              >
                 <div className="grid gap-4 sm:grid-cols-2">
                   <InfoCard
                     icon={<UserRound aria-hidden="true" className="size-4" />}
@@ -193,7 +202,11 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
                 </p>
               </Tabs.Content>
 
-              <Tabs.Content value="favorites" className="outline-none">
+              <Tabs.Content
+                value="favorites"
+                forceMount
+                className={tabContentClassName}
+              >
                 <SummaryCard
                   icon={<Heart aria-hidden="true" className="size-5" />}
                   title="Збережені товари"
@@ -207,7 +220,11 @@ export default function ProfileDialog({ user, open, onOpenChange }: Props) {
                 />
               </Tabs.Content>
 
-              <Tabs.Content value="auto-search" className="outline-none">
+              <Tabs.Content
+                value="auto-search"
+                forceMount
+                className={tabContentClassName}
+              >
                 <SummaryCard
                   icon={<Search aria-hidden="true" className="size-5" />}
                   title="Ваші автопошуки"

@@ -33,9 +33,15 @@ export const apiEndpoints = {
     item: (id: string) => `/auto-search/${id}`,
     products: (id: string) => `/auto-search/${id}/products`,
   },
+  admin: {
+    indexer: {
+      reindex: "/indices/reindex",
+    },
+  },
   conversations: {
     list: "/conversations",
     item: (id: string) => `/conversations/${id}`,
     messages: (id: string) => `/conversations/${id}/messages`,
+    read: (id: string) => `/conversations/${id}/read`,
   },
 } as const;

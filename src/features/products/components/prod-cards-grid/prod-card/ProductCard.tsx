@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { InfoMarkIcon } from "@/assets/icons/InfoMarkIcon";
 import { Button } from "@/components/ui/button/button";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 import { Link } from "@/i18n/navigation";
 import type { ProductCardType } from "@/types/product";
 import { cn } from "@/utils/utils";
@@ -109,6 +110,7 @@ const ProductCard = ({
   onToggleFavorite,
 }: Props) => {
   const { price, address, createdAt } = card;
+  const city = toUkrainianCityName(address.city);
   const title = getCardTitle(card);
   const t = useTranslations("Favorites");
   const condition = getCardCondition(card);
@@ -179,8 +181,8 @@ const ProductCard = ({
         <div className="mt-auto flex h-7 items-center gap-2 text-xs @card-desktop:px-2 text-text-secondary">
           <span className="flex min-w-0 flex-1 items-center gap-1">
             <LocationIcon className="size-4 shrink-0 @card-tablet:size-4.5" />
-            <span className="truncate" title={address.city}>
-              {address.city}
+            <span className="truncate" title={city}>
+              {city}
             </span>
           </span>
           {/* The phone card shows a short date so the city has room; the full one is kept for

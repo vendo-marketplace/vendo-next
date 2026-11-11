@@ -15,6 +15,7 @@ import type {
 } from "@/features/auto-search/types/auto-search";
 import { Link } from "@/i18n/navigation";
 import { formatPrice } from "@/features/auto-search/utils/auto-search-utils";
+import { toUkrainianCityName } from "@/features/products/lib/city-name";
 
 type Props = { id: string };
 
@@ -205,7 +206,7 @@ export default function AutoSearchProducts({ id }: Props) {
                     </p>
                     <p className="mt-2 flex items-center gap-1 text-xs text-text-tertiary">
                       <MapPin aria-hidden="true" className="size-3.5" />
-                      {product.address?.city ?? t("unknownCity")}
+                      {product.address?.city ? toUkrainianCityName(product.address.city) : t("unknownCity")}
                     </p>
                   </div>
                 </div>

@@ -7,7 +7,11 @@ import {
 import type { InfiniteData } from "@tanstack/react-query";
 
 import { conversationsApi } from "@/api/conversations";
-import { chatKeys, chatQueries } from "@/features/chats/queries/chat.queries";
+import {
+  chatKeys,
+  chatQueries,
+  setConversationReadState,
+} from "@/features/chats/queries/chat.queries";
 import type {
   CreateConversationRequest,
   Message,
@@ -19,6 +23,12 @@ type SendMessageVariables = {
   id: string;
   request: SendMessageRequest;
   senderId: string;
+};
+
+type MarkReadVariables = {
+  id: string;
+  lastReadMessageId: string;
+  readerId: string;
 };
 
 type SendMessageContext = {
@@ -57,8 +67,9 @@ export function useConversations(enabled = true) {
   return useQuery({ ...chatQueries.list(), enabled });
 }
 
-export function useConversation(id: string) {
-  return useQuery(chatQueries.conversation(id));
+export function useConversation(id: string, enabled = true) {
+  const query = chatQueries.conversation(id);
+  return useQuery({ ...query, enabled: Boolean(id) && enabled });
 }
 
 export function useConversationMessages(id: string) {
@@ -141,5 +152,20 @@ export function useChatMutations() {
     },
   });
 
-  return { create, send, remove };
+  const markRead = useMutation({
+    mutationFn: ({ id, lastReadMessageId }: MarkReadVariables) =>
+      conversationsApi.markRead(id, { lastReadMessageId }),
+    onMutate: ({ id, lastReadMessageId, readerId }) =>
+      setConversationReadState(queryClient, id, readerId, {
+        lastReadMessageId,
+        lastReadAt: new Date().toISOString(),
+      }),
+    onError: (_error, { id }) =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: chatKeys.list() }),
+        queryClient.invalidateQueries({ queryKey: chatKeys.conversation(id) }),
+      ]),
+  });
+
+  return { create, send, remove, markRead };
 }
