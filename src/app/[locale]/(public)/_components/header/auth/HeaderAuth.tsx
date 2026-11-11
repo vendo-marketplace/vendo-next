@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, UserRound } from "lucide-react";
+import { Search, ShieldCheck, UserRound } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button/button";
@@ -13,12 +14,14 @@ import {
   DropdownTrigger,
 } from "@/components/ui/dropdown/dropdown";
 import { CircleUserIcon } from "@/components/ui/icons";
+import { hasAdminRole } from "@/features/admin/utils/has-admin-role";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { Link, useRouter } from "@/i18n/navigation";
 import ProfileDialog from "./ProfileDialog";
 
 export default function HeaderAuth() {
+  const t = useTranslations("Admin");
   const router = useRouter();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { data: user } = useMe();
@@ -120,6 +123,14 @@ export default function HeaderAuth() {
               Мої автопошуки
             </Link>
           </DropdownItem>
+          {hasAdminRole(user) && (
+            <DropdownItem asChild>
+              <Link href="/admin">
+                <ShieldCheck aria-hidden="true" className="size-4" />
+                {t("headerLink")}
+              </Link>
+            </DropdownItem>
+          )}
           <DropdownSeparator />
           <DropdownItem
             disabled={isLoggingOut}

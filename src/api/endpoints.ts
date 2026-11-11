@@ -33,6 +33,11 @@ export const apiEndpoints = {
     item: (id: string) => `/auto-search/${id}`,
     products: (id: string) => `/auto-search/${id}/products`,
   },
+  admin: {
+    indexer: {
+      reindex: "/indices/reindex",
+    },
+  },
   conversations: {
     list: "/conversations",
     item: (id: string) => `/conversations/${id}`,

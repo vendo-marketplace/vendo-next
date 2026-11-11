@@ -18,12 +18,14 @@ export type GoogleLoginCredentials = {
   authCode: string;
 };
 
+export type UserRole = "USER" | "ADMIN";
+
 export type MeResponse = {
   id: string;
   email: string;
   emailVerified: boolean;
   status: string;
-  roles: string[];
+  roles: UserRole[];
   providerType: string;
   fullName: string;
   createdAt: string;
