@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button/button";
-import { CameraPhotoIcon } from "@/assets/icons/CameraPhotoIcon";
-import { SearchIcon } from "@/assets/icons/SearchIcon";
+import { NavCameraIcon, NavSearchSmallIcon } from "@/assets/icons/NavIcons";
 import type { SubmitEvent } from "react";
 
 type Props = {
   query: string;
   onQueryChange: (query: string) => void;
   onSubmit: () => void;
+  autoFocus?: boolean;
 };
 
-const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
+const SearchBarForm = ({ query, onQueryChange, onSubmit, autoFocus = false }: Props) => {
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSubmit();
@@ -29,7 +29,7 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
           aria-label="Шукати"
           className="size-4 rounded-none text-text-tertiary group-focus-within:text-text-brand focus:text-text-brand hover:text-text-hover"
         >
-          <SearchIcon size={16} />
+          <NavSearchSmallIcon size={16} />
         </Button>
         <input
           name="query"
@@ -39,6 +39,7 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
           placeholder="Пошук товарів"
           aria-label="Пошук товарів"
           autoComplete="off"
+          autoFocus={autoFocus}
         />
         <Button
           variant="none"
@@ -47,7 +48,7 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
           aria-label="Пошук за фото"
           className="size-4 rounded-none text-text-tertiary focus:text-text-brand hover:text-text-hover"
         >
-          <CameraPhotoIcon size={16} />
+          <NavCameraIcon size={16} />
         </Button>
       </div>
     </form>

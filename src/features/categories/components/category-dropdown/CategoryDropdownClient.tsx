@@ -2,7 +2,7 @@
 
 import { ChevronRight, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Grid4Icon } from "@/assets/icons/Grid4Icon";
 import { Button } from "@/components/ui/button/button";
@@ -107,6 +107,8 @@ function CategoryBranch({
   );
 }
 
+export const OPEN_CATALOG_EVENT = "vendo:toggle-catalog";
+
 export default function CategoryDropdownClient({
   categories,
   unavailable = false,
@@ -135,6 +137,13 @@ export default function CategoryDropdownClient({
     setOpenPath([]);
   };
 
+  // Phones open the catalog from the bottom menu, which has no access to this state.
+  useEffect(() => {
+    const toggle = () => setIsOpen((open) => !open);
+    window.addEventListener(OPEN_CATALOG_EVENT, toggle);
+    return () => window.removeEventListener(OPEN_CATALOG_EVENT, toggle);
+  }, []);
+
   useCatalogDialog({
     isOpen,
     onClose: () => setIsOpen(false),
@@ -144,23 +153,27 @@ export default function CategoryDropdownClient({
 
   return (
     <>
-      <div ref={triggerRef} className="w-fit">
+      <div ref={triggerRef} className="hidden w-fit md:block">
         <Button
           variant="secondary"
           title="Каталог товарів"
+          aria-label="Каталог товарів"
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           aria-controls="catalog-dialog"
           onClick={() => setIsOpen((open) => !open)}
-          className={cn("gap-1.5 px-5 font-medium", isOpen && "border-stroke-brand")}
+          className={cn(
+            "h-10 gap-1.5 px-3 font-medium lg:px-5",
+            isOpen && "border-stroke-brand",
+          )}
         >
           <Grid4Icon size={16} />
-          <span>Каталог</span>
+          <span className="hidden lg:inline">Каталог</span>
         </Button>
       </div>
 
       {isOpen && (
-        <div className="page-container fixed inset-x-0 top-28 z-50 lg:top-19">
+        <div className="page-container fixed inset-x-0 top-14 z-50 md:top-19">
           <section
             role="dialog"
             id="catalog-dialog"
@@ -188,7 +201,7 @@ export default function CategoryDropdownClient({
                 first?.focus();
               }
             }}
-            className="flex max-h-[calc(100dvh-8rem)] w-full flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl lg:max-h-[calc(100dvh-4.75rem-1rem)]"
+            className="flex max-h-[calc(100dvh-3.5rem-6rem)] w-full flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl md:max-h-[calc(100dvh-4.75rem-1rem)]"
           >
             <div className="flex shrink-0 items-center justify-between border-b border-stroke-secondary px-4 py-2 sm:px-5 md:hidden">
               <p className="text-base font-semibold text-text-primary">

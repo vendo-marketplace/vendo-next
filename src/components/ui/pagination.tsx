@@ -4,14 +4,15 @@ import { cn } from "@/utils/utils";
 
 type PageItem = number | "ellipsis-start" | "ellipsis-end";
 
-// 1 … 4 5 6 … 24: first, last and the neighbours of the current page.
+// First, last and the neighbours of the current page.
 export const getPageItems = (currentPage: number, totalPages: number): PageItem[] => {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
 
-  let start = Math.max(2, Math.min(currentPage - 1, totalPages - 4));
-  let end = Math.min(totalPages - 1, Math.max(currentPage + 1, 5));
+  // As in Figma 5739-42576: "1 2 3 4 … 24" at the start, "1 … 9 10 11 … 24" in the middle.
+  let start = Math.max(2, Math.min(currentPage - 1, totalPages - 3));
+  let end = Math.min(totalPages - 1, Math.max(currentPage + 1, 4));
   // An ellipsis that would hide a single page shows that page instead.
   if (start === 3) start = 2;
   if (end === totalPages - 2) end = totalPages - 1;
@@ -27,18 +28,21 @@ export const getPageItems = (currentPage: number, totalPages: number): PageItem[
 };
 
 const itemClassName =
-  "flex h-11 min-w-9 items-center justify-center rounded-lg border px-2 text-sm font-medium transition-colors sm:px-3 lg:h-9";
+  "flex h-9 min-w-9 items-center justify-center rounded-lg border px-2 text-sm font-medium shadow-xs transition-colors sm:px-3";
 
 const navButtonClassName = cn(
   itemClassName,
-  "border-stroke-primary-subtle bg-surface-primary text-text-primary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:border-stroke-secondary disabled:text-text-placeholder disabled:hover:bg-surface-primary",
+  // Figma 5739-42576: the arrows have a lighter frame than the page numbers.
+  "min-w-8 border-stroke-secondary bg-surface-primary text-text-primary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:text-text-placeholder disabled:hover:bg-surface-primary",
 );
 
 export function Pagination({
   currentPage,
   totalPages,
   onPageChange,
+  label = "Сторінки",
 }: {
+  label?: string;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -46,7 +50,7 @@ export function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <nav aria-label="Сторінки" className="flex justify-center">
+    <nav aria-label={label} className="flex justify-center">
       <ul className="flex flex-wrap items-center justify-center gap-0.5 sm:gap-1">
         <li>
           <button

@@ -188,7 +188,7 @@ export default function CategoryProducts({
           />
         </div>
 
-        <div ref={resultsRef} className="flex min-w-0 scroll-mt-28 flex-col gap-7">
+        <div ref={resultsRef} className="flex min-w-0 scroll-mt-18 flex-col gap-7 md:scroll-mt-23">
           {isError && !data ? (
             <p className="text-sm text-text-secondary">Не вдалося завантажити товари.</p>
           ) : totalElements === 0 ? (

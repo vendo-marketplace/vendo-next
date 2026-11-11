@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+
+import { Pagination } from "@/components/ui/pagination";
 
 import { useSearchProductsPage } from "@/features/products/hooks/use-products";
 import ProductCardsGrid from "@/features/products/components/prod-cards-grid/ProductCardsGrid";
@@ -12,6 +14,7 @@ import type { SearchProductsQuery } from "@/types/product";
 export default function RecommendedProducts() {
   const { sort, setSort: updateSort } = useProductSortParams();
   const [page, setPage] = useState(1);
+  const sectionRef = useRef<HTMLElement>(null);
   const setSort = (value: Parameters<typeof updateSort>[0]) => {
     setPage(1);
     updateSort(value);
@@ -28,67 +31,37 @@ export default function RecommendedProducts() {
 
   const cards = data?.data ?? [];
   const pagination = data?.metadata;
-  const visiblePages = pagination
-    ? Array.from({ length: Math.min(5, pagination.totalPages) }, (_, index) => {
-        const start = Math.min(
-          Math.max(1, page - 2),
-          Math.max(1, pagination.totalPages - 4),
-        );
-        return start + index;
-      })
-    : [];
+
+  const goToPage = (nextPage: number) => {
+    setPage(nextPage);
+    sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   if (!isLoading && cards.length === 0) return null;
 
   return (
-    <section className="page-container space-y-5 py-4 lg:space-y-7">
+    <section
+      ref={sectionRef}
+      className="page-container scroll-mt-18 space-y-5 py-4 md:scroll-mt-23 lg:space-y-7"
+    >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="min-w-0 text-xl font-semibold text-text-primary sm:text-2xl lg:text-3xl">
+        {/* Phones: just the centred title; sorting a recommendation feed there is noise. */}
+        <h2 className="min-w-0 text-center text-xl font-semibold text-text-primary sm:text-left sm:text-2xl lg:text-3xl">
           Товари, що вам можуть сподобатись
         </h2>
-        <div className="flex shrink-0 justify-end sm:ml-4">
+        <div className="hidden shrink-0 justify-end sm:ml-4 sm:flex">
           <ProductSortSelect value={sort} onChange={setSort} />
         </div>
       </div>
 
       <ProductCardsGrid cards={cards} isLoading={isLoading || isFetching} />
-      {pagination && pagination.totalPages > 1 && (
-        <nav
-          aria-label="Сторінки рекомендованих товарів"
-          className="flex flex-wrap items-center justify-center gap-2"
-        >
-          <button
-            type="button"
-            onClick={() => setPage((current) => current - 1)}
-            disabled={!pagination.hasPrevious}
-            className="h-10 rounded-lg border border-stroke-secondary px-4 text-sm font-medium text-text-primary transition-colors hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Назад
-          </button>
-          {visiblePages.map((pageNumber) => (
-            <button
-              key={pageNumber}
-              type="button"
-              aria-current={pageNumber === page ? "page" : undefined}
-              onClick={() => setPage(pageNumber)}
-              className={`size-10 rounded-lg border text-sm font-medium transition-colors ${
-                pageNumber === page
-                  ? "border-surface-brand bg-surface-brand text-text-invert"
-                  : "border-stroke-secondary text-text-primary hover:bg-surface-secondary"
-              }`}
-            >
-              {pageNumber}
-            </button>
-          ))}
-          <button
-            type="button"
-            onClick={() => setPage((current) => current + 1)}
-            disabled={!pagination.hasNext}
-            className="h-10 rounded-lg border border-stroke-secondary px-4 text-sm font-medium text-text-primary transition-colors hover:bg-surface-secondary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Далі
-          </button>
-        </nav>
+      {pagination && (
+        <Pagination
+          label="Сторінки рекомендованих товарів"
+          currentPage={page}
+          totalPages={pagination.totalPages}
+          onPageChange={goToPage}
+        />
       )}
     </section>
   );

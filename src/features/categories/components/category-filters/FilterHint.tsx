@@ -11,9 +11,9 @@ export type FilterHintContent = {
 };
 
 const SIDE_GAP = 4;
-// Keeps the popover clear of the sticky header (76px desktop, 112px mobile); with no room
+// Keeps the popover clear of the sticky header (76px from tablets up, 56px on phones); with no room
 // above, it flips below the icon.
-const COLLISION_PADDING = { top: 124, right: 16, bottom: 16, left: 16 };
+const COLLISION_PADDING = { top: 92, right: 16, bottom: 16, left: 16 };
 
 type Placement = { alignOffset: number; width?: number };
 
