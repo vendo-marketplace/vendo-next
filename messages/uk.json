@@ -3,7 +3,13 @@
     "RELEVANCE": "За релевантністю",
     "PRICE_ASC": "Спочатку дешевші",
     "PRICE_DESC": "Спочатку дорожчі",
-    "CREATED_AT_DESC": "Найновіші"
+    "CREATED_AT_DESC": "Спочатку нові"
+  },
+  "ProductSortShort": {
+    "RELEVANCE": "Релевантні",
+    "PRICE_ASC": "Дешевші",
+    "PRICE_DESC": "Дорожчі",
+    "CREATED_AT_DESC": "Нові"
   },
   "Favorites": {
     "title": "Обране",

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button/button";
-import { CameraIcon, SearchIcon } from "@/components/ui/icons";
+import { CameraPhotoIcon } from "@/assets/icons/CameraPhotoIcon";
+import { SearchIcon } from "@/assets/icons/SearchIcon";
 import type { SubmitEvent } from "react";
 
 type Props = {
@@ -20,14 +21,15 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
       role="search"
       onSubmit={handleSubmit}
     >
-      <div className="flex items-center h-full gap-2 rounded-lg px-2.5 border border-stroke-primary flex-1 group-focus-within:border-stroke-brand">
+      <div className="flex items-center h-full gap-2 rounded-lg px-2.5 border border-stroke-primary-subtle bg-surface-primary shadow-xs flex-1 transition-colors group-focus-within:border-stroke-brand">
         <Button
           variant="none"
           type="submit"
           size="none"
+          aria-label="Шукати"
           className="size-4 rounded-none text-text-tertiary group-focus-within:text-text-brand focus:text-text-brand hover:text-text-hover"
         >
-          <SearchIcon className="size-4" />
+          <SearchIcon size={16} />
         </Button>
         <input
           name="query"
@@ -42,9 +44,10 @@ const SearchBarForm = ({ query, onQueryChange, onSubmit }: Props) => {
           variant="none"
           size="none"
           type="button"
+          aria-label="Пошук за фото"
           className="size-4 rounded-none text-text-tertiary focus:text-text-brand hover:text-text-hover"
         >
-          <CameraIcon className="size-4" />
+          <CameraPhotoIcon size={16} />
         </Button>
       </div>
     </form>

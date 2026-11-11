@@ -9,14 +9,18 @@ const FooterNavigationColumn = ({ column }: Props) => {
   const { heading, links } = column;
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-4">
-      <h3 className="font-medium text-text-primary">{heading}</h3>
+      <h3 className="font-sans text-md font-medium text-text-primary">{heading}</h3>
 
       <ul className="flex flex-col gap-3">
         {links.map((link) => (
           <li key={link.label}>
             <Link
               href="/"
-              className={`text-text-secondary ${link.highlighted && "bg-linear-to-r from-purple-700 to-[#C042ED] bg-clip-text text-transparent"}`}
+              className={
+                link.highlighted
+                  ? "bg-linear-to-r from-[#6fd1ff] via-brand-400 to-[#0055ff] bg-clip-text text-transparent"
+                  : "text-text-secondary transition-colors hover:text-text-primary"
+              }
             >
               {link.label}
             </Link>

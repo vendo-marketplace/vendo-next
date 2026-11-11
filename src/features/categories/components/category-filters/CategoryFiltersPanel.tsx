@@ -19,8 +19,11 @@ export function CategoryFiltersPanel({
   filters,
   attributes,
   onChange,
+  inDrawer = false,
 }: {
   id?: string;
+  // Inside the mobile side panel, which has its own title and frame.
+  inDrawer?: boolean;
   filters: CategoryFilters;
   attributes: FilterAttribute[];
   // Receives an updater so quick successive edits build on the latest filters.
@@ -30,12 +33,18 @@ export function CategoryFiltersPanel({
     <aside
       id={id}
       aria-label="Фільтри"
-      className="flex flex-col gap-5 rounded-lg border border-stroke-secondary/30 bg-surface-primary px-3 py-6 shadow-sm"
+      className={
+        inDrawer
+          ? "flex flex-col gap-5 bg-surface-primary px-4 py-4"
+          : "flex flex-col gap-5 rounded-lg border border-stroke-secondary/30 bg-surface-primary px-3 py-6 shadow-sm"
+      }
     >
-      <div className="flex items-center gap-2 border-b border-stroke-secondary pb-3">
-        <FilterIcon size={20} />
-        <h2 className="text-xl font-semibold text-text-primary">Фільтри</h2>
-      </div>
+      {!inDrawer && (
+        <div className="flex items-center gap-2 border-b border-stroke-secondary pb-3">
+          <FilterIcon size={20} />
+          <h2 className="text-xl font-semibold text-text-primary">Фільтри</h2>
+        </div>
+      )}
 
       <div className="flex flex-col gap-4">
         <FilterSection title="Місто">
@@ -76,6 +85,7 @@ export function CategoryFiltersPanel({
             key={attribute.id}
             attribute={attribute}
             last={index === attributes.length - 1}
+            // Mockup (Figma 5629:35802): every section starts open.
             value={filters.attributes[attribute.id] ?? EMPTY_ATTRIBUTE_VALUE}
             onChange={(value) =>
               onChange((current) => ({

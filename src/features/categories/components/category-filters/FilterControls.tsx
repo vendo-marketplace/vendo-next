@@ -7,19 +7,38 @@ import { ArrowRightIcon } from "@/assets/icons/ArrowRightIcon";
 import { TickIcon } from "@/assets/icons/TickIcon";
 import { cn } from "@/utils/utils";
 
+const sectionTitleClassName = "font-sans text-md font-semibold text-text-primary";
+
 export function FilterSection({
   title,
+  hint,
   children,
   collapsible = true,
+  defaultOpen = true,
   last = false,
 }: {
-  title: ReactNode;
+  title: string;
+  // Extra control after the title, such as an info popover; kept outside the toggle button.
+  hint?: ReactNode;
   children: ReactNode;
   collapsible?: boolean;
+  defaultOpen?: boolean;
   last?: boolean;
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(defaultOpen);
   const contentId = useId();
+  const chevron = (
+    <AngleUpIcon
+      size={20}
+      className={cn("shrink-0 transition-transform", !isOpen && "rotate-180")}
+    />
+  );
+  const toggleProps = {
+    type: "button" as const,
+    "aria-expanded": isOpen,
+    "aria-controls": contentId,
+    onClick: () => setIsOpen((open) => !open),
+  };
 
   return (
     <section
@@ -28,24 +47,36 @@ export function FilterSection({
         !last && "border-b border-stroke-secondary pb-6",
       )}
     >
-      {collapsible ? (
-        <button
-          type="button"
-          aria-expanded={isOpen}
-          aria-controls={contentId}
-          onClick={() => setIsOpen((open) => !open)}
-          className="flex w-full items-center justify-between gap-2 rounded-sm text-left text-md font-semibold text-text-primary"
-        >
-          {title}
-          <AngleUpIcon
-            size={20}
-            className={cn("shrink-0 transition-transform", !isOpen && "rotate-180")}
-          />
-        </button>
+      {!collapsible ? (
+        <h3 className={sectionTitleClassName}>{title}</h3>
+      ) : hint ? (
+        <div className="flex items-center gap-1.5">
+          <h3 className={sectionTitleClassName}>{title}</h3>
+          {hint}
+          <button
+            {...toggleProps}
+            aria-label={`${title}: ${isOpen ? "згорнути" : "розгорнути"}`}
+            className="-m-3 ml-auto rounded-sm p-3 text-text-primary lg:m-0 lg:ml-auto lg:p-0"
+          >
+            {chevron}
+          </button>
+        </div>
       ) : (
-        <h3 className="font-sans text-md font-semibold text-text-primary">{title}</h3>
+        <h3 className="m-0">
+          <button
+            {...toggleProps}
+            // Touch screens get a 44px row; the negative margin keeps the layout from the mockup.
+            className={cn(
+              "-my-2.5 flex w-full items-center justify-between gap-2 rounded-sm py-2.5 text-left lg:my-0 lg:py-0",
+              sectionTitleClassName,
+            )}
+          >
+            {title}
+            {chevron}
+          </button>
+        </h3>
       )}
-      {isOpen && (
+      {(!collapsible || isOpen) && (
         <div id={contentId} className="flex flex-col gap-4">
           {children}
         </div>
@@ -69,7 +100,7 @@ export function FilterChip({
       aria-pressed={selected}
       onClick={onToggle}
       className={cn(
-        "rounded-lg border px-4 py-2 text-sm font-semibold transition-colors",
+        "min-h-9 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors lg:min-h-0 lg:px-4 lg:py-2",
         selected
           ? "border-stroke-brand-subtle bg-surface-brand-subtle text-text-brand"
           : "border-stroke-primary-subtle bg-surface-primary text-text-primary hover:bg-surface-secondary",
@@ -98,7 +129,9 @@ export function FilterCheckbox({
   swatch?: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-2.5 text-sm font-semibold text-text-primary">
+    // relative keeps the visually hidden input inside the label, so focusing it never scrolls
+    // the filters panel to some other spot.
+    <label className="relative flex min-h-9 cursor-pointer items-center gap-2.5 text-sm font-semibold text-text-primary lg:min-h-0">
       <input
         type="checkbox"
         checked={checked}
@@ -126,9 +159,8 @@ export function FilterCheckbox({
         )}
         <span>
           {label}
-          {/* TODO(api): counts per option need a facets endpoint. */}
           {count !== undefined && (
-            <span className="font-normal text-text-tertiary"> ({count.toLocaleString("uk-UA")})</span>
+            <span className="font-normal text-text-secondary"> ({count.toLocaleString("uk-UA")})</span>
           )}
         </span>
       </span>
@@ -148,7 +180,7 @@ export function FilterSwitch({
   description?: string;
 }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-1">
+    <label className="relative flex min-h-11 cursor-pointer items-center justify-between gap-1 lg:min-h-0">
       <span className="flex flex-col gap-0.5">
         <span className="text-sm font-semibold text-text-primary">{label}</span>
         {description && (
@@ -195,7 +227,7 @@ export function ShowMoreButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-fit items-center gap-1 rounded-sm text-sm font-medium text-text-brand hover:text-text-brand-dark"
+      className="-my-3 flex w-fit items-center gap-1 rounded-sm py-3 text-sm font-medium text-text-brand hover:text-text-brand-dark lg:my-0 lg:py-0"
     >
       {expanded ? "Згорнути" : `Показати більше (${hiddenCount})`}
       <ArrowRightIcon

@@ -27,11 +27,11 @@ export const getPageItems = (currentPage: number, totalPages: number): PageItem[
 };
 
 const itemClassName =
-  "flex h-9 min-w-9 items-center justify-center rounded-lg border px-3 text-sm font-medium transition-colors";
+  "flex h-11 min-w-9 items-center justify-center rounded-lg border px-2 text-sm font-medium transition-colors sm:px-3 lg:h-9";
 
 const navButtonClassName = cn(
   itemClassName,
-  "min-w-8 border-stroke-primary-subtle bg-surface-primary text-text-primary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:border-stroke-secondary disabled:text-text-placeholder disabled:hover:bg-surface-primary",
+  "border-stroke-primary-subtle bg-surface-primary text-text-primary hover:bg-surface-secondary disabled:cursor-not-allowed disabled:border-stroke-secondary disabled:text-text-placeholder disabled:hover:bg-surface-primary",
 );
 
 export function Pagination({
@@ -47,7 +47,7 @@ export function Pagination({
 
   return (
     <nav aria-label="Сторінки" className="flex justify-center">
-      <ul className="flex flex-wrap items-center gap-1">
+      <ul className="flex flex-wrap items-center justify-center gap-0.5 sm:gap-1">
         <li>
           <button
             type="button"

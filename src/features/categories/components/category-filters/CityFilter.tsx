@@ -37,6 +37,11 @@ export function CityFilter({
       />
       {options.length > 0 ? (
         <FilterChips>
+          {!search.trim() && (
+            <FilterChip selected={value.length === 0} onToggle={() => onChange([])}>
+              Уся Україна
+            </FilterChip>
+          )}
           {options.map((city) => (
             <FilterChip
               key={city}

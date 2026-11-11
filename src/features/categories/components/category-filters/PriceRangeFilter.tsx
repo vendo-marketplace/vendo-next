@@ -73,7 +73,7 @@ export function PriceRangeFilter({
         <Input
           inputMode="numeric"
           aria-label="Ціна до"
-          placeholder="До"
+          placeholder={`До ${PRICE_SLIDER_MAX.toLocaleString("uk-UA")}`}
           clearable={false}
           value={value.max}
           onChange={(event) => onChange({ ...value, max: keepDigits(event.target.value) })}

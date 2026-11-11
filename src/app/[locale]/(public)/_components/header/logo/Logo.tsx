@@ -1,4 +1,4 @@
-import logoUrl from "@/assets/icons/logo.svg";
+import logoUrl from "@/assets/icons/logo-vendo.svg";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/utils";
 import Image from "next/image";
@@ -9,12 +9,8 @@ interface Props {
 
 const Logo = ({ className }: Props) => {
   return (
-    <Link href="/" className={cn("block h-9 w-auto", className)}>
-      <Image
-        src={logoUrl}
-        alt="Vendo logo"
-        className="h-9 w-auto"
-      />
+    <Link href="/" aria-label="Vendo — на головну" className={cn("block w-fit", className)}>
+      <Image src={logoUrl} alt="" priority className="h-8 w-auto sm:h-9 lg:h-11" />
     </Link>
   );
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import { Search, UserRound } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button/button";
@@ -12,7 +11,9 @@ import {
   DropdownSeparator,
   DropdownTrigger,
 } from "@/components/ui/dropdown/dropdown";
-import { CircleUserIcon } from "@/components/ui/icons";
+import { SearchIcon } from "@/assets/icons/SearchIcon";
+import { UserCircleIcon } from "@/assets/icons/UserCircleIcon";
+import { UserIcon } from "@/assets/icons/UserIcon";
 import { useMe } from "@/features/auth/hooks/use-me";
 import { useLogout } from "@/features/auth/hooks/use-logout";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -30,7 +31,7 @@ export default function HeaderAuth() {
         <Button
           asChild
           variant="outline"
-          className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
         >
           <Link href="/sign-in">Вхід</Link>
         </Button>
@@ -41,7 +42,7 @@ export default function HeaderAuth() {
         <Button
           asChild
           variant="outline"
-          className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
         >
           <Link href="/sign-up">Реєстрація</Link>
         </Button>
@@ -51,7 +52,7 @@ export default function HeaderAuth() {
           className="size-8 border-0 p-0 sm:hidden"
         >
           <Link href="/sign-in" aria-label="Увійти або зареєструватися">
-            <CircleUserIcon className="size-6" />
+            <UserCircleIcon size={24} />
           </Link>
         </Button>
       </div>
@@ -76,11 +77,11 @@ export default function HeaderAuth() {
             }
           >
             <span className="relative grid size-6 place-items-center">
-              <CircleUserIcon className="size-6" />
+              <UserCircleIcon size={24} />
               {needsProfileAttention && (
                 <span
                   aria-hidden="true"
-                  className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full border-2 border-surface-primary bg-amber-500"
+                  className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full border-2 border-surface-primary bg-surface-warning"
                 />
               )}
             </span>
@@ -98,25 +99,25 @@ export default function HeaderAuth() {
             onSelect={() => setIsProfileOpen(true)}
             className={
               needsProfileAttention
-                ? "bg-amber-50 text-amber-800 hover:bg-amber-100 hover:text-amber-900 data-highlighted:bg-amber-100 data-highlighted:text-amber-900"
+                ? "bg-surface-warning-subtle text-text-warning hover:bg-orange-100 hover:text-orange-800 data-highlighted:bg-orange-100 data-highlighted:text-orange-800"
                 : undefined
             }
           >
-            <UserRound
-              aria-hidden="true"
-              className={`size-4 ${needsProfileAttention ? "text-amber-700" : ""}`}
+            <UserIcon
+              size={16}
+              className={needsProfileAttention ? "text-text-warning" : undefined}
             />
             <span className="flex-1">Детальніше про профіль</span>
             {needsProfileAttention && (
               <span
                 aria-hidden="true"
-                className="size-2 rounded-full bg-amber-500"
+                className="size-2 rounded-full bg-surface-warning"
               />
             )}
           </DropdownItem>
           <DropdownItem asChild>
             <Link href="/auto-search">
-              <Search aria-hidden="true" className="size-4" />
+              <SearchIcon size={16} />
               Мої автопошуки
             </Link>
           </DropdownItem>

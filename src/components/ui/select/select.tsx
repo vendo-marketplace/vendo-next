@@ -12,6 +12,7 @@ type Props<T extends string> = {
   disabled?: boolean;
   onChange?: (value: T) => void;
   className?: string;
+  icon?: React.ReactNode;
 };
 
 const Select = <T extends string>({
@@ -20,8 +21,11 @@ const Select = <T extends string>({
   placeholder = "Select an option",
   disabled,
   className,
+  icon,
   onChange,
 }: Props<T>) => {
+  const selected = options.find((option) => option.value === value);
+
   const handleValueChange = (nextValue: string) => {
     const option = options.find((option) => option.value === nextValue);
 
@@ -37,12 +41,51 @@ const Select = <T extends string>({
       onValueChange={handleValueChange}
     >
       <RadixSelect.Trigger
-        className={`group flex justify-between items-center gap-2 font-medium text-text-secondary text-[14px] leading-5 w-fit px-4 py-1.5 rounded-lg border border-stroke-primary ${className}`}
+        className={cn(
+          "group flex h-10 w-fit items-center gap-1.5 rounded-lg border border-stroke-primary-subtle bg-surface-primary px-3 text-sm font-medium text-text-primary shadow-xs transition-colors outline-none hover:not-focus:border-stroke-brand data-[state=open]:border-stroke-primary disabled:cursor-not-allowed disabled:bg-surface-tertiary",
+          className,
+        )}
       >
-        <RadixSelect.Value placeholder={placeholder} />
+        {icon && (
+          <span aria-hidden="true" className="flex shrink-0 text-text-secondary">
+            {icon}
+          </span>
+        )}
+        {/* Every label is stacked invisibly in one grid cell, so the trigger keeps the width of
+            the longest option and does not jump when the choice changes. */}
+        <span className="grid min-w-0 flex-1 text-left">
+          {options.map((option) => (
+            <span
+              key={option.value}
+              aria-hidden="true"
+              className="invisible col-start-1 row-start-1 truncate"
+            >
+              {option.shortLabel ? (
+                <>
+                  <span className="sm:hidden">{option.shortLabel}</span>
+                  <span className="hidden sm:inline">{option.label}</span>
+                </>
+              ) : (
+                option.label
+              )}
+            </span>
+          ))}
+          <span className="col-start-1 row-start-1 truncate">
+            <RadixSelect.Value placeholder={placeholder}>
+              {selected?.shortLabel ? (
+                <>
+                  <span className="sm:hidden">{selected.shortLabel}</span>
+                  <span className="hidden sm:inline">{selected.label}</span>
+                </>
+              ) : (
+                selected?.label
+              )}
+            </RadixSelect.Value>
+          </span>
+        </span>
         <RadixSelect.Icon
           aria-hidden="true"
-          className="transition-transform duration-200 group-data-[state=open]:rotate-180"
+          className="ml-1.5 transition-transform duration-200 group-data-[state=open]:rotate-180"
         >
           <AngleDownIcon className="size-4" />
         </RadixSelect.Icon>
@@ -55,13 +98,13 @@ const Select = <T extends string>({
           sideOffset={4}
           className="z-[60] min-w-(--radix-select-trigger-width) font-medium"
         >
-          <RadixSelect.Viewport className="rounded-lg bg-surface-primary p-2 gap-6 cursor-pointer border border-stroke-primary-subtle text-text-secondary text-[14px] leading-5">
+          <RadixSelect.Viewport className="flex cursor-pointer flex-col gap-0.5 rounded-lg border border-stroke-primary-subtle bg-surface-primary p-1.5 text-sm leading-5 text-text-secondary shadow-md">
             {options.map((opt) => (
               <RadixSelect.Item
                 key={opt.value}
                 value={opt.value}
                 className={cn(
-                  "flex items-center justify-between rounded-lg border-0 gap-2 px-2 py-1.5 outline-none",
+                  "flex items-center justify-between gap-3 rounded-md border-0 px-2.5 py-2 outline-none",
                   opt.value === value && "text-text-primary",
                   "hover:bg-surface-brand-subtle hover:font-semibold data-highlighted:bg-surface-brand-subtle data-highlighted:font-semibold",
                 )}
@@ -69,7 +112,7 @@ const Select = <T extends string>({
                 <RadixSelect.ItemText>{opt.label}</RadixSelect.ItemText>
                 {opt.value === value && (
                   <RadixSelect.Icon aria-hidden="true">
-                    <TickIcon className="size-3.5 text-text-secondary" />
+                    <TickIcon className="size-4 text-text-secondary" />
                   </RadixSelect.Icon>
                 )}
               </RadixSelect.Item>

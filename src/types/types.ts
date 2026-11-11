@@ -19,6 +19,8 @@ export type ApiError = {
 export type SelectOption<T extends string> = {
   value: T;
   label: string;
+  // Shown in the closed select on phones, where the full label does not fit.
+  shortLabel?: string;
 };
 
 export type SortDirection = "ASC" | "DESC";

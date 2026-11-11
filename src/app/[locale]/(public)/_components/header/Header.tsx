@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button/button";
-import { ChatBubbleIcon } from "@/components/ui/icons";
+import { ChatIcon } from "@/assets/icons/ChatIcon";
+import { PlusIcon } from "@/assets/icons/PlusIcon";
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
 import HeaderAuth from "./auth/HeaderAuth";
 import HeaderFavoritesLink from "./favorites/HeaderFavoritesLink";
@@ -12,10 +12,10 @@ import { Link } from "@/i18n/navigation";
 
 const Header = () => {
   return (
-    <header className="sticky top-0 left-0 z-50 flex h-28 w-full items-center justify-center border-b border-stroke-primary-subtle bg-surface-primary lg:h-[88px]">
+    <header className="sticky top-0 left-0 z-50 flex h-28 w-full items-center justify-center border-b border-stroke-secondary bg-surface-primary lg:h-19">
       <div className="page-container grid h-full grid-cols-[auto_minmax(0,1fr)] grid-rows-[48px_64px] items-center gap-x-3 lg:flex lg:gap-3 xl:gap-4">
         <div className="col-start-1 row-start-1 lg:shrink-0">
-          <Logo className="h-7 sm:h-8 lg:h-9" />
+          <Logo />
         </div>
 
         <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:gap-2 lg:order-last lg:ml-auto">
@@ -27,7 +27,7 @@ const Header = () => {
             className="hidden size-8 border-0 p-0 sm:inline-flex"
           >
             <Link href="/chats">
-              <ChatBubbleIcon className="size-6" />
+              <ChatIcon size={24} />
             </Link>
           </Button>
           <HeaderAuth />
@@ -37,7 +37,7 @@ const Header = () => {
             className="size-9 p-0 sm:h-10 sm:w-auto sm:px-3 lg:px-4"
           >
             <Link href="/create">
-              <Plus aria-hidden="true" className="size-5 sm:hidden" />
+              <PlusIcon size={20} className="sm:hidden" />
               <span className="hidden sm:inline">Додати оголошення</span>
             </Link>
           </Button>

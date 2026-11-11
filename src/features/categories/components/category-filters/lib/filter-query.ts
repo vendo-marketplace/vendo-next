@@ -9,9 +9,10 @@ import {
 import type { FilterAttribute } from "./mock-filter-attributes";
 
 const toConditionQuery = (conditions: Condition[]) => {
-  // TODO(api): "like-new" has no backend field yet; only isNew true/false exists.
+  // TODO(api): "like-new" has no backend field yet; only isNew true/false exists, so it is
+  // asked for as used and narrowed down on the client.
   const wantsNew = conditions.includes("new");
-  const wantsUsed = conditions.includes("used");
+  const wantsUsed = conditions.includes("used") || conditions.includes("like-new");
   return wantsNew === wantsUsed ? {} : { isNew: wantsNew };
 };
 

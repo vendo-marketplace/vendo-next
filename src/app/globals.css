@@ -5,6 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  /* Product card sizes from Figma: mobile 168px, tablet 243px (from 190px), desktop 311px. */
+  --container-card-tablet: 11.875rem;
+  --container-card-desktop: 17.5rem;
+
   /* Primitive palette — Figma "Colors & Typography" */
   --color-brand-50: #edf6ff;
   --color-brand-100: #d7eaff;
