@@ -22,6 +22,7 @@ import {
   useConversations,
 } from "@/features/chats/hooks/use-chats";
 import { useConversationSocket } from "@/features/chats/hooks/use-conversation-socket";
+import { getReadUpTo, useMarkConversationRead } from "@/features/chats/hooks/use-read-receipts";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { SearchProductsQuery } from "@/types/product";
 import ConversationSidebar, {
@@ -56,6 +57,7 @@ export default function ChatsPage() {
     create: createMutation,
     send: sendMutation,
     remove: removeMutation,
+    markRead: markReadMutation,
   } = useChatMutations();
 
   const productIds = useMemo(
@@ -129,8 +131,11 @@ export default function ChatsPage() {
   const peer =
     activeConversation && user
       ? getConversationPeer(activeConversation, user.id)
-      : { isUserSeller: false, name: "Продавець", role: "Продавець" };
+      : { isUserSeller: false, id: "", name: "Продавець", role: "Продавець" };
   const peerIsSeller = !peer.isUserSeller;
+  const peerReadUpTo = getReadUpTo(activeConversation?.readStates[peer.id], messages);
+
+  useMarkConversationRead(activeConversation, messages, user?.id, markReadMutation.mutate);
 
   const selectConversation = (conversationId: string) => {
     setSelectedId(conversationId);
@@ -300,6 +305,7 @@ export default function ChatsPage() {
                 messages={messages}
                 userId={user.id}
                 peerName={peer.name}
+                peerReadUpTo={peerReadUpTo}
                 isLoading={
                   areMessagesLoading ||
                   (isDraftConversation && !activeProduct) ||

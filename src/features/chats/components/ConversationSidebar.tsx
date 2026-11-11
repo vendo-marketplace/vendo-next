@@ -36,9 +36,11 @@ const getInitials = (name: string) =>
 // The other side of the conversation, as seen by the current user.
 export const getConversationPeer = (conversation: Conversation, userId: string) => {
   const isUserSeller = conversation.seller.id === userId;
+  const participant = isUserSeller ? conversation.buyer : conversation.seller;
   return {
     isUserSeller,
-    name: (isUserSeller ? conversation.buyer : conversation.seller).fullName,
+    id: participant.id,
+    name: participant.fullName,
     role: isUserSeller ? "Покупець" : "Продавець",
   };
 };

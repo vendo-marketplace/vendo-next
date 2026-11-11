@@ -42,5 +42,6 @@ export const apiEndpoints = {
     list: "/conversations",
     item: (id: string) => `/conversations/${id}`,
     messages: (id: string) => `/conversations/${id}/messages`,
+    read: (id: string) => `/conversations/${id}/read`,
   },
 } as const;

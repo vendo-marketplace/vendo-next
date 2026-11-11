@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { InfiniteData } from "@tanstack/react-query";
 
-import { chatKeys } from "@/features/chats/queries/chat.queries";
-import type { Message, MessagePage } from "@/features/chats/types/chat";
+import { chatKeys, setConversationReadState } from "@/features/chats/queries/chat.queries";
+import type { Message, MessagePage, MessagesReadEvent } from "@/features/chats/types/chat";
 
 const HEARTBEAT_INTERVAL = 10_000;
 const MAX_RECONNECT_DELAY = 30_000;
@@ -21,32 +21,49 @@ function getSocketUrl() {
   return url.toString();
 }
 
-function parseMessageFrame(frame: string): Message | null {
-  const normalizedFrame = frame.replaceAll("\r\n", "\n").replace(/^\n+/, "");
-  if (!normalizedFrame.startsWith("MESSAGE\n")) return null;
+const getMessagesTopic = (conversationId: string) =>
+  `/topic/conversations/${conversationId}`;
+const getReadTopic = (conversationId: string) =>
+  `/topic/conversations/${conversationId}/read`;
 
-  const bodyStart = normalizedFrame.indexOf("\n\n");
+type MessageFrame = {
+  destination: string;
+  payload: object;
+};
+
+function parseMessageFrame(frame: string): MessageFrame | null {
+  if (!frame.startsWith("MESSAGE\n")) return null;
+
+  const bodyStart = frame.indexOf("\n\n");
   if (bodyStart < 0) return null;
 
-  try {
-    const payload: unknown = JSON.parse(normalizedFrame.slice(bodyStart + 2));
-    if (
-      typeof payload !== "object" ||
-      payload === null ||
-      !("id" in payload) ||
-      !("conversationId" in payload) ||
-      !("senderId" in payload) ||
-      !("content" in payload) ||
-      !("createdAt" in payload)
-    ) {
-      return null;
-    }
+  const destination = frame
+    .slice(0, bodyStart)
+    .split("\n")
+    .find((header) => header.startsWith("destination:"))
+    ?.slice("destination:".length);
+  if (!destination) return null;
 
-    return payload as Message;
+  try {
+    const payload: unknown = JSON.parse(frame.slice(bodyStart + 2));
+    if (typeof payload !== "object" || payload === null) return null;
+
+    return { destination, payload };
   } catch {
     return null;
   }
 }
+
+const hasKeys = <T extends object>(payload: object, keys: (keyof T & string)[]) =>
+  keys.every((key) => key in payload);
+
+const isMessage = (payload: object): payload is Message =>
+  hasKeys<Message>(payload, ["id", "conversationId", "senderId", "content", "createdAt"]);
+
+const isMessagesReadEvent = (payload: object): payload is MessagesReadEvent =>
+  "type" in payload &&
+  payload.type === "MESSAGES_READ" &&
+  hasKeys<MessagesReadEvent>(payload, ["conversationId", "readerId", "lastReadMessageId", "readAt"]);
 
 function appendMessage(
   data: InfiniteData<MessagePage> | undefined,
@@ -110,16 +127,11 @@ function sendConnectFrame(socket: WebSocket, host: string) {
   );
 }
 
-function sendSubscribeFrame(socket: WebSocket, conversationId: string) {
+function sendSubscribeFrame(socket: WebSocket, id: string, destination: string) {
   socket.send(
-    [
-      "SUBSCRIBE",
-      `id:conversation-${conversationId}`,
-      `destination:/topic/conversations/${conversationId}`,
-      "ack:auto",
-      "",
-      FRAME_END,
-    ].join("\n"),
+    ["SUBSCRIBE", `id:${id}`, `destination:${destination}`, "ack:auto", "", FRAME_END].join(
+      "\n",
+    ),
   );
 }
 
@@ -139,7 +151,8 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
     const subscribe = () => {
       if (!socket || socket.readyState !== WebSocket.OPEN) return;
 
-      sendSubscribeFrame(socket, conversationId);
+      sendSubscribeFrame(socket, `conversation-${conversationId}`, getMessagesTopic(conversationId));
+      sendSubscribeFrame(socket, `conversation-read-${conversationId}`, getReadTopic(conversationId));
       void queryClient.invalidateQueries({ queryKey: chatKeys.list() });
       heartbeatTimer = setInterval(() => socket?.send("\n"), HEARTBEAT_INTERVAL);
     };
@@ -158,8 +171,22 @@ export function useConversationSocket(conversationId: string, enabled: boolean) 
         return;
       }
 
-      const message = parseMessageFrame(frame);
-      if (!message || message.conversationId !== conversationId) return;
+      const messageFrame = parseMessageFrame(frame);
+      if (!messageFrame) return;
+      const { destination, payload } = messageFrame;
+
+      if (destination === getReadTopic(conversationId)) {
+        if (!isMessagesReadEvent(payload) || payload.conversationId !== conversationId) return;
+        setConversationReadState(queryClient, conversationId, payload.readerId, {
+          lastReadMessageId: payload.lastReadMessageId,
+          lastReadAt: payload.readAt,
+        });
+        return;
+      }
+
+      if (destination !== getMessagesTopic(conversationId) || !isMessage(payload)) return;
+      if (payload.conversationId !== conversationId) return;
+      const message = payload;
 
       queryClient.setQueryData<InfiniteData<MessagePage>>(
         chatKeys.messages(conversationId),

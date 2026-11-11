@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, CheckCheck, LoaderCircle } from "lucide-react";
+import { Check, CheckCheck, Clock, LoaderCircle } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 
 import LoadingSpinner from "@/components/ui/loading-spinner";
@@ -11,6 +11,7 @@ type Props = {
   messages: Message[];
   userId: string;
   peerName: string;
+  peerReadUpTo?: string;
   isLoading: boolean;
   isError: boolean;
   onRetry: () => void;
@@ -34,6 +35,7 @@ export default function MessageHistory({
   messages,
   userId,
   peerName,
+  peerReadUpTo,
   isLoading,
   isError,
   onRetry,
@@ -179,12 +181,9 @@ export default function MessageHistory({
                     }`}
                   >
                     <span>{formatTime(message.createdAt)}</span>
-                    {fromMe &&
-                      (index === messages.length - 1 ? (
-                        <CheckCheck className="size-3.5" />
-                      ) : (
-                        <Check className="size-3" />
-                      ))}
+                    {fromMe && (
+                      <MessageStatus message={message} peerReadUpTo={peerReadUpTo} />
+                    )}
                   </div>
                 </div>
               </div>
@@ -194,4 +193,21 @@ export default function MessageHistory({
       )}
     </div>
   );
+}
+
+const getMessageStatus = (message: Message, peerReadUpTo?: string) => {
+  if (message.id.startsWith("optimistic-")) return "sending";
+  if (peerReadUpTo && Date.parse(message.createdAt) <= Date.parse(peerReadUpTo)) return "read";
+  return "sent";
+};
+
+const MESSAGE_STATUS = {
+  sending: { icon: Clock, label: "Надсилається", className: "size-3" },
+  sent: { icon: Check, label: "Надіслано", className: "size-3.5" },
+  read: { icon: CheckCheck, label: "Прочитано", className: "size-3.5 text-white" },
+} as const;
+
+function MessageStatus({ message, peerReadUpTo }: { message: Message; peerReadUpTo?: string }) {
+  const { icon: Icon, label, className } = MESSAGE_STATUS[getMessageStatus(message, peerReadUpTo)];
+  return <Icon role="img" aria-label={label} className={className} />;
 }

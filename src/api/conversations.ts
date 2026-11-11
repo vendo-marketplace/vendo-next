@@ -4,6 +4,7 @@ import type {
   ConversationCreatedResponse,
   ConversationsResponse,
   CreateConversationRequest,
+  MarkReadRequest,
   MessagePage,
   SendMessageRequest,
 } from "@/features/chats/types/chat";
@@ -27,4 +28,6 @@ export const conversationsApi = {
     }),
   sendMessage: async (id: string, request: SendMessageRequest) =>
     client.post<void>(apiEndpoints.conversations.messages(id), request),
+  markRead: async (id: string, request: MarkReadRequest) =>
+    client.patch<void>(apiEndpoints.conversations.read(id), request),
 };
