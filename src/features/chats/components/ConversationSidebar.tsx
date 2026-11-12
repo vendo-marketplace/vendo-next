@@ -4,6 +4,8 @@ import { MessageCircle, Search, Tag } from "lucide-react";
 import { useMemo, type ReactNode } from "react";
 
 import type { Conversation } from "@/features/chats/types/chat";
+import { getLastActivityAt, hasUnreadMessages } from "@/features/chats/utils/unread";
+import { cn } from "@/utils/utils";
 import type { ProductCardType } from "@/types/product";
 
 const FILTERS = [
@@ -156,15 +158,14 @@ export default function ConversationSidebar({
           if (filter === "selling" && !peer.isUserSeller) return false;
 
           const product = products.get(conversation.productId);
-          const searchableText = `${peer.name} ${conversation.lastMessage} ${product?.title ?? ""}`;
+          const searchableText = `${peer.name} ${conversation.lastMessage?.content ?? ""} ${product?.title ?? ""}`;
           return searchableText
             .toLocaleLowerCase("uk")
             .includes(query.toLocaleLowerCase("uk"));
         })
         .sort(
           (left, right) =>
-            new Date(right.createdAt).getTime() -
-            new Date(left.createdAt).getTime(),
+            Date.parse(getLastActivityAt(right)) - Date.parse(getLastActivityAt(left)),
         ),
     [conversations, filter, products, query, userId],
   );
@@ -223,6 +224,7 @@ export default function ConversationSidebar({
           visibleConversations.map((conversation) => {
             const peer = getConversationPeer(conversation, userId);
             const product = products.get(conversation.productId);
+            const isUnread = hasUnreadMessages(conversation, userId);
 
             return (
               <button
@@ -246,15 +248,34 @@ export default function ConversationSidebar({
                     <span className="truncate text-sm font-semibold text-text-primary">
                       {peer.name}
                     </span>
-                    <span className="shrink-0 text-xs text-text-tertiary">
-                      {formatDate(conversation.createdAt)}
+                    <span
+                      className={cn(
+                        "shrink-0 text-xs",
+                        isUnread ? "font-medium text-text-brand" : "text-text-tertiary",
+                      )}
+                    >
+                      {formatDate(getLastActivityAt(conversation))}
                     </span>
                   </span>
                   <span className="mt-1 block truncate text-xs text-text-tertiary">
                     {peer.role} · {product?.title ?? "Оголошення"}
                   </span>
-                  <span className="mt-1.5 block truncate text-sm text-text-secondary">
-                    {conversation.lastMessage}
+                  <span className="mt-1.5 flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "min-w-0 flex-1 truncate text-sm",
+                        isUnread ? "font-semibold text-text-primary" : "text-text-secondary",
+                      )}
+                    >
+                      {conversation.lastMessage?.content}
+                    </span>
+                    {isUnread && (
+                      <span
+                        role="img"
+                        aria-label="Є непрочитані повідомлення"
+                        className="size-2.5 shrink-0 rounded-full bg-surface-brand"
+                      />
+                    )}
                   </span>
                 </span>
               </button>

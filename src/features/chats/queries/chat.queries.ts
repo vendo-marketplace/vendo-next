@@ -6,6 +6,7 @@ import type { Conversation, ReadState } from "@/features/chats/types/chat";
 export const chatKeys = {
   all: ["conversations"] as const,
   list: () => [...chatKeys.all, "list"] as const,
+  unread: () => [...chatKeys.all, "unread"] as const,
   conversation: (id: string) => [...chatKeys.all, "item", id] as const,
   messages: (id: string) => [...chatKeys.all, "messages", id] as const,
 };
@@ -18,6 +19,18 @@ export const chatQueries = {
         const response = await conversationsApi.list();
         return response.data.data;
       },
+      refetchOnWindowFocus: true,
+    }),
+  unread: () =>
+    queryOptions({
+      queryKey: chatKeys.unread(),
+      queryFn: async () => {
+        const response = await conversationsApi.unread();
+        return response.data.count;
+      },
+      // Polled until the backend pushes unread changes over a per-user socket topic.
+      refetchOnWindowFocus: true,
+      refetchInterval: 60_000,
     }),
   conversation: (id: string) =>
     queryOptions({

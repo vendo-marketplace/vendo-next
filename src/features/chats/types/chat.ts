@@ -8,14 +8,25 @@ export interface ReadState {
   lastReadAt: string;
 }
 
+export interface LastMessage {
+  id: string;
+  senderId: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface Conversation {
   id: string;
   productId: string;
   seller: ConversationParticipant;
   buyer: ConversationParticipant;
   readStates: Record<string, ReadState>;
-  lastMessage: string;
+  lastMessage: LastMessage | null;
   createdAt: string;
+}
+
+export interface UnreadResponse {
+  count: number;
 }
 
 export interface ConversationsResponse {

@@ -67,6 +67,10 @@ export function useConversations(enabled = true) {
   return useQuery({ ...chatQueries.list(), enabled });
 }
 
+export function useUnreadConversationsCount(enabled = true) {
+  return useQuery({ ...chatQueries.unread(), enabled });
+}
+
 export function useConversation(id: string, enabled = true) {
   const query = chatQueries.conversation(id);
   return useQuery({ ...query, enabled: Boolean(id) && enabled });
@@ -130,6 +134,7 @@ export function useChatMutations() {
       const invalidations = [
         queryClient.invalidateQueries({ queryKey: chatKeys.conversation(id) }),
         queryClient.invalidateQueries({ queryKey: chatKeys.list() }),
+        queryClient.invalidateQueries({ queryKey: chatKeys.unread() }),
       ];
       if (!result?.previousData) {
         invalidations.push(
@@ -147,6 +152,7 @@ export function useChatMutations() {
     mutationFn: (id: string) => conversationsApi.remove(id),
     onSuccess: (_response, id) => {
       void queryClient.invalidateQueries({ queryKey: chatKeys.list() });
+      void queryClient.invalidateQueries({ queryKey: chatKeys.unread() });
       queryClient.removeQueries({ queryKey: chatKeys.conversation(id) });
       queryClient.removeQueries({ queryKey: chatKeys.messages(id) });
     },
@@ -160,6 +166,7 @@ export function useChatMutations() {
         lastReadMessageId,
         lastReadAt: new Date().toISOString(),
       }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: chatKeys.unread() }),
     onError: (_error, { id }) =>
       Promise.all([
         queryClient.invalidateQueries({ queryKey: chatKeys.list() }),

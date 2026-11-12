@@ -40,6 +40,7 @@ export const apiEndpoints = {
   },
   conversations: {
     list: "/conversations",
+    unread: "/conversations/unread",
     item: (id: string) => `/conversations/${id}`,
     messages: (id: string) => `/conversations/${id}/messages`,
     read: (id: string) => `/conversations/${id}/read`,

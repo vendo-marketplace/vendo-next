@@ -7,12 +7,14 @@ import type {
   MarkReadRequest,
   MessagePage,
   SendMessageRequest,
+  UnreadResponse,
 } from "@/features/chats/types/chat";
 import { apiEndpoints } from "./endpoints";
 
 export const conversationsApi = {
   list: async () =>
     client.get<ConversationsResponse>(apiEndpoints.conversations.list),
+  unread: async () => client.get<UnreadResponse>(apiEndpoints.conversations.unread),
   get: async (id: string) =>
     client.get<Conversation>(apiEndpoints.conversations.item(id)),
   create: async (request: CreateConversationRequest) =>
