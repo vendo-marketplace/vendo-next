@@ -11,18 +11,18 @@ import {
   DropdownSeparator,
   DropdownTrigger,
 } from "@/components/ui/dropdown/dropdown";
+import { BellIcon } from "@/assets/icons/BellIcon";
 import { SearchIcon } from "@/assets/icons/SearchIcon";
 import { ShieldIcon } from "@/assets/icons/ShieldIcon";
 import { UserIcon } from "@/assets/icons/UserIcon";
 import { hasAdminRole } from "@/features/admin/utils/has-admin-role";
 import type { MeResponse } from "@/features/auth/types/auth";
 import { useLogout } from "@/features/auth/hooks/use-logout";
+import { needsProfileAttention } from "@/features/auth/utils/needs-profile-attention";
+import { useUnreadIndicators } from "@/features/notifications/hooks/use-unread-indicators";
 import { Link, useRouter } from "@/i18n/navigation";
 
 import ProfileDialog from "./ProfileDialog";
-
-export const needsProfileAttention = (user: MeResponse) =>
-  !user.emailVerified || !user.fullName?.trim();
 
 // The account menu, opened from the header icon on tablets and desktop and from the bottom
 // menu on phones, where it opens upwards.
@@ -41,6 +41,7 @@ export default function AccountMenu({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const needsAttention = needsProfileAttention(user);
+  const { unreadNotifications } = useUnreadIndicators(user);
   const displayName = user.fullName?.trim() || "Мій акаунт";
 
   return (
@@ -68,6 +69,18 @@ export default function AccountMenu({
             {needsAttention && (
               <span aria-hidden="true" className="size-2 rounded-full bg-surface-warning" />
             )}
+          </DropdownItem>
+          <DropdownItem asChild>
+            <Link href="/notifications">
+              <BellIcon size={16} />
+              <span className="flex-1">Сповіщення</span>
+              {unreadNotifications > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-surface-error px-1.5 text-xs font-semibold text-text-invert">
+                  <span className="sr-only">нових: </span>
+                  {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                </span>
+              )}
+            </Link>
           </DropdownItem>
           <DropdownItem asChild>
             <Link href="/auto-search">

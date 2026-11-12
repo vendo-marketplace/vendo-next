@@ -27,15 +27,16 @@ export default function HeaderMobileSearch() {
         aria-label="Пошук товарів"
         aria-expanded={isOpen}
         onClick={() => setIsOpen(true)}
-        // The icon is 24px as in Figma; the hit area reaches 28×40px without touching the heart.
-        className="relative flex size-6 items-center justify-center rounded-sm text-text-secondary transition-colors after:absolute after:-inset-x-0.5 after:-inset-y-2 after:content-[''] hover:text-text-brand md:hidden"
+        // 28px icon (a touch larger than Figma for easier reading); the hit area reaches 32×44px.
+        className="relative flex size-7 items-center justify-center rounded-sm text-text-secondary transition-colors after:absolute after:-inset-x-0.5 after:-inset-y-2 after:content-[''] hover:text-text-brand md:hidden"
       >
-        <NavSearchIcon size={24} />
+        <NavSearchIcon size={28} />
       </button>
 
       {isOpen && (
-        // The "Search" header variant (Figma): 56px tall like the header, with a 36px field.
-        <div className="absolute inset-x-0 top-0 z-10 flex h-14 items-center gap-3 border-b border-stroke-secondary bg-surface-primary px-4 md:hidden [&_form]:h-9">
+        // The "Search" header variant (Figma): 56px tall like the header, with a 40px field
+        // and 16px typed text (iOS Safari zooms in on anything smaller), a 14px placeholder and 20px search and camera icons.
+        <div className="absolute inset-x-0 top-0 z-10 flex h-14 items-center gap-3 border-b border-stroke-secondary bg-surface-primary px-4 md:hidden [&_form]:h-10 [&_input]:text-md [&_input]:placeholder:text-sm [&_[data-photo-trigger]]:size-5 [&_[data-photo-trigger]_svg]:size-5 [&_[data-search-submit]]:size-5 [&_[data-search-submit]_svg]:size-5">
           <button
             type="button"
             aria-label="Закрити пошук"

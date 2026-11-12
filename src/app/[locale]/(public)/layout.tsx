@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import Header from "@/app/[locale]/(public)/_components/header/Header";
 import Footer from "@/app/[locale]/(public)/_components/footer/footer";
 import MobileBottomNav from "@/app/[locale]/(public)/_components/bottom-nav/MobileBottomNav";
+import { PhotoSearchDialog } from "@/features/photo-search/components/PhotoSearchDialog";
 
 export default function RootLayout({
   children,
@@ -14,8 +15,9 @@ export default function RootLayout({
       </main>
       <Footer />
       {/* Room under the footer so the phone bottom menu never covers it. */}
-      <div aria-hidden="true" className="h-[calc(4.5rem+env(safe-area-inset-bottom))] md:hidden" />
+      <div aria-hidden="true" className="h-[calc(5.5rem+env(safe-area-inset-bottom))] md:h-[calc(6rem+env(safe-area-inset-bottom))] lg:hidden" />
       <MobileBottomNav />
+      <PhotoSearchDialog />
     </>
   );
 }

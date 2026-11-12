@@ -19,6 +19,7 @@ export function CategoryToolbar({
   activeFiltersCount,
   onOpenFilters,
   autoSearchQuery,
+  sortValues = CATEGORY_PRODUCT_SORT_VALUES,
 }: {
   totalElements?: number;
   sort: ProductSortOption;
@@ -26,6 +27,8 @@ export function CategoryToolbar({
   activeFiltersCount: number;
   onOpenFilters: () => void;
   autoSearchQuery: Record<string, string>;
+  // Search results add "Релевантні"; category listings have no relevance ordering.
+  sortValues?: readonly ProductSortOption[];
 }) {
   const autoSearchHref = { pathname: "/auto-search", query: autoSearchQuery };
 
@@ -53,7 +56,7 @@ export function CategoryToolbar({
           <ProductSortSelect
             value={sort}
             onChange={onSortChange}
-            sortValues={CATEGORY_PRODUCT_SORT_VALUES}
+            sortValues={sortValues}
             className="h-10 w-full min-w-0 sm:w-fit"
           />
         )}

@@ -16,8 +16,8 @@ const SearchBar = ({ autoFocus, onSearch }: Props) => {
     <SearchBarForm
       query={query}
       onQueryChange={setQuery}
-      onSubmit={() => {
-        search();
+      onSubmit={(value) => {
+        search(value);
         onSearch?.();
       }}
       autoFocus={autoFocus}

@@ -153,7 +153,7 @@ export default function CategoryDropdownClient({
 
   return (
     <>
-      <div ref={triggerRef} className="hidden w-fit md:block">
+      <div ref={triggerRef} className="hidden w-fit lg:block">
         <Button
           variant="secondary"
           title="Каталог товарів"
@@ -163,17 +163,17 @@ export default function CategoryDropdownClient({
           aria-controls="catalog-dialog"
           onClick={() => setIsOpen((open) => !open)}
           className={cn(
-            "h-10 gap-1.5 px-3 font-medium lg:px-5",
+            "h-10 gap-1.5 px-5 font-medium",
             isOpen && "border-stroke-brand",
           )}
         >
           <Grid4Icon size={16} />
-          <span className="hidden lg:inline">Каталог</span>
+          <span>Каталог</span>
         </Button>
       </div>
 
       {isOpen && (
-        <div className="page-container fixed inset-x-0 top-14 z-50 md:top-19">
+        <div className="page-container fixed inset-x-0 top-14 z-50 md:top-16 lg:top-19">
           <section
             role="dialog"
             id="catalog-dialog"
@@ -201,9 +201,9 @@ export default function CategoryDropdownClient({
                 first?.focus();
               }
             }}
-            className="flex max-h-[calc(100dvh-3.5rem-6rem)] w-full flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl md:max-h-[calc(100dvh-4.75rem-1rem)]"
+            className="flex max-h-[calc(100dvh-3.5rem-6rem)] w-full flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl md:max-h-[calc(100dvh-4rem-6rem)] lg:max-h-[calc(100dvh-4.75rem-1rem)]"
           >
-            <div className="flex shrink-0 items-center justify-between border-b border-stroke-secondary px-4 py-2 sm:px-5 md:hidden">
+            <div className="flex shrink-0 items-center justify-between border-b border-stroke-secondary px-4 py-2 sm:px-5 lg:hidden">
               <p className="text-base font-semibold text-text-primary">
                 Каталог
               </p>

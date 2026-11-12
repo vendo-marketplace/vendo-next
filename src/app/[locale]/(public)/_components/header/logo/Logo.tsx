@@ -10,7 +10,7 @@ interface Props {
 const Logo = ({ className }: Props) => {
   return (
     <Link href="/" aria-label="Vendo — на головну" className={cn("block w-fit", className)}>
-      <Image src={logoUrl} alt="" priority className="h-7 w-auto md:h-9 lg:h-11" />
+      <Image src={logoUrl} alt="" priority className="h-8 w-auto md:h-9 lg:h-11" />
     </Link>
   );
 };

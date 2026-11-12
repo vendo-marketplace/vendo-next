@@ -5,6 +5,10 @@ import type { SelectOption } from "@/types/types";
 import { cn } from "@/utils/utils";
 import { Select as RadixSelect } from "radix-ui";
 
+// Shared with triggers that open something else, such as the phone sorting sheet.
+export const selectTriggerClassName =
+  "group flex h-10 w-fit items-center gap-1.5 rounded-lg border border-stroke-primary-subtle bg-surface-primary px-3 text-sm font-medium text-text-primary shadow-xs transition-colors outline-none hover:not-focus:border-stroke-brand data-[state=open]:border-stroke-primary disabled:cursor-not-allowed disabled:bg-surface-tertiary";
+
 type Props<T extends string> = {
   options: readonly SelectOption<T>[];
   value?: T;
@@ -41,10 +45,7 @@ const Select = <T extends string>({
       onValueChange={handleValueChange}
     >
       <RadixSelect.Trigger
-        className={cn(
-          "group flex h-10 w-fit items-center gap-1.5 rounded-lg border border-stroke-primary-subtle bg-surface-primary px-3 text-sm font-medium text-text-primary shadow-xs transition-colors outline-none hover:not-focus:border-stroke-brand data-[state=open]:border-stroke-primary disabled:cursor-not-allowed disabled:bg-surface-tertiary",
-          className,
-        )}
+        className={cn(selectTriggerClassName, className)}
       >
         {icon && (
           <span aria-hidden="true" className="flex shrink-0 text-text-secondary">

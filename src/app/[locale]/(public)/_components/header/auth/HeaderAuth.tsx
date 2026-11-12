@@ -3,17 +3,24 @@
 import { Button } from "@/components/ui/button/button";
 import { NavChatIcon, NavUserIcon } from "@/assets/icons/NavIcons";
 import { useMe } from "@/features/auth/hooks/use-me";
+import { IndicatorDot } from "@/features/notifications/components/IndicatorDot";
+import {
+  getAccountMenuLabel,
+  getChatsLabel,
+  useUnreadIndicators,
+} from "@/features/notifications/hooks/use-unread-indicators";
 import { Link } from "@/i18n/navigation";
 
-import AccountMenu, { needsProfileAttention } from "./AccountMenu";
+import AccountMenu from "./AccountMenu";
 
 export default function HeaderAuth() {
   const { data: user } = useMe();
+  const { hasUnreadChats, accountTone } = useUnreadIndicators(user);
 
   if (!user) {
     return (
-      // Phones sign in from the bottom menu; tablets get an icon, desktop the two text links.
-      <div className="hidden items-center gap-1 md:flex lg:gap-2">
+      // Phones and tablets sign in from the bottom menu; desktop gets the two text links.
+      <div className="hidden items-center gap-2 lg:flex">
         <Button
           asChild
           variant="outline"
@@ -32,32 +39,24 @@ export default function HeaderAuth() {
         >
           <Link href="/sign-up">Реєстрація</Link>
         </Button>
-        <Button
-          asChild
-          variant="outline"
-          className="size-10 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand lg:hidden"
-        >
-          <Link href="/sign-in" aria-label="Увійти або зареєструватися">
-            <NavUserIcon size={24} />
-          </Link>
-        </Button>
       </div>
     );
   }
 
-  const needsAttention = needsProfileAttention(user);
-
   return (
     <>
-      {/* Phones reach chats and the account menu from the bottom menu. */}
+      {/* Phones and tablets reach chats and the account menu from the bottom menu. */}
       <Button
         asChild
         variant="outline"
-        aria-label="Повідомлення"
-        className="hidden size-10 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand md:inline-flex"
+        aria-label={getChatsLabel(hasUnreadChats, "Повідомлення")}
+        className="relative hidden size-10 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand lg:inline-flex"
       >
         <Link href="/chats">
-          <NavChatIcon size={24} />
+          <span className="relative grid size-6 place-items-center">
+            <NavChatIcon size={24} />
+            {hasUnreadChats && <IndicatorDot tone="error" />}
+          </span>
         </Link>
       </Button>
       <AccountMenu
@@ -65,21 +64,12 @@ export default function HeaderAuth() {
         trigger={
           <Button
             variant="outline"
-            className="hidden size-10 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand md:inline-flex"
-            aria-label={
-              needsAttention
-                ? "Відкрити меню акаунта, потрібна дія в профілі"
-                : "Відкрити меню акаунта"
-            }
+            className="relative hidden size-10 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand lg:inline-flex"
+            aria-label={getAccountMenuLabel(accountTone)}
           >
             <span className="relative grid size-6 place-items-center">
               <NavUserIcon size={24} />
-              {needsAttention && (
-                <span
-                  aria-hidden="true"
-                  className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full border-2 border-surface-primary bg-surface-warning"
-                />
-              )}
+              {accountTone && <IndicatorDot tone={accountTone} />}
             </span>
           </Button>
         }

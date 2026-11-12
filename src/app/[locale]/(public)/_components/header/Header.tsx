@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
 import { Button } from "@/components/ui/button/button";
-import { PlusIcon } from "@/assets/icons/PlusIcon";
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
 import { Link } from "@/i18n/navigation";
 
@@ -14,17 +13,20 @@ import SearchBar from "./search-bar/SearchBar";
 // Figma 5083-17521 / 5085-18281:
 // - phones (5083-17681, taller by request): a 56px row with the logo and two 24px icons 4px apart; the rest is in
 //   the bottom menu;
-// - tablets: catalog icon, search field, icons and "+ Додати";
+// - tablets: a 64px row with the logo, a 40px search field and the heart; like on phones, the
+//   catalog, "+", chats and the account live in the bottom menu;
 // - desktop: "Каталог", search field, icons or "Вхід / Реєстрація", "Додати оголошення".
 const Header = () => {
   return (
-    <header className="sticky top-0 left-0 z-50 h-14 w-full border-b border-stroke-secondary bg-surface-primary md:h-19">
+    // The bottom line is an inset shadow, not a border, so the row keeps its full even height and
+    // icons centre on whole pixels instead of blurring on a half pixel.
+    <header className="sticky top-0 left-0 z-50 h-14 w-full bg-surface-primary shadow-[inset_0_-1px_0_var(--color-stroke-secondary)] md:h-16 lg:h-19">
       <div className="page-container relative flex h-full items-center gap-3 xl:gap-4">
-        <Logo className="shrink-0" />
+        <Logo className="shrink-0 md:mr-4 lg:mr-0" />
 
         <CategoryDropdown />
 
-        <div className="hidden min-w-0 flex-1 md:block lg:max-w-130">
+        <div className="hidden min-w-0 flex-1 md:block md:max-w-120 lg:max-w-130">
           <Suspense fallback={null}>
             <SearchBar />
           </Suspense>
@@ -36,12 +38,8 @@ const Header = () => {
           </Suspense>
           <HeaderFavoritesLink />
           <HeaderAuth />
-          <Button asChild className="ml-1 hidden h-10 gap-1.5 px-3 md:inline-flex lg:ml-2 lg:px-4">
-            <Link href="/create">
-              <PlusIcon size={20} className="lg:hidden" />
-              <span className="lg:hidden">Додати</span>
-              <span className="hidden lg:inline">Додати оголошення</span>
-            </Link>
+          <Button asChild className="ml-2 hidden h-10 px-4 lg:inline-flex">
+            <Link href="/create">Додати оголошення</Link>
           </Button>
         </div>
       </div>

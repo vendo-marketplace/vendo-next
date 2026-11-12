@@ -1,10 +1,11 @@
 "use client";
 
 import { Dialog } from "radix-ui";
-import { useEffect, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import { BellIcon } from "@/assets/icons/BellIcon";
 import { CrossIcon } from "@/assets/icons/CrossIcon";
+import { SheetHandle, useIsPhone, useSheetDrag } from "@/components/ui/bottom-sheet/bottom-sheet";
 import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/utils/utils";
@@ -14,21 +15,6 @@ import type { ActiveFilterChip } from "./lib/active-filter-chips";
 import { formatListingsCount } from "./lib/filter-display";
 
 const DESKTOP_QUERY = "(min-width: 64rem)";
-// The sm breakpoint: below it the filters open as a sheet from the bottom.
-const PHONE_QUERY = "(max-width: 39.99rem)";
-
-const subscribeToPhone = (onChange: () => void) => {
-  const query = window.matchMedia(PHONE_QUERY);
-  query.addEventListener("change", onChange);
-  return () => query.removeEventListener("change", onChange);
-};
-
-const useIsPhone = () =>
-  useSyncExternalStore(
-    subscribeToPhone,
-    () => window.matchMedia(PHONE_QUERY).matches,
-    () => false,
-  );
 
 // Phones: a sheet that slides up from the bottom, with the buttons under the thumb.
 // Tablets: a side panel from the left. Desktop has the sidebar instead.
@@ -55,6 +41,7 @@ export function CategoryFiltersDrawer({
   children: ReactNode;
 }) {
   const isPhone = useIsPhone();
+  const drag = useSheetDrag(() => onOpenChange(false));
   const hasFilters = chips.length > 0;
 
   // Growing past lg brings back the sidebar, so the panel closes.
@@ -77,8 +64,16 @@ export function CategoryFiltersDrawer({
               ? "inset-x-0 bottom-0 h-[calc(100dvh-3rem)] rounded-t-lg data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom"
               : "top-0 left-0 h-dvh w-[calc(100%-3rem)] max-w-sm rounded-r-lg data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left",
           )}
+          style={isPhone ? drag.style : undefined}
         >
-          <div className="relative flex shrink-0 items-center justify-center border-b border-stroke-secondary px-14 py-2">
+          {isPhone && <SheetHandle {...drag.handlers} />}
+          <div
+            {...(isPhone ? drag.handlers : {})}
+            className={cn(
+              "relative flex shrink-0 items-center justify-center border-b border-stroke-secondary px-14 py-2",
+              isPhone && "touch-none pt-1",
+            )}
+          >
             <Dialog.Title className="font-heading text-xl leading-11 font-semibold text-text-primary">
               Фільтри
             </Dialog.Title>

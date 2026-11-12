@@ -154,7 +154,20 @@ const ProductCard = ({
           </p>
         </div>
 
-        <ul className="mt-3.5 mb-1 grid @card-tablet:mt-4 grid-cols-2 border-y @card-desktop:grid-cols-3 border-stroke-primary-subtle text-xs">
+        <ul
+          className={cn(
+            "mt-3.5 mb-1 grid @card-tablet:mt-4 grid-cols-2 border-y @card-desktop:grid-cols-3 border-stroke-primary-subtle text-xs",
+            // No specs: below desktop the row has nothing to show, so its lines hide while it keeps
+            // its height and the city and date stay level with the neighbouring cards.
+            specs.length === 0 && "border-transparent @card-desktop:border-stroke-primary-subtle",
+          )}
+        >
+          {specs.length === 0 && (
+            <li aria-hidden="true" className={cn(badgeClassName, "invisible @card-desktop:hidden")}>
+              <span className="size-3.5 shrink-0 @card-tablet:size-4" />
+              <span>&nbsp;</span>
+            </li>
+          )}
           <li
             className={cn(
               badgeClassName,

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 const SearchPage = async () => {
   return (
-    <section className="px-20 py-6">
+    <section className="page-container py-6">
       <Suspense fallback={null}>
         <SearchResults />
       </Suspense>
