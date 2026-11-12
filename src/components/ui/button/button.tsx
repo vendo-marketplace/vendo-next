@@ -10,7 +10,7 @@ const buttonVariants = {
     secondary:
       "bg-surface-brand-subtle border border-surface-brand-subtle text-text-brand shadow-sm hover:border-stroke-brand focus-visible:border-stroke-brand",
     outline:
-      "bg-surface-primary border border-stroke-primary-subtle text-text-primary hover:bg-surface-secondary focus-visible:border-stroke-brand focus-visible:text-text-brand focus-visible:shadow-focus-secondary",
+      "bg-surface-primary border border-stroke-primary-subtle text-text-primary hover:bg-surface-brand-subtle hover:border-stroke-brand-subtle hover:text-text-brand focus-visible:border-stroke-brand focus-visible:text-text-brand focus-visible:shadow-focus-secondary",
     success:
       "bg-surface-success text-text-invert shadow-xs hover:bg-surface-success-hover focus-visible:bg-surface-success-hover focus-visible:border focus-visible:border-stroke-success-subtle",
     "success-outline":

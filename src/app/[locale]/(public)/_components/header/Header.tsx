@@ -1,56 +1,46 @@
 import { Suspense } from "react";
-import { Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button/button";
-import { ChatBubbleIcon } from "@/components/ui/icons";
 import CategoryDropdown from "@/features/categories/components/category-dropdown/CategoryDropdown";
+import { Link } from "@/i18n/navigation";
+
 import HeaderAuth from "./auth/HeaderAuth";
 import HeaderFavoritesLink from "./favorites/HeaderFavoritesLink";
 import Logo from "./logo/Logo";
+import HeaderMobileSearch from "./search-bar/HeaderMobileSearch";
 import SearchBar from "./search-bar/SearchBar";
-import { Link } from "@/i18n/navigation";
 
+// Figma 5083-17521 / 5085-18281:
+// - phones (5083-17681, taller by request): a 56px row with the logo and two 24px icons 4px apart; the rest is in
+//   the bottom menu;
+// - tablets: a 64px row with the logo, a 40px search field and the heart; like on phones, the
+//   catalog, "+", chats and the account live in the bottom menu;
+// - desktop: "Каталог", search field, icons or "Вхід / Реєстрація", "Додати оголошення".
 const Header = () => {
   return (
-    <header className="sticky top-0 left-0 z-50 flex h-28 w-full items-center justify-center border-b border-stroke-primary-subtle bg-surface-primary lg:h-[88px]">
-      <div className="page-container grid h-full grid-cols-[auto_minmax(0,1fr)] grid-rows-[48px_64px] items-center gap-x-3 lg:flex lg:gap-3 xl:gap-4">
-        <div className="col-start-1 row-start-1 lg:shrink-0">
-          <Logo className="h-7 sm:h-8 lg:h-9" />
-        </div>
+    // The bottom line is an inset shadow, not a border, so the row keeps its full even height and
+    // icons centre on whole pixels instead of blurring on a half pixel.
+    <header className="sticky top-0 left-0 z-50 h-14 w-full bg-surface-primary shadow-[inset_0_-1px_0_var(--color-stroke-secondary)] md:h-16 lg:h-19">
+      <div className="page-container relative flex h-full items-center gap-3 xl:gap-4">
+        <Logo className="shrink-0 md:mr-4 lg:mr-0" />
 
-        <div className="col-start-2 row-start-1 flex items-center justify-end gap-1 sm:gap-2 lg:order-last lg:ml-auto">
-          <HeaderFavoritesLink />
-          <Button
-            asChild
-            variant="outline"
-            aria-label="Повідомлення"
-            className="hidden size-8 border-0 p-0 sm:inline-flex"
-          >
-            <Link href="/chats">
-              <ChatBubbleIcon className="size-6" />
-            </Link>
-          </Button>
-          <HeaderAuth />
-          <Button
-            asChild
-            aria-label="Додати оголошення"
-            className="size-9 p-0 sm:h-10 sm:w-auto sm:px-3 lg:px-4"
-          >
-            <Link href="/create">
-              <Plus aria-hidden="true" className="size-5 sm:hidden" />
-              <span className="hidden sm:inline">Додати оголошення</span>
-            </Link>
-          </Button>
-        </div>
+        <CategoryDropdown />
 
-        <div className="col-start-1 row-start-2">
-          <CategoryDropdown />
-        </div>
-
-        <div className="col-start-2 row-start-2 min-w-0 lg:max-w-[520px] lg:flex-1">
+        <div className="hidden min-w-0 flex-1 md:block md:max-w-120 lg:max-w-130">
           <Suspense fallback={null}>
             <SearchBar />
           </Suspense>
+        </div>
+
+        <div className="ml-auto flex items-center gap-1 lg:gap-2">
+          <Suspense fallback={null}>
+            <HeaderMobileSearch />
+          </Suspense>
+          <HeaderFavoritesLink />
+          <HeaderAuth />
+          <Button asChild className="ml-2 hidden h-10 px-4 lg:inline-flex">
+            <Link href="/create">Додати оголошення</Link>
+          </Button>
         </div>
       </div>
     </header>

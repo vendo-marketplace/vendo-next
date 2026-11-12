@@ -27,7 +27,7 @@ const ProductCardsGrid = ({ cards, isLoading = false, withSidebar = false }: Pro
       className={
         withSidebar
           ? "grid w-full grid-cols-2 gap-3 md:grid-cols-3"
-          : "grid w-full grid-cols-2 gap-4 md:grid-cols-3 md:gap-5 xl:grid-cols-4"
+          : "grid w-full grid-cols-2 gap-4 md:grid-cols-3 lg:gap-5 xl:grid-cols-4"
       }
     >
       {cards.map((card, index) => (

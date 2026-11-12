@@ -15,6 +15,7 @@ import {
   ShowMoreButton,
 } from "./FilterControls";
 import { getColorSwatch, isColorAttribute, shouldRenderAsChips } from "./lib/filter-display";
+import { FilterHint } from "./FilterHint";
 import { toggleValue, type AttributeValue } from "./lib/filter-state";
 import type { FilterAttribute } from "./lib/mock-filter-attributes";
 
@@ -76,20 +77,21 @@ function EnumOptions({
       {options.length >= SEARCHABLE_FROM && (
         <Input
           aria-label={`Пошук: ${attribute.title}`}
-          placeholder={`Пошук: ${attribute.title.toLowerCase()}`}
+          placeholder={attribute.searchPlaceholder ?? `Пошук: ${attribute.title.toLowerCase()}`}
           start={<SearchIcon className="size-full" />}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           onClear={() => setSearch("")}
         />
       )}
-      <div className={withSwatches ? "flex flex-col gap-3.5" : "flex flex-col gap-3"}>
+      <div className={withSwatches ? "flex flex-col lg:gap-3.5" : "flex flex-col lg:gap-3"}>
         {visible.map((option) => (
           <FilterCheckbox
             key={option}
             label={option}
             checked={value.values.includes(option)}
             onChange={() => toggle(option)}
+            count={attribute.optionCounts?.[option]}
             swatch={withSwatches ? getColorSwatch(option) : undefined}
           />
         ))}
@@ -112,16 +114,25 @@ export function AttributeFilter({
   attribute,
   value,
   onChange,
+  defaultOpen,
   last,
 }: {
   attribute: FilterAttribute;
   value: AttributeValue;
   onChange: (value: AttributeValue) => void;
+  defaultOpen?: boolean;
   last?: boolean;
 }) {
+  const sectionProps = {
+    title: attribute.title,
+    hint: attribute.hint && <FilterHint label={attribute.title} hint={attribute.hint} />,
+    defaultOpen,
+    last,
+  };
+
   if (attribute.type === "BOOLEAN") {
     return (
-      <FilterSection title={attribute.title} collapsible={false} last={last}>
+      <FilterSection {...sectionProps} collapsible={false}>
         <FilterSwitch
           label={toPresenceLabel(attribute.title)}
           description={attribute.description}
@@ -134,7 +145,7 @@ export function AttributeFilter({
 
   if (attribute.type === "ENUM") {
     return (
-      <FilterSection title={attribute.title} last={last}>
+      <FilterSection {...sectionProps}>
         <EnumOptions attribute={attribute} value={value} onChange={onChange} />
       </FilterSection>
     );
@@ -142,7 +153,7 @@ export function AttributeFilter({
 
   if (attribute.type === "RANGE") {
     return (
-      <FilterSection title={attribute.title} last={last}>
+      <FilterSection {...sectionProps}>
         <div className="flex gap-4">
           <NumberInput
             size="base"
@@ -165,7 +176,7 @@ export function AttributeFilter({
 
   if (attribute.type === "NUMBER") {
     return (
-      <FilterSection title={attribute.title} last={last}>
+      <FilterSection {...sectionProps}>
         <NumberInput
           size="base"
           aria-label={attribute.title}

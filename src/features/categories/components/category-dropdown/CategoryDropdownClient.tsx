@@ -1,16 +1,13 @@
 "use client";
 
-import {
-  ChevronDown,
-  ChevronRight,
-  Grid2X2,
-  X,
-} from "lucide-react";
+import { ChevronRight, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { Grid4Icon } from "@/assets/icons/Grid4Icon";
 import { Button } from "@/components/ui/button/button";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/utils/utils";
 import { useCatalogDialog } from "../../hooks/use-catalog-dialog";
 import type { CategoryOption } from "../../types/category";
 import { CategoryIcon } from "./category-icons";
@@ -110,6 +107,8 @@ function CategoryBranch({
   );
 }
 
+export const OPEN_CATALOG_EVENT = "vendo:toggle-catalog";
+
 export default function CategoryDropdownClient({
   categories,
   unavailable = false,
@@ -138,6 +137,13 @@ export default function CategoryDropdownClient({
     setOpenPath([]);
   };
 
+  // Phones open the catalog from the bottom menu, which has no access to this state.
+  useEffect(() => {
+    const toggle = () => setIsOpen((open) => !open);
+    window.addEventListener(OPEN_CATALOG_EVENT, toggle);
+    return () => window.removeEventListener(OPEN_CATALOG_EVENT, toggle);
+  }, []);
+
   useCatalogDialog({
     isOpen,
     onClose: () => setIsOpen(false),
@@ -147,31 +153,27 @@ export default function CategoryDropdownClient({
 
   return (
     <>
-      <div ref={triggerRef} className="w-fit">
+      <div ref={triggerRef} className="hidden w-fit lg:block">
         <Button
-          variant="outline"
+          variant="secondary"
           title="Каталог товарів"
+          aria-label="Каталог товарів"
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           aria-controls="catalog-dialog"
           onClick={() => setIsOpen((open) => !open)}
-          className={
-            isOpen
-              ? "border-surface-brand bg-surface-secondary-brand text-text-brand hover:border-surface-brand hover:bg-surface-secondary-brand hover:text-text-brand"
-              : ""
-          }
+          className={cn(
+            "h-10 gap-1.5 px-5 font-medium",
+            isOpen && "border-stroke-brand",
+          )}
         >
-          <Grid2X2 aria-hidden="true" className="size-4" />
+          <Grid4Icon size={16} />
           <span>Каталог</span>
-          <ChevronDown
-            aria-hidden="true"
-            className={`size-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-          />
         </Button>
       </div>
 
       {isOpen && (
-        <div className="page-container fixed inset-x-0 top-28 z-50 lg:top-[88px]">
+        <div className="page-container fixed inset-x-0 top-14 z-50 md:top-16 lg:top-19">
           <section
             role="dialog"
             id="catalog-dialog"
@@ -199,9 +201,9 @@ export default function CategoryDropdownClient({
                 first?.focus();
               }
             }}
-            className="flex max-h-[calc(100dvh-8rem)] w-full flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl lg:max-h-[calc(100dvh-88px-1rem)]"
+            className="flex max-h-[calc(100dvh-3.5rem-6rem)] w-full flex-col overflow-hidden rounded-b-xl bg-surface-primary shadow-2xl md:max-h-[calc(100dvh-4rem-6rem)] lg:max-h-[calc(100dvh-4.75rem-1rem)]"
           >
-            <div className="flex shrink-0 items-center justify-between border-b border-stroke-secondary px-4 py-2 sm:px-5 md:hidden">
+            <div className="flex shrink-0 items-center justify-between border-b border-stroke-secondary px-4 py-2 sm:px-5 lg:hidden">
               <p className="text-base font-semibold text-text-primary">
                 Каталог
               </p>

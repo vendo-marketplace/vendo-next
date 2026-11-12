@@ -48,14 +48,19 @@ export default function AutoSearchManager({
   categories,
   categoryError = false,
   selectedAutoSearchId,
-}: Props & { selectedAutoSearchId?: string }) {
+  prefill,
+}: Props & {
+  selectedAutoSearchId?: string;
+  // Opens the create form straight away, filled with these values.
+  prefill?: Partial<AutoSearchFormValues>;
+}) {
   const t = useTranslations("AutoSearch");
   const { data: user, isPending: isAuthPending } = useMe();
   const isAuthenticated = Boolean(user);
   const { data: autoSearches = [], isLoading, isError, refetch } =
     useAutoSearches(isAuthenticated, user?.id);
   const { create, update, remove } = useAutoSearchMutations();
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState(Boolean(prefill?.categoryId));
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const categoryTrails = useMemo(() => getCategoryTrails(categories), [categories]);
@@ -156,6 +161,7 @@ export default function AutoSearchManager({
           <AutoSearchForm
             key="new"
             categories={categories}
+            prefill={prefill}
             isSaving={create.isPending}
             onCancel={() => {
               setIsCreating(false);

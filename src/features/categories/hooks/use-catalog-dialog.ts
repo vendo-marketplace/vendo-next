@@ -33,9 +33,11 @@ export const useCatalogDialog = ({
     // The trigger toggles the dialog itself, so clicks on it are ignored here.
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Node;
+      // The bottom menu's "Каталог" on phones toggles the dialog itself too.
       const isInside =
         dialogRef.current?.contains(target) ||
-        trigger?.contains(target);
+        trigger?.contains(target) ||
+        (target instanceof Element && Boolean(target.closest("[data-catalog-trigger]")));
 
       if (!isInside) close();
     };

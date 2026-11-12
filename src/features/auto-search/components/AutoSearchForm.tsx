@@ -20,6 +20,8 @@ import { getApiErrorMessage } from "@/utils/api-error";
 type Props = {
   categories: CategoryOption[];
   initialValues?: AutoSearchFormValues;
+  // Partial values for a new auto-search, e.g. the filters of the page it was started from.
+  prefill?: Partial<AutoSearchFormValues>;
   isEditing?: boolean;
   isSaving: boolean;
   onCancel: () => void;
@@ -71,6 +73,7 @@ const getCategoryTrail = (categories: CategoryOption[], path: string[]) => {
 export default function AutoSearchForm({
   categories,
   initialValues,
+  prefill,
   isEditing = false,
   isSaving,
   onCancel,
@@ -85,11 +88,10 @@ export default function AutoSearchForm({
       city: "",
       expirationDate: defaultExpirationDate(),
       status: "ACTIVE",
+      ...prefill,
     },
   );
-  const [isCategoryPickerOpen, setIsCategoryPickerOpen] = useState(
-    !initialValues?.categoryId,
-  );
+  const [isCategoryPickerOpen, setIsCategoryPickerOpen] = useState(!values.categoryId);
   const [error, setError] = useState("");
   const categoryPath = useMemo(
     () => findCategoryPath(categories, values.categoryId),

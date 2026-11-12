@@ -1,149 +1,78 @@
 "use client";
 
-import { Search, ShieldCheck, UserRound } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useState } from "react";
-
 import { Button } from "@/components/ui/button/button";
-import {
-  Dropdown,
-  DropdownContent,
-  DropdownItem,
-  DropdownLabel,
-  DropdownSeparator,
-  DropdownTrigger,
-} from "@/components/ui/dropdown/dropdown";
-import { CircleUserIcon } from "@/components/ui/icons";
-import { hasAdminRole } from "@/features/admin/utils/has-admin-role";
+import { NavChatIcon, NavUserIcon } from "@/assets/icons/NavIcons";
 import { useMe } from "@/features/auth/hooks/use-me";
-import { useLogout } from "@/features/auth/hooks/use-logout";
-import { Link, useRouter } from "@/i18n/navigation";
-import ProfileDialog from "./ProfileDialog";
+import { IndicatorDot } from "@/features/notifications/components/IndicatorDot";
+import {
+  getAccountMenuLabel,
+  getChatsLabel,
+  useUnreadIndicators,
+} from "@/features/notifications/hooks/use-unread-indicators";
+import { Link } from "@/i18n/navigation";
+
+import AccountMenu from "./AccountMenu";
 
 export default function HeaderAuth() {
-  const t = useTranslations("Admin");
-  const router = useRouter();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { data: user } = useMe();
-  const { mutate: logout, isPending: isLoggingOut } = useLogout();
+  const { hasUnreadChats, accountTone } = useUnreadIndicators(user);
 
   if (!user) {
     return (
-      <div className="flex items-center gap-1 sm:gap-2">
+      // Phones and tablets sign in from the bottom menu; desktop gets the two text links.
+      <div className="hidden items-center gap-2 lg:flex">
         <Button
           asChild
           variant="outline"
-          className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary lg:inline-flex"
         >
           <Link href="/sign-in">Вхід</Link>
         </Button>
         <span
           aria-hidden="true"
-          className="hidden h-6 w-px bg-stroke-secondary sm:block"
+          className="hidden h-6 w-px bg-stroke-secondary lg:block"
         />
         <Button
           asChild
           variant="outline"
-          className="hidden h-10 border-0 bg-transparent px-2 text-sm text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary sm:inline-flex"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary lg:inline-flex"
         >
           <Link href="/sign-up">Реєстрація</Link>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          className="size-8 border-0 p-0 sm:hidden"
-        >
-          <Link href="/sign-in" aria-label="Увійти або зареєструватися">
-            <CircleUserIcon className="size-6" />
-          </Link>
         </Button>
       </div>
     );
   }
 
-  const needsProfileAttention =
-    !user.emailVerified || !user.fullName?.trim();
-  const displayName = user.fullName?.trim() || "Мій акаунт";
-
   return (
     <>
-      <Dropdown>
-        <DropdownTrigger asChild>
+      {/* Phones and tablets reach chats and the account menu from the bottom menu. */}
+      <Button
+        asChild
+        variant="outline"
+        aria-label={getChatsLabel(hasUnreadChats, "Повідомлення")}
+        className="relative hidden size-10 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand lg:inline-flex"
+      >
+        <Link href="/chats">
+          <span className="relative grid size-6 place-items-center">
+            <NavChatIcon size={24} />
+            {hasUnreadChats && <IndicatorDot tone="error" />}
+          </span>
+        </Link>
+      </Button>
+      <AccountMenu
+        user={user}
+        trigger={
           <Button
             variant="outline"
-            className="size-8 border-0 p-0"
-            aria-label={
-              needsProfileAttention
-                ? "Відкрити меню акаунта, потрібна дія в профілі"
-                : "Відкрити меню акаунта"
-            }
+            className="relative hidden size-10 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand lg:inline-flex"
+            aria-label={getAccountMenuLabel(accountTone)}
           >
             <span className="relative grid size-6 place-items-center">
-              <CircleUserIcon className="size-6" />
-              {needsProfileAttention && (
-                <span
-                  aria-hidden="true"
-                  className="absolute -right-0.5 -top-0.5 size-2.5 rounded-full border-2 border-surface-primary bg-amber-500"
-                />
-              )}
+              <NavUserIcon size={24} />
+              {accountTone && <IndicatorDot tone={accountTone} />}
             </span>
           </Button>
-        </DropdownTrigger>
-
-        <DropdownContent align="end" sideOffset={8} className="w-72 p-2">
-          <DropdownLabel className="px-3 pb-3 pt-2">
-            <span className="block truncate text-sm font-semibold text-text-primary">
-              {displayName}
-            </span>
-            <span className="mt-1 block truncate font-normal">{user.email}</span>
-          </DropdownLabel>
-          <DropdownItem
-            onSelect={() => setIsProfileOpen(true)}
-            className={
-              needsProfileAttention
-                ? "bg-amber-50 text-amber-800 hover:bg-amber-100 hover:text-amber-900 data-highlighted:bg-amber-100 data-highlighted:text-amber-900"
-                : undefined
-            }
-          >
-            <UserRound
-              aria-hidden="true"
-              className={`size-4 ${needsProfileAttention ? "text-amber-700" : ""}`}
-            />
-            <span className="flex-1">Детальніше про профіль</span>
-            {needsProfileAttention && (
-              <span
-                aria-hidden="true"
-                className="size-2 rounded-full bg-amber-500"
-              />
-            )}
-          </DropdownItem>
-          <DropdownItem asChild>
-            <Link href="/auto-search">
-              <Search aria-hidden="true" className="size-4" />
-              Мої автопошуки
-            </Link>
-          </DropdownItem>
-          {hasAdminRole(user) && (
-            <DropdownItem asChild>
-              <Link href="/admin">
-                <ShieldCheck aria-hidden="true" className="size-4" />
-                {t("headerLink")}
-              </Link>
-            </DropdownItem>
-          )}
-          <DropdownSeparator />
-          <DropdownItem
-            disabled={isLoggingOut}
-            onSelect={() => logout(undefined, { onSuccess: () => router.refresh() })}
-          >
-            {isLoggingOut ? "Вихід…" : "Вийти"}
-          </DropdownItem>
-        </DropdownContent>
-      </Dropdown>
-      <ProfileDialog
-        user={user}
-        open={isProfileOpen}
-        onOpenChange={setIsProfileOpen}
+        }
       />
     </>
   );

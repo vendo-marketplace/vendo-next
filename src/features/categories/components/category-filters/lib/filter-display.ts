@@ -45,5 +45,7 @@ const LISTING_FORMS: Record<string, string> = {
   other: "оголошення",
 };
 
-export const formatListingsFound = (count: number) =>
-  `Знайдено ${count.toLocaleString("uk-UA")} ${LISTING_FORMS[pluralRules.select(count)]}`;
+export const formatListingsCount = (count: number) =>
+  `${count.toLocaleString("uk-UA")} ${LISTING_FORMS[pluralRules.select(count)]}`;
+
+export const formatListingsFound = (count: number) => `Знайдено ${formatListingsCount(count)}`;

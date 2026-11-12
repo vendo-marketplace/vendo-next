@@ -1,5 +1,6 @@
 import Image from "next/image";
 import logo from "@/assets/icons/logo-vendo.svg";
+import { cn } from "@/utils/utils";
 
 const logoVariants = {
   size: {
@@ -14,13 +15,14 @@ export type LogoSize = keyof typeof logoVariants.size;
 
 export type LogoProps = {
   size?: LogoSize;
+  className?: string;
 };
 
-export const Logo = ({ size = "md" }: LogoProps) => (
+export const Logo = ({ size = "md", className }: LogoProps) => (
   <Image
     data-size={size}
     src={logo}
     alt="Vendo"
-    className={`w-auto ${logoVariants.size[size]}`}
+    className={cn("w-auto", logoVariants.size[size], className)}
   />
 );

@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button/button";
 export function CategoryEmptyResults({
   hasFilters,
   onReset,
+  emptyMessage = "У цій категорії поки немає оголошень.",
 }: {
   hasFilters: boolean;
+  // Shown when nothing matched without any filters.
+  emptyMessage?: string;
   onReset: () => void;
 }) {
   return (
@@ -13,7 +16,7 @@ export function CategoryEmptyResults({
       <p className="max-w-sm text-sm text-text-secondary">
         {hasFilters
           ? "Спробуйте змінити або скинути фільтри."
-          : "У цій категорії поки немає оголошень."}
+          : emptyMessage}
       </p>
       {hasFilters && (
         <Button variant="outline" className="mt-4" onClick={onReset}>
