@@ -3,7 +3,11 @@
 import { useId } from "react";
 
 import { ClockIcon } from "@/assets/icons";
-import { ArrowUpLeftIcon, CloseIcon, NavSearchSmallIcon } from "@/assets/icons/NavIcons";
+import {
+  ArrowUpLeftIcon,
+  CloseIcon,
+  NavSearchSmallIcon,
+} from "@/assets/icons/NavIcons";
 import { cn } from "@/utils/utils";
 
 import { POPULAR_SEARCHES } from "../lib/popular-searches";
@@ -80,7 +84,10 @@ export function SearchDropdown({
     >
       <span className="flex min-w-0 items-center gap-1.5">
         {isTyping ? (
-          <NavSearchSmallIcon size={16} className="shrink-0 text-text-tertiary" />
+          <NavSearchSmallIcon
+            size={16}
+            className="shrink-0 text-text-tertiary"
+          />
         ) : (
           <ClockIcon size={16} className="shrink-0 text-text-tertiary" />
         )}
@@ -123,18 +130,26 @@ export function SearchDropdown({
       id={id}
       onMouseDown={(event) => event.preventDefault()}
       className={cn(
-        "absolute inset-x-0 top-full z-10 mt-2.5 flex max-h-[calc(100dvh-6rem)] animate-in flex-col gap-4 overflow-y-auto rounded-lg border border-stroke-secondary bg-surface-primary px-3 pt-3 pb-4 shadow-xs fade-in-0",
+        "absolute inset-x-0 top-full z-10 mt-2.5 flex max-h-[calc(100dvh-6rem)] animate-in flex-col gap-4 overflow-y-auto rounded-lg border border-stroke-secondary bg-surface-primary px-3 pt-3 pb-4 shadow-lg fade-in-0",
         "max-md:fixed max-md:top-14 max-md:bottom-0 max-md:mt-0 max-md:max-h-none max-md:overscroll-contain max-md:rounded-none max-md:border-0 max-md:px-2.5 max-md:pt-4 max-md:pb-[calc(1rem+env(safe-area-inset-bottom))]",
       )}
     >
       {isTyping ? (
-        <ul id={listboxId} role="listbox" aria-label="Підказки пошуку" className="flex flex-col">
+        <ul
+          id={listboxId}
+          role="listbox"
+          aria-label="Підказки пошуку"
+          className="flex flex-col"
+        >
           {options.map(renderOption)}
         </ul>
       ) : (
         <>
           {options.length > 0 && (
-            <section aria-labelledby={historyTitleId} className="flex flex-col gap-2">
+            <section
+              aria-labelledby={historyTitleId}
+              className="flex flex-col gap-2"
+            >
               <div className="flex items-center justify-between">
                 <h2 id={historyTitleId} className={sectionTitleClassName}>
                   Історія пошуку
@@ -157,7 +172,10 @@ export function SearchDropdown({
               </ul>
             </section>
           )}
-          <section aria-labelledby={popularTitleId} className="flex flex-col gap-2">
+          <section
+            aria-labelledby={popularTitleId}
+            className="flex flex-col gap-2"
+          >
             <h2 id={popularTitleId} className={sectionTitleClassName}>
               Популярне
             </h2>

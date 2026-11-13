@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { MessageCircleIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { InfoMarkIcon } from "@/assets/icons/InfoMarkIcon";
@@ -28,7 +29,10 @@ import {
   type CardCondition,
   type SpecKind,
 } from "./lib/card-specs";
-import { formatListingDate, formatListingDateShort } from "./lib/format-listing-date";
+import {
+  formatListingDate,
+  formatListingDateShort,
+} from "./lib/format-listing-date";
 import { isSampleProduct } from "./lib/sample-smartphones";
 
 interface Props {
@@ -47,7 +51,10 @@ const InfoIcon = ({ className }: { className?: string }) => (
   </span>
 );
 
-const SPEC_ICONS: Record<SpecKind, (props: { className?: string }) => React.ReactNode> = {
+const SPEC_ICONS: Record<
+  SpecKind,
+  (props: { className?: string }) => React.ReactNode
+> = {
   storage: StorageIcon,
   battery: BatteryIcon,
   warranty: WarrantyIcon,
@@ -58,7 +65,7 @@ const SPEC_ICONS: Record<SpecKind, (props: { className?: string }) => React.Reac
 // condition opens the specs row; on smaller cards it sits on the photo, and phone cells get
 // smaller icons and padding so the values fit.
 const badgeClassName =
-  "flex min-w-0 items-center gap-1 border-stroke-primary-subtle pt-2 pr-0.5 pb-1.5 pl-1 not-last:border-r @card-tablet:gap-1.5 @card-tablet:pr-2 @card-tablet:pl-2 @card-desktop:py-2";
+  "flex min-w-0 flex-auto items-center gap-1 border-stroke-primary-subtle not-first:justify-center pt-2 pr-0.5 pb-1.5 pl-1 not-last:border-r @card-tablet:px-1 @card-desktop:py-2 @[17.5rem]:gap-1.5 @[17.5rem]:px-2";
 
 const CONDITIONS: Record<
   CardCondition,
@@ -89,9 +96,19 @@ function ConditionLabel({ condition }: { condition: CardCondition }) {
 
 const cardLinkClassName = "flex h-full flex-col rounded-lg";
 
+const WRITE_BUTTON_CLASS =
+  "flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-surface-brand-subtle bg-surface-brand-subtle text-sm font-semibold text-text-brand transition-colors hover:border-stroke-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stroke-brand";
+
 // Sample listings have no product page yet, so they are not links.
-function CardLink({ card, children }: { card: ProductCardType; children: React.ReactNode }) {
-  if (isSampleProduct(card.id)) return <div className={cardLinkClassName}>{children}</div>;
+function CardLink({
+  card,
+  children,
+}: {
+  card: ProductCardType;
+  children: React.ReactNode;
+}) {
+  if (isSampleProduct(card.id))
+    return <div className={cardLinkClassName}>{children}</div>;
   return (
     <Link
       href={`/product/${card.id}?q=${encodeURIComponent(card.title)}`}
@@ -118,9 +135,12 @@ const ProductCard = ({
   const image = getCardImage(card);
 
   return (
-    <article className="@container relative flex h-full w-full flex-col rounded-lg border border-stroke-primary-subtle bg-surface-primary px-2 pt-2 pb-1 shadow-xs transition-shadow hover:shadow-md">
+    // On hover (or keyboard focus) the card rises above its neighbours and a panel with "Написати"
+    // slides out from its bottom edge over the card below, so the grid itself never shifts.
+    <article className="group/card @container relative flex h-full w-full flex-col rounded-lg border border-stroke-secondary bg-surface-primary p-2 shadow-xs transition-[box-shadow,border-radius] duration-200 ease-out focus-within:z-20 focus-within:rounded-b-none focus-within:shadow-lg hover:z-20 hover:rounded-b-none hover:shadow-lg">
       <CardLink card={card}>
-        <div className="relative aspect-[152/160] w-full @card-tablet:aspect-[227/220] @card-desktop:aspect-[295/264] shrink-0 overflow-hidden rounded-sm bg-surface-secondary">
+        {/* The photo runs edge to edge across the top of the card. */}
+        <div className="relative -mx-2 -mt-2 aspect-square shrink-0 overflow-hidden rounded-t-lg bg-surface-secondary">
           {image ? (
             <Image
               src={image}
@@ -128,50 +148,30 @@ const ProductCard = ({
               fill
               sizes="(max-width: 768px) 50vw, 311px"
               loading={eager ? "eager" : "lazy"}
-              className="object-cover"
+              className="object-cover transition-transform duration-500 ease-out group-hover/card:scale-105 motion-reduce:group-hover/card:scale-100"
             />
           ) : (
             <span className="grid h-full place-items-center text-sm text-text-tertiary">
               Фото відсутнє
             </span>
           )}
-          <span
-            className={cn(
-              "absolute top-1 left-2 flex max-w-[calc(100%-3.5rem)] items-center gap-1 rounded-sm bg-surface-primary px-1 py-px text-xs font-semibold @card-tablet:py-0.5 @card-tablet:pr-1.5 @card-desktop:hidden",
-              CONDITIONS[condition].className,
-            )}
-          >
-            <ConditionLabel condition={condition} />
-          </span>
         </div>
 
-        <div className="flex flex-col gap-1 pt-4 @card-tablet:gap-1.5 @card-desktop:px-2">
-          <h3 className="line-clamp-2 h-10 font-sans text-sm font-normal text-text-primary @card-tablet:h-auto @card-tablet:truncate @card-desktop:text-md">
+        <div className="flex flex-col gap-0.5 px-1 pt-3">
+          {/* Up to two lines, and always two lines tall, so prices line up across a row. */}
+          <h3 className="line-clamp-2 min-h-10 font-sans text-sm leading-5 font-normal text-text-primary transition-colors group-hover/card:text-text-brand">
             {title}
           </h3>
-          <p className="font-heading text-lg leading-6 font-semibold text-text-primary @card-tablet:leading-7 @card-desktop:text-xl">
+          <p className="font-heading text-lg leading-7 font-bold text-text-primary">
             {formatPrice(price)}
           </p>
         </div>
 
-        <ul
-          className={cn(
-            "mt-3.5 mb-1 grid @card-tablet:mt-4 grid-cols-2 border-y @card-desktop:grid-cols-3 border-stroke-primary-subtle text-xs",
-            // No specs: below desktop the row has nothing to show, so its lines hide while it keeps
-            // its height and the city and date stay level with the neighbouring cards.
-            specs.length === 0 && "border-transparent @card-desktop:border-stroke-primary-subtle",
-          )}
-        >
-          {specs.length === 0 && (
-            <li aria-hidden="true" className={cn(badgeClassName, "invisible @card-desktop:hidden")}>
-              <span className="size-3.5 shrink-0 @card-tablet:size-4" />
-              <span>&nbsp;</span>
-            </li>
-          )}
+        <ul className="mt-3.5 mb-1 flex border-y border-stroke-primary-subtle text-xs @card-tablet:mt-4">
           <li
             className={cn(
               badgeClassName,
-              "hidden font-semibold @card-desktop:flex",
+              "font-semibold",
               CONDITIONS[condition].className,
             )}
           >
@@ -182,18 +182,25 @@ const ProductCard = ({
             return (
               <li
                 key={`${value}-${index}`}
-                className={cn(badgeClassName, "text-text-secondary")}
+                className={cn(
+                  badgeClassName,
+                  "text-text-secondary",
+                  // A phone card has room for the condition and one spec.
+                  index > 0 && "@max-card-tablet:hidden",
+                  index === 0 && "@max-card-tablet:border-r-0",
+                )}
               >
-                <Icon className="size-3.5 shrink-0 @card-tablet:size-4" />
+                {/* Below desktop the spec icons give their room to the values. */}
+                <Icon className="hidden size-4 shrink-0 @card-desktop:block" />
                 <span className="truncate">{value}</span>
               </li>
             );
           })}
         </ul>
 
-        <div className="mt-auto flex h-7 items-center gap-2 text-xs @card-desktop:px-2 text-text-secondary">
+        <div className="mt-auto flex items-center gap-2 px-1 pt-3 pb-1 text-xs text-text-tertiary">
           <span className="flex min-w-0 flex-1 items-center gap-1">
-            <LocationIcon className="size-4 shrink-0 @card-tablet:size-4.5" />
+            <LocationIcon className="size-3.5 shrink-0" />
             <span className="truncate" title={city}>
               {city}
             </span>
@@ -209,6 +216,24 @@ const ProductCard = ({
         </div>
       </CardLink>
 
+      {/* The hover panel with "Написати". Sample listings have no chat, so their button is inert. */}
+      <div className="invisible absolute inset-x-[-1px] top-full -mt-px rounded-b-lg border border-t-0 border-stroke-secondary bg-surface-primary px-3 pb-3 opacity-0 shadow-lg transition-opacity duration-200 [clip-path:inset(0_-24px_-24px_-24px)] group-focus-within/card:visible group-focus-within/card:opacity-100 group-hover/card:visible group-hover/card:opacity-100">
+        {isSampleProduct(card.id) ? (
+          <span aria-hidden="true" className={WRITE_BUTTON_CLASS}>
+            <MessageCircleIcon className="size-4" />
+            Написати
+          </span>
+        ) : (
+          <Link
+            href={`/chats?productId=${encodeURIComponent(card.id)}`}
+            className={WRITE_BUTTON_CLASS}
+          >
+            <MessageCircleIcon aria-hidden="true" className="size-4" />
+            Написати
+          </Link>
+        )}
+      </div>
+
       <Button
         variant="none"
         size="none"
@@ -217,7 +242,7 @@ const ProductCard = ({
         aria-pressed={favorite}
         onClick={onToggleFavorite}
         className={cn(
-          "absolute top-3 right-4 z-10 size-8 rounded-full after:absolute after:-inset-1.5 after:content-[''] border border-surface-brand-subtle bg-surface-brand-subtle p-0 shadow-sm transition-[transform,color] active:scale-90",
+          "absolute top-2 right-2 z-10 size-8 rounded-full after:absolute after:-inset-1.5 after:content-[''] bg-surface-primary p-0 shadow-xs transition-[transform,color] active:scale-90",
           favorite
             ? "text-text-brand"
             : "text-text-secondary hover:text-text-brand",

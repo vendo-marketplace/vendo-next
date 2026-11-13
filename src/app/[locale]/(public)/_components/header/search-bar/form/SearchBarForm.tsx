@@ -54,12 +54,18 @@ const SearchBarForm = ({
 
   return (
     <div className="relative flex flex-1" {...combobox.containerProps}>
-      {/* Figma 5343-22761: the page below the header dims while the dropdown is open
+      {/* Figma 5343-22761: the page below the header dims (a soft blue veil) while the dropdown is open
           (phones get a full-screen dropdown instead). */}
       {combobox.isExpanded && (
         <div
           aria-hidden="true"
-          className="fixed inset-x-0 top-16 bottom-0 animate-in bg-black/25 fade-in-0 max-md:hidden lg:top-19"
+          // Starts right under the header, wherever it is (the announcement bar can push it down).
+          ref={(overlay) => {
+            const header = overlay?.closest("header");
+            if (overlay && header)
+              overlay.style.top = `${header.getBoundingClientRect().bottom}px`;
+          }}
+          className="fixed inset-x-0 top-16 bottom-0 animate-in bg-[#0b2e7a]/15 backdrop-blur-[2px] fade-in-0 max-md:hidden lg:top-19"
         />
       )}
       <form
