@@ -84,7 +84,9 @@ function CategoryBranch({
         aria-hidden={!isExpanded}
         inert={!isExpanded}
         className={`grid transition-[grid-template-rows,opacity] duration-200 ease-in-out ${
-          isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          isExpanded
+            ? "grid-rows-[1fr] opacity-100"
+            : "grid-rows-[0fr] opacity-0"
         }`}
       >
         <div className="min-h-0 overflow-hidden pl-3">
@@ -163,7 +165,7 @@ export default function CategoryDropdownClient({
           aria-controls="catalog-dialog"
           onClick={() => setIsOpen((open) => !open)}
           className={cn(
-            "h-10 gap-1.5 px-5 font-medium",
+            "h-10 gap-1.5 border-stroke-brand-subtle px-5 font-medium",
             isOpen && "border-stroke-brand",
           )}
         >
@@ -183,9 +185,10 @@ export default function CategoryDropdownClient({
             ref={dialogRef}
             onKeyDown={(event) => {
               if (event.key !== "Tab") return;
-              const focusable = event.currentTarget.querySelectorAll<HTMLElement>(
-                'a[href], button:not([disabled]), select:not([disabled])',
-              );
+              const focusable =
+                event.currentTarget.querySelectorAll<HTMLElement>(
+                  "a[href], button:not([disabled]), select:not([disabled])",
+                );
               const first = focusable.item(0);
               const last = focusable.item(focusable.length - 1);
 
@@ -256,7 +259,11 @@ export default function CategoryDropdownClient({
                               className="size-6 shrink-0 object-contain"
                             />
                           ) : (
-                            <CategoryIcon index={index} aria-hidden="true" className="size-5 shrink-0" />
+                            <CategoryIcon
+                              index={index}
+                              aria-hidden="true"
+                              className="size-5 shrink-0"
+                            />
                           )}
                           <span className="min-w-0 flex-1 leading-snug break-words">
                             {category.title}
@@ -289,30 +296,30 @@ export default function CategoryDropdownClient({
 
                   {selectedCategory && (
                     <div className="grid grid-cols-1 gap-x-8 gap-y-7 sm:grid-cols-2 xl:grid-cols-3">
-                      {selectedCategory.children.length > 0 ? (
-                        selectedCategory.children.map((subcategory) => (
-                          <section key={subcategory.id}>
-                            <h2 className="px-2 py-2.5 text-sm font-semibold text-text-primary">
-                              {subcategory.title}
-                            </h2>
-                            {subcategory.children.length > 0 && (
-                              <div className="mt-1 grid">
-                                {subcategory.children.map((child) => (
-                                  <CategoryBranch
-                                    key={child.id}
-                                    category={child}
-                                    parentSlug={selectedCategory.slug}
-                                    onNavigate={() => setIsOpen(false)}
-                                    openPath={openPath}
-                                    level={0}
-                                    onToggle={toggleCategory}
-                                  />
-                                ))}
-                              </div>
-                            )}
-                          </section>
-                        ))
-                      ) : null}
+                      {selectedCategory.children.length > 0
+                        ? selectedCategory.children.map((subcategory) => (
+                            <section key={subcategory.id}>
+                              <h2 className="px-2 py-2.5 text-sm font-semibold text-text-primary">
+                                {subcategory.title}
+                              </h2>
+                              {subcategory.children.length > 0 && (
+                                <div className="mt-1 grid">
+                                  {subcategory.children.map((child) => (
+                                    <CategoryBranch
+                                      key={child.id}
+                                      category={child}
+                                      parentSlug={selectedCategory.slug}
+                                      onNavigate={() => setIsOpen(false)}
+                                      openPath={openPath}
+                                      level={0}
+                                      onToggle={toggleCategory}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </section>
+                          ))
+                        : null}
                     </div>
                   )}
                 </div>

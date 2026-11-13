@@ -24,7 +24,7 @@ export default function HeaderAuth() {
         <Button
           asChild
           variant="outline"
-          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary lg:inline-flex"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-primary shadow-none hover:bg-surface-secondary hover:text-text-brand lg:inline-flex"
         >
           <Link href="/sign-in">Вхід</Link>
         </Button>
@@ -35,7 +35,7 @@ export default function HeaderAuth() {
         <Button
           asChild
           variant="outline"
-          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-secondary shadow-none hover:bg-surface-secondary hover:text-text-primary lg:inline-flex"
+          className="hidden h-10 border-0 bg-transparent px-2 text-sm font-normal text-text-primary shadow-none hover:bg-surface-secondary hover:text-text-brand lg:inline-flex"
         >
           <Link href="/sign-up">Реєстрація</Link>
         </Button>

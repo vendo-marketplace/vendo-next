@@ -7,7 +7,9 @@
 @theme {
   /* Product card sizes from Figma: mobile 168px, tablet 243px (from 190px), desktop 311px. */
   --container-card-tablet: 11.875rem;
-  --container-card-desktop: 17.5rem;
+  /* Measured on the card's content box (width minus padding and border): 14.375rem lets the 5-column
+     homepage cards (~233px inside) use the desktop layout, while the Figma tablet card (~225px) does not. */
+  --container-card-desktop: 14.375rem;
 
   /* Primitive palette — Figma "Colors & Typography" */
   --color-brand-50: #edf6ff;
@@ -176,15 +178,16 @@
 
 @layer base {
   * {
-    @apply border-stroke-primary-subtle outline-stroke-brand
+    @apply border-stroke-primary-subtle outline-stroke-brand;
   }
   button {
-    @apply cursor-pointer
+    @apply cursor-pointer;
   }
   body {
     @apply bg-surface-secondary text-text-primary;
   }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
   html {
@@ -192,7 +195,12 @@
     /* Keeps the scrollbar space when overlays lock body scroll, so the layout doesn't jump. */
     scrollbar-gutter: stable;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading;
   }
   /* Keep browser autofill from repainting inputs blue and swapping the font */
@@ -210,19 +218,47 @@
 /* Shared page width and side gutters: header, catalog and page sections line up on it. */
 @utility page-container {
   @apply mx-auto w-full max-w-330 px-4 sm:px-6 md:px-10 lg:px-4 xl:px-0;
+  /* 1320px up to 1600px screens; wider screens get a wider column, so the side margins stay
+     around 120px instead of growing without end. */
+  --page-container-max: 82.5rem;
+
+  @media (width >= 100rem) {
+    --page-container-max: 92.5rem;
+    max-width: var(--page-container-max);
+  }
+
+  @media (width >= 117.5rem) {
+    --page-container-max: 105rem;
+    max-width: var(--page-container-max);
+  }
 
   /* Centre on whole pixels: a half-pixel offset blurs every SVG icon inside on 100%-scale monitors. */
   @supports (margin-left: round(down, 1.5px, 1px)) {
-    margin-left: max(0px, round(down, (100% - 82.5rem) / 2, 1px));
+    margin-left: max(
+      0px,
+      round(down, (100% - var(--page-container-max)) / 2, 1px)
+    );
   }
 }
 
-/* Outer page column (1440px), centred on whole pixels like page-container. */
+/* Outer page column (1440px, wider on big screens), centred on whole pixels like page-container. */
 @utility page-shell {
   @apply mx-auto w-full max-w-360;
+  /* Grows with page-container on wide screens, keeping 60px on each side of it. */
+  --page-shell-max: 90rem;
+
+  @media (width >= 100rem) {
+    --page-shell-max: 100rem;
+    max-width: var(--page-shell-max);
+  }
+
+  @media (width >= 117.5rem) {
+    --page-shell-max: 112.5rem;
+    max-width: var(--page-shell-max);
+  }
 
   @supports (margin-left: round(down, 1.5px, 1px)) {
-    margin-left: max(0px, round(down, (100% - 90rem) / 2, 1px));
+    margin-left: max(0px, round(down, (100% - var(--page-shell-max)) / 2, 1px));
   }
 }
 

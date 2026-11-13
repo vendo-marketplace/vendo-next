@@ -20,7 +20,7 @@ const HeaderFavoritesLink = () => {
     <Button
       asChild
       variant="outline"
-      className="relative size-7 border-0 p-0 text-text-secondary hover:bg-transparent hover:text-text-brand after:absolute after:-inset-x-0.5 after:-inset-y-2 after:content-[''] md:-mr-1 md:size-8 md:after:-inset-1 lg:mr-0 lg:size-10 lg:after:hidden"
+      className="relative size-7 border-0 p-0 text-text-primary hover:bg-transparent hover:text-text-brand after:absolute after:-inset-x-0.5 after:-inset-y-2 after:content-[''] md:-mr-1 md:size-8 md:after:-inset-1 lg:mr-0 lg:size-10 lg:after:hidden"
     >
       <Link
         href="/favorites"
