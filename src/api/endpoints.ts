@@ -17,12 +17,19 @@ export const apiEndpoints = {
     validate: "/verification/validate",
   },
   categories: {
+    root: "/categories",
+    image: "/categories/image",
     tree: "/categories/tree",
+    item: (categoryId: string) => `/categories/${categoryId}`,
     attributes: (categoryId: string) => `/categories/${categoryId}/attributes`,
   },
   products: {
     search: "/search",
     create: "/products",
+  },
+  attributes: {
+    root: "/attributes",
+    item: (attributeId: string) => `/attributes/${attributeId}`,
   },
   favorites: {
     list: "/favorites",
