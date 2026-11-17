@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button/button";
 import type { Category, CategoryAttribute } from "@/features/categories/types/category";
 import { Link } from "@/i18n/navigation";
 
+import { canHaveAttributes, canHaveChildren } from "../../lib/category-tree";
 import { AttributeTypeBadge } from "../attributes/AttributeTypeBadge";
 import { CopyId } from "../shared/CopyId";
 import { CategoryImageField } from "./CategoryImageField";
@@ -37,7 +38,7 @@ export const CategoryDetails = ({ category, trail, onSelect, onEdit, onAddChild 
       />
       <div className="grid gap-6 p-5 lg:grid-cols-2">
         <CategoryImageField category={category} />
-        <AttributesSection attributes={category.attributes} />
+        {canHaveAttributes(category) && <AttributesSection attributes={category.attributes} />}
         <ChildrenSection category={category} onSelect={onSelect} />
       </div>
       <DetailsFooter category={category} root={trail[0]} />
@@ -120,10 +121,14 @@ const DetailsHeader = ({
           <Pencil aria-hidden="true" className="size-4" />
           {t("edit")}
         </Button>
-        <Button variant="secondary" size="sm" onClick={() => onAddChild(category)}>
-          <Plus aria-hidden="true" className="size-4" />
-          {t("addChild")}
-        </Button>
+        {canHaveChildren(category) ? (
+          <Button variant="secondary" size="sm" onClick={() => onAddChild(category)}>
+            <Plus aria-hidden="true" className="size-4" />
+            {t("addChild")}
+          </Button>
+        ) : (
+          <p className="max-w-56 text-xs text-text-tertiary">{t("leafNoChildren")}</p>
+        )}
       </div>
     </header>
   );

@@ -44,6 +44,17 @@ export async function CategoryPageView({
   }
 
   const { category, trail, attributes } = result.data;
+
+  if (category.children.length > 0) {
+    if (brandSlug) notFound();
+
+    return (
+      <section className="page-container py-8">
+        <CategoryHeader category={category} trail={trail} tilesLayout="grid" />
+      </section>
+    );
+  }
+
   const filterAttributes = await withOptionCounts(
     category.id,
     withMockFilters(category.slug, attributes),

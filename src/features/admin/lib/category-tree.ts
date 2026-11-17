@@ -94,3 +94,11 @@ export const getAttributeUsage = (
 
   return usage;
 };
+
+// The API derives the type from attributes: a non-root category with attributes is a
+// CHILD (a leaf that cannot have subcategories), without them a SUB. Roots and
+// categories that already have subcategories therefore cannot take attributes.
+export const canHaveAttributes = (category: Category) =>
+  category.type !== "PARENT" && category.children.length === 0;
+
+export const canHaveChildren = (category: Category) => category.type !== "CHILD";

@@ -11,13 +11,12 @@ type Props = {
   id: string;
   value: string[];
   onChange: (value: string[]) => void;
+  onBlur?: () => void;
   invalid: boolean;
   "aria-describedby"?: string;
 };
 
-// Comma-separated input adds several values at once; duplicates are skipped
-// because the API requires unique values.
-export const AllowedValuesInput = ({ id, value, onChange, invalid, ...aria }: Props) => {
+export const AllowedValuesInput = ({ id, value, onChange, onBlur, invalid, ...aria }: Props) => {
   const t = useTranslations("Admin.attributes.form");
   const [draft, setDraft] = useState("");
 
@@ -45,6 +44,10 @@ export const AllowedValuesInput = ({ id, value, onChange, invalid, ...aria }: Pr
           value={draft}
           clearable={false}
           onChange={(event) => setDraft(event.target.value)}
+          onBlur={() => {
+            add();
+            onBlur?.();
+          }}
           onKeyDown={(event) => {
             if (event.key !== "Enter") return;
             event.preventDefault();

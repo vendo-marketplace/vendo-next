@@ -1,8 +1,7 @@
 import { z } from "zod";
 
-// Same patterns as the API's CreateCategoryRequest.
-const TITLE_PATTERN =
-  /^[A-ZА-ЯІЇЄ][A-Za-zА-ЯІЇЄа-яіїє]*(?:[ -][A-Za-zА-ЯІЇЄа-яіїє]+)*$/;
+import { normalizeApostrophes, TITLE_PATTERN } from "./title-pattern";
+
 const SLUG_PATTERN = /^[a-z0-9]+(?:_[a-z0-9]+)*$/;
 
 export const categoryFormSchema = z.object({
@@ -10,9 +9,10 @@ export const categoryFormSchema = z.object({
     .string()
     .trim()
     .min(1, "Вкажіть назву.")
+    .overwrite(normalizeApostrophes)
     .regex(
       TITLE_PATTERN,
-      "З великої літери; лише літери, пробіли й дефіси між словами.",
+      "З великої літери; літери, цифри, апостроф, «-», «/» і «,», слова через один пробіл.",
     ),
   slug: z
     .string()

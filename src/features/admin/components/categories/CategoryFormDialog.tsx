@@ -13,6 +13,7 @@ import { applyApiErrorToForm, SERVER_ERROR_KEY } from "@/utils/api-error";
 
 import { useCreateCategory, useUpdateCategory } from "../../hooks/use-admin-categories";
 import { useAutoSlug } from "../../hooks/use-auto-slug";
+import { canHaveAttributes } from "../../lib/category-tree";
 import { categoryFormSchema, type CategoryFormValues } from "../../schemas/category-schema";
 import { AdminDialog } from "../shared/AdminDialog";
 import { FormActions } from "../shared/FormActions";
@@ -75,6 +76,9 @@ const CategoryForm = ({ mode, onDone, onCreated }: CategoryFormProps) => {
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
   const isEdit = mode.kind === "edit";
+  // A new subcategory may take attributes (then it becomes a leaf); a new root may not.
+  const attributesAllowed =
+    mode.kind === "edit" ? canHaveAttributes(mode.category) : mode.parent !== null;
 
   const {
     control,
@@ -95,11 +99,13 @@ const CategoryForm = ({ mode, onDone, onCreated }: CategoryFormProps) => {
   });
   const serverError = errors.root?.server?.message;
 
-  const save = async ({ title, slug, attributes }: CategoryFormValues) => {
+  const save = async ({ title, slug, attributes: selected }: CategoryFormValues) => {
+    const attributes = attributesAllowed ? selected : [];
+
     if (mode.kind === "edit") {
       await updateCategory.mutateAsync({
         categoryId: mode.category.id,
-        body: { title, slug, attributes },
+        body: { title, slug, ...(attributesAllowed && { attributes }) },
       });
       toast.success(t("updated"));
       return;
@@ -168,25 +174,30 @@ const CategoryForm = ({ mode, onDone, onCreated }: CategoryFormProps) => {
           )}
         </FormField>
 
-        <div className="flex flex-col gap-3">
-          <span className="text-sm font-semibold text-text-primary">{t("attributesLabel")}</span>
-          <Controller
-            control={control}
-            name="attributes"
-            render={({ field }) => (
-              <AttributePicker
-                value={field.value}
-                onChange={field.onChange}
-                assigned={isEdit ? mode.category.attributes : []}
-              />
+        {attributesAllowed ? (
+          <div className="flex flex-col gap-3">
+            <span className="text-sm font-semibold text-text-primary">{t("attributesLabel")}</span>
+            {!isEdit && <p className="text-xs text-text-secondary">{t("attributesLeafHint")}</p>}
+            <Controller
+              control={control}
+              name="attributes"
+              render={({ field }) => (
+                <AttributePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  assigned={isEdit ? mode.category.attributes : []}
+                />
+              )}
+            />
+            {errors.attributes?.message && (
+              <p role="alert" className="text-xs text-text-error">
+                {errors.attributes.message}
+              </p>
             )}
-          />
-          {errors.attributes?.message && (
-            <p role="alert" className="text-xs text-text-error">
-              {errors.attributes.message}
-            </p>
-          )}
-        </div>
+          </div>
+        ) : (
+          <p className="text-xs text-text-secondary">{t("attributesNotAllowed")}</p>
+        )}
       </div>
 
       <FormActions

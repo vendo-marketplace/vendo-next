@@ -72,14 +72,23 @@ function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
   );
 }
 
-function Tiles({ label, tiles }: { label: string; tiles: Tile[] }) {
+type TilesLayout = "strip" | "grid";
+
+function Tiles({ label, tiles, layout }: { label: string; tiles: Tile[]; layout: TilesLayout }) {
   return (
     <ul
       aria-label={label}
-      className="-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:gap-3 lg:mx-0 lg:grid lg:grid-cols-8 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+      className={
+        layout === "grid"
+          ? "grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 lg:grid-cols-6"
+          : "-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:gap-3 lg:mx-0 lg:grid lg:grid-cols-8 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+      }
     >
       {tiles.map((tile) => (
-        <li key={tile.key} className="w-24 shrink-0 snap-start sm:w-32 lg:w-auto">
+        <li
+          key={tile.key}
+          className={layout === "grid" ? undefined : "w-24 shrink-0 snap-start sm:w-32 lg:w-auto"}
+        >
           <Link
             href={tile.href}
             aria-current={tile.isCurrent ? "page" : undefined}
@@ -110,11 +119,13 @@ export function CategoryHeader({
   trail,
   brandTiles,
   currentBrand,
+  tilesLayout = "strip",
 }: {
   category: Category;
   trail: Category[];
   brandTiles?: BrandTile[];
   currentBrand?: string;
+  tilesLayout?: TilesLayout;
 }) {
   const path = trail.length ? trail : [category];
   const rootSlug = path[0].slug;
@@ -123,7 +134,6 @@ export function CategoryHeader({
   const crumbs: Crumb[] = [
     ...path.map((item, index) => ({
       label: item.title,
-      // The last category is the current page, unless a brand page sits below it.
       href:
         index < path.length - 1 || currentBrand
           ? getCategoryHref(rootSlug, item.slug)
@@ -138,7 +148,6 @@ export function CategoryHeader({
         title: name,
         image,
         isCurrent: name === currentBrand,
-        // The current brand tile leads back to the whole category.
         href:
           name === currentBrand
             ? categoryHref
@@ -162,7 +171,9 @@ export function CategoryHeader({
         </h1>
         <ListingsCountNextToTitle />
       </div>
-      {tiles && <Tiles label={brandTiles ? "Бренди" : "Підкатегорії"} tiles={tiles} />}
+      {tiles && (
+        <Tiles label={brandTiles ? "Бренди" : "Підкатегорії"} tiles={tiles} layout={tilesLayout} />
+      )}
     </div>
   );
 }

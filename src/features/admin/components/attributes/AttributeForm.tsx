@@ -177,7 +177,12 @@ export const AttributeForm = ({ attribute, onSaved, bodyClassName, renderActions
                 control={control}
                 name="allowedValues"
                 render={({ field }) => (
-                  <AllowedValuesInput {...fieldProps} value={field.value} onChange={field.onChange} />
+                  <AllowedValuesInput
+                    {...fieldProps}
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                  />
                 )}
               />
             )}

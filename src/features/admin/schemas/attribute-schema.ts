@@ -2,10 +2,8 @@ import { z } from "zod";
 
 import type { CategoryAttributeType } from "@/features/categories/types/category";
 
-// The API's CreateAttributeRequest title pattern: capitalised first word, then
-// words joined by a space, a hyphen or ", ".
-const TITLE_PATTERN =
-  /^[A-ZА-ЯІЇЄ][a-zа-яіїє]*(?:[ -][A-Za-zА-ЯІЇЄа-яіїє-]+|, [A-Za-zА-ЯІЇЄа-яіїє]+)*$/;
+import { normalizeApostrophes, TITLE_PATTERN } from "./title-pattern";
+
 const SLUG_PATTERN = /^[a-z0-9]+(?:_[a-z0-9]+)*$/;
 
 export const ATTRIBUTE_TYPES = [
@@ -26,9 +24,10 @@ export const attributeFormSchema = z
       .string()
       .trim()
       .min(1, "Вкажіть назву.")
+      .overwrite(normalizeApostrophes)
       .regex(
         TITLE_PATTERN,
-        "З великої літери, далі малі; слова через пробіл, дефіс або «, ».",
+        "З великої літери; літери, цифри, апостроф, «-», «/» і «,», слова через один пробіл.",
       ),
     slug: z
       .string()
